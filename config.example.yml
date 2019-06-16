@@ -1,0 +1,52 @@
+timesheet_file: ./buchungen.yml
+archive_path: ./archive
+redmines:
+  -
+    name: Synyx
+    prefix: S
+    server:
+      url: https://project.synyx.de
+      apikey:
+    activities:
+      8: [DesignView, Design, View, Dsgn]
+      9: [Entwicklung, E]
+      10: [Konzeption, Kzpt]
+      11: [Kombination, Komb]
+      12: [Organisation, Orga]
+      13: [Besprechung, Besp]
+      19: [Systemadministration, Sys, Adm]
+      21: [Analyse, Ana]
+      25: [Dokumentation, Doku]
+      26: [Schulung, Schu]
+      32: [Support, Sup]
+      33: [Marketing]
+      46: [Sales]
+      47: [Consulting]
+  -
+    name: example
+    default: 1
+    prefix: C
+    server:
+      url: https://projects.example.net
+      apikey:
+    activities:
+      16: [AdministrationTechnisch, Adm, AT]
+      10: [Analyse, Ana]
+      26: [DailyWeekly, Dly, Wkly]
+      8: [Design, Dsgn]
+      17: [Dokumentation, Doku]
+      22: [EinarbeitungGeben, EinG]
+      28: [EinarbeitungEmpfangen, EinE]
+      27: [EntwicklungPair, EP]
+      9: [EntwicklungSolo, ES]
+      19: [MaintenanceSupport, Sup]
+      11: [Organisatorisches, Orga]
+      24: [Planning, Pla]
+      29: [Retro, Ret]
+      23: [Review, Rev]
+      25: [Workshop, Ws]
+templates:
+  BeispielDaily:
+    activity: Daily
+    issue: S99999
+    text: Daily
