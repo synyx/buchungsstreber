@@ -10,12 +10,12 @@ require_relative 'lib/redmine_api'
 require_relative 'lib/utils'
 require_relative 'lib/redmines'
 
-config = YAML.load_file File.expand_path('./config.yml', File.dirname(__FILE__))
+config = YAML.load_file File.expand_path('./config.yml', __dir__)
 
 yaml_timesheet = YamlTimesheet.new config['templates']
 redmines = Redmines.new(config['redmines'])
 
-timesheet_file = File.expand_path(config['timesheet_file'], File.dirname(__FILE__))
+timesheet_file = File.expand_path(config['timesheet_file'], __dir__)
 
 entries = yaml_timesheet.parse timesheet_file
 
@@ -74,5 +74,5 @@ end
 
 puts "Buchungen erfolgreich gespeichert".green.bold
 
-archive_path = File.expand_path(config['archive_path'], File.dirname(__FILE__))
+archive_path = File.expand_path(config['archive_path'], __dir__)
 yaml_timesheet.archive(timesheet_file, archive_path, min_date)
