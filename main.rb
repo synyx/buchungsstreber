@@ -10,12 +10,12 @@ require_relative 'lib/redmine_api'
 require_relative 'lib/utils'
 require_relative 'lib/redmines'
 
-config = YAML.load_file 'config.yml'
+config = YAML.load_file File.expand_path('./config.yml', File.dirname(__FILE__))
 
 yaml_timesheet = YamlTimesheet.new config['templates']
 redmines = Redmines.new(config['redmines'])
 
-timesheet_file = config['timesheet_file']
+timesheet_file = File.expand_path(config['timesheet_file'], File.dirname(__FILE__))
 
 entries = yaml_timesheet.parse timesheet_file
 
@@ -27,7 +27,7 @@ entries.each do |entry|
   redmine = redmines.get(entry[:redmine])
   valid &= validator.validate(entry, redmine)
   daily_hours[entry[:date]] += entry[:time]
-  
+
   weekday = entry[:date].strftime('%a')
   print "#{weekday}: "
   time_s = (entry[:time].to_s + 'h').ljust(5)
@@ -74,4 +74,5 @@ end
 
 puts "Buchungen erfolgreich gespeichert".green.bold
 
-yaml_timesheet.archive(timesheet_file, config['archive_path'], min_date)
+archive_path = File.expand_path(config['archive_path'], File.dirname(__FILE__))
+yaml_timesheet.archive(timesheet_file, archive_path, min_date)
