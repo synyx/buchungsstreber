@@ -1,5 +1,5 @@
-require 'yaml'
-require 'date'
+require "yaml"
+require "date"
 
 class YamlTimesheet
 
@@ -21,17 +21,17 @@ class YamlTimesheet
   end
 
   def archive(file_path, archive_path, date)
-    old_timesheet = ''
+    old_timesheet = ""
     File.read(file_path).each_line do |line|
-      break if line.start_with? '---'
+      break if line.start_with? "---"
       old_timesheet += line
     end
 
     FileUtils.mkdir archive_path unless File.directory? archive_path
-    archive_filename = date.strftime('%Y-%m-%d') + '.yml'
+    archive_filename = date.strftime("%Y-%m-%d") + ".yml"
     File.write("#{archive_path}/#{archive_filename}", old_timesheet)
 
-    next_monday = (Date.today + ((1 - Date.today.wday) % 7)).strftime('%Y-%m-%d')
+    next_monday = (Date.today + ((1 - Date.today.wday) % 7)).strftime("%Y-%m-%d")
     File.write(file_path, "#{next_monday}:\n\n\n---\n# Letzte Woche\n" + old_timesheet)
   end
 
@@ -42,9 +42,9 @@ class YamlTimesheet
 
     if @templates.key? activity
       template = @templates[activity]
-      activity = template['activity']
-      issue_ref ||= template['issue'].to_s
-      text ||= template['text']
+      activity = template["activity"]
+      issue_ref ||= template["issue"].to_s
+      text ||= template["text"]
     end
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref

@@ -3,8 +3,8 @@ class Redmines
     @redmines = {}
     redmines.each do |config|
       redmine = RedmineApi.new(config)
-      @redmines[config['prefix']] = redmine
-      @default = redmine if config['default']
+      @redmines[config["prefix"]] = redmine
+      @default = redmine if config["default"]
     end
   end
 

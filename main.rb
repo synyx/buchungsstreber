@@ -1,29 +1,30 @@
 #!/usr/bin/ruby
 
-require 'yaml'
-require 'colorize'
-require 'date'
-require 'fileutils'
-require_relative 'lib/validator'
-require_relative 'lib/parser/yaml_timesheet'
-require_relative 'lib/redmine_api'
-require_relative 'lib/utils'
-require_relative 'lib/redmines'
+require "yaml"
+require "colorize"
+require "date"
+require "fileutils"
+require_relative "lib/validator"
+require_relative "lib/parser/yaml_timesheet"
+require_relative "lib/redmine_api"
+require_relative "lib/utils"
+require_relative "lib/redmines"
 
-VERSION = '1.0.0'
+VERSION = "1.0.0"
 
-config = YAML.load_file File.expand_path('./config.yml', __dir__)
+config = YAML.load_file File.expand_path("./config.yml", __dir__)
 
-yaml_timesheet = YamlTimesheet.new config['templates']
-redmines = Redmines.new(config['redmines'])
+yaml_timesheet = YamlTimesheet.new config["templates"]
+redmines = Redmines.new(config["redmines"])
 
-timesheet_file = File.expand_path(config['timesheet_file'], __dir__)
+timesheet_file = File.expand_path(config["timesheet_file"], __dir__)
 
 entries = yaml_timesheet.parse timesheet_file
 
 title = "BUCHUNGSSTREBER v#{VERSION}"
 puts title.bold
-puts "~" * title.length + "\n\n"
+puts "~" * title.length
+puts ""
 
 puts "Buchungsübersicht:".bold
 validator = Validator.new
@@ -34,21 +35,21 @@ entries.each do |entry|
   valid &= validator.validate(entry, redmine)
   daily_hours[entry[:date]] += entry[:time]
 
-  weekday = entry[:date].strftime('%a')
+  weekday = entry[:date].strftime("%a")
   print "#{weekday}: "
-  time_s = (entry[:time].to_s + 'h').ljust(5)
+  time_s = (entry[:time].to_s + "h").ljust(5)
   print time_s.bold
-  print ' @ '
+  print " @ "
   issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
   print issue_title.blue
-  print ': '
+  print ": "
   text = Utils.fixed_length(entry[:text], 30)
   puts text
 end
-puts ''
+puts ""
 
 unless valid
-  puts 'Ungültige Buchungen gefunden – Abbruch!'.red.bold
+  puts "Ungültige Buchungen gefunden – Abbruch!".red.bold
   exit
 end
 
@@ -62,12 +63,12 @@ daily_hours.each do |date, hours|
    else
      color = nil
   end
-  puts "#{date.strftime('%a')}: #{hours}".colorize(color)
+  puts "#{date.strftime("%a")}: #{hours}".colorize(color)
 end
 
 puts "Buchungen in Redmine übernehmen? (j/N)"
 cont = gets.chomp
-unless cont == 'j' || cont == 'y'
+unless cont == "j" || cont == "y"
   puts "Abbruch"
   exit
 end
@@ -75,10 +76,10 @@ end
 entries.each do |entry|
   puts "Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}"
   success = redmines.get(entry[:redmine]).add_time entry
-  puts success ? '→ OK'.green : '→ FEHLER'.red.bold
+  puts success ? "→ OK".green : "→ FEHLER".red.bold
 end
 
 puts "Buchungen erfolgreich gespeichert".green.bold
 
-archive_path = File.expand_path(config['archive_path'], __dir__)
+archive_path = File.expand_path(config["archive_path"], __dir__)
 yaml_timesheet.archive(timesheet_file, archive_path, min_date)
