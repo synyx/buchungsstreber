@@ -10,6 +10,8 @@ require_relative 'lib/redmine_api'
 require_relative 'lib/utils'
 require_relative 'lib/redmines'
 
+VERSION = '1.0.0'
+
 config = YAML.load_file File.expand_path('./config.yml', __dir__)
 
 yaml_timesheet = YamlTimesheet.new config['templates']
@@ -18,6 +20,10 @@ redmines = Redmines.new(config['redmines'])
 timesheet_file = File.expand_path(config['timesheet_file'], __dir__)
 
 entries = yaml_timesheet.parse timesheet_file
+
+title = "BUCHUNGSSTREBER v#{VERSION}"
+puts title.bold
+puts "~" * title.length + "\n\n"
 
 puts "Buchungsübersicht:".bold
 validator = Validator.new
