@@ -1,5 +1,6 @@
 require "yaml"
 require "date"
+require "time"
 
 class YamlTimesheet
 
@@ -49,6 +50,10 @@ class YamlTimesheet
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
 
+    if time.include? "-"
+      time = parse_time_diff(time)
+    end
+
     {
       time: time.to_f,
       activity: activity,
@@ -57,5 +62,13 @@ class YamlTimesheet
       date: date,
       redmine: redmine
     }
+  end
+
+  def parse_time_diff(time_diff)
+    start, done = time_diff.split "-"
+    diff_in_s = (Time.parse(done) - Time.parse(start)).to_f
+    quarter_hours = (diff_in_s / 900).ceil
+
+    quarter_hours * 0.25
   end
 end

@@ -10,7 +10,7 @@ require_relative "lib/redmine_api"
 require_relative "lib/utils"
 require_relative "lib/redmines"
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 config = YAML.load_file File.expand_path("./config.yml", __dir__)
 
