@@ -2,6 +2,9 @@
   - 0.25    BeispielDaily
   - 1.25    Orga    S8484   Blog-Beitrag schreiben
   - 6.5     ES      99999   Feature implementiert
+  # Auch die Angabe von Zeitspannen (ohne Leerzeichen) ist möglich
+  # und wird auf volle Viertelstunden aufgerundet:
+  - 12:00-12:35 ES  99999   Weiteres Feature implementiert
 
 2019-06-18:
   - 0.5     BeispielDaily
