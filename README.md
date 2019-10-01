@@ -19,7 +19,7 @@ Installation
 1. Repository auschecken
 2. Ruby-Gems installieren: `bundler install`
    (oder ohne bundler: `gem install colorize`)
-3. `config.example.yml` nach `config.yml` kopieren
+3. `example.config.yml` nach `config.yml` kopieren
 4. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
 
 Nutzung
