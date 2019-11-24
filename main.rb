@@ -5,7 +5,7 @@ require "colorize"
 require "date"
 require "fileutils"
 require_relative "lib/validator"
-require_relative "lib/parser/yaml_timesheet"
+require_relative "lib/parser"
 require_relative "lib/redmine_api"
 require_relative "lib/utils"
 require_relative "lib/redmines"
@@ -15,12 +15,12 @@ VERSION = "1.1.0"
 
 config = Config.load
 
-yaml_timesheet = YamlTimesheet.new config["templates"]
+timesheet_parser = TimesheetParser.new config["templates"]
 redmines = Redmines.new(config["redmines"])
 
 timesheet_file = File.expand_path(config["timesheet_file"], __dir__)
 
-entries = yaml_timesheet.parse timesheet_file
+entries = timesheet_parser.parse timesheet_file
 
 title = "BUCHUNGSSTREBER v#{VERSION}"
 puts title.bold
@@ -83,4 +83,4 @@ end
 puts "Buchungen erfolgreich gespeichert".green.bold
 
 archive_path = File.expand_path(config["archive_path"], __dir__)
-yaml_timesheet.archive(timesheet_file, archive_path, min_date)
+timesheet_parser.archive(timesheet_file, archive_path, min_date)
