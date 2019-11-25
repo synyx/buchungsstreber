@@ -11,12 +11,12 @@ class TimesheetParser
 
   def parse(file)
     case File.extname(file)
-    when 'yaml'
+    when '.yaml', '.yml'
       YamlTimesheet.new(@templates).parse(file)
-    when 'buchungen'
+    when '.B'
       BuchTimesheet.new(@templates).parse(file)
     else
-      throw 'Unknown file extension, cannot parse'
+      throw "Unknown file extension, cannot parse #{file}"
     end
   end
 end
