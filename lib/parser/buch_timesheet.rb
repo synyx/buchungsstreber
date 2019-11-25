@@ -20,7 +20,7 @@ class BuchTimesheet
         next
       when /([a-z]?)#([0-9]*)\s\s*([0-9]+(?:[.:][0-9]*)?)\s\s*([a-zA-Z]*\t)?(.*)/i
         result << {
-            time: $3.to_f,
+            time: parse_time($3),
             activity: $4,
             issue: $2,
             text: $5,
@@ -39,5 +39,18 @@ class BuchTimesheet
     end
 
     result
+  end
+
+private
+
+  def parse_time(time_descr)
+    case time_descr
+    when /(\d+):(\d+)/
+      hours = $1.to_i
+      minutes = $2.to_i
+      hours + minutes / 60.0
+    when /\d+\.\d+/
+      time_descr.to_f
+    end
   end
 end
