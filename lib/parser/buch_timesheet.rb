@@ -22,7 +22,7 @@ class BuchTimesheet
         next
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]*\s+)?(?<text>.*)/i
         result << {
-            time: parse_time($~[:time]),
+            time: qarter_time(parse_time($~[:time])),
             activity: ($~[:activity] ? $~[:activity].strip : nil),
             issue: $~[:issue],
             text: $~[:text],
@@ -51,9 +51,17 @@ private
       hours = $1.to_i
       minutes = $2.to_i
       hours + minutes / 60.0
-    when /\d+\.\d+/
+    when /\d+(?:\.\d+)?/
       time_descr.to_f
+    else
+      raise "invalid time: #{time_descr}"
     end
+  end
+
+  def qarter_time(time)
+    quarter_hours = ((time * 60 * 60) / 900).ceil
+
+    quarter_hours * 0.25
   end
 
   def parse_date(date_descr)
