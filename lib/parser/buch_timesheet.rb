@@ -1,3 +1,5 @@
+require 'date'
+
 # BuchTimesheep parses the layout used by jo.
 #
 class BuchTimesheet
@@ -18,14 +20,14 @@ class BuchTimesheet
       when /^%/
         # ignore comment lines
         next
-      when /([a-z]?)#([0-9]*)\s\s*([0-9]+(?:[.:][0-9]*)?)\s\s*([a-zA-Z]*\t)?(.*)/i
+      when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]*\s+)?(?<text>.*)/i
         result << {
-            time: parse_time($3),
-            activity: $4,
-            issue: $2,
-            text: $5,
-            date: current,
-            redmine: $1
+            time: parse_time($~[:time]),
+            activity: ($~[:activity] ? $~[:activity].strip : nil),
+            issue: $~[:issue],
+            text: $~[:text],
+            date: parse_date(current),
+            redmine: $~[:redmine]
         }
       when /^$/
         # ignore empty lines
@@ -52,5 +54,9 @@ private
     when /\d+\.\d+/
       time_descr.to_f
     end
+  end
+
+  def parse_date(date_descr)
+    Date.parse(date_descr)
   end
 end
