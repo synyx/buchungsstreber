@@ -1,14 +1,13 @@
 class MockRedmine
-
   def add_time(entry)
-    true
+    entry && true
   end
 
   def valid_activity?(activity)
-    true
+    activity && true
   end
 
   def get_issue(issue_id)
-    "Subject"
+    issue_id && 'Subject'
   end
 end
