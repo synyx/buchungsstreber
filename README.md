@@ -25,4 +25,19 @@ Installation
 Nutzung
 -------
 
-…
+Buchungen werden als Plaintext erfasst, jede Zeile entspricht dabei einer Buchung.
+Eine "Datums-Überschrift" spezifiert das Datum der darunter folgenden Buchungen.
+
+Eine Buchungs-Zeile hat dabei immer folgendes Format (getrennt durch Tabs oder Leerzeichen):
+```yaml
+- [Zeit] [Aktivität] [Ticket-Nr.] [Beschreibung]
+```
+
+### Beispiel:
+```yaml
+2019-01-01:
+- 1.5   Orga  12345  Nachbereitung
+```
+In diesem Fall würden für den *01.01.2019* eineinhalb Stunden auf das Ticket #12345 gebucht. 
+Die Aktivität wäre dabei "Orga" und die Beschreibung "Nachbereitung".
+
