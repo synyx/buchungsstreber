@@ -1,7 +1,7 @@
 class Config
   def self.load
-    [__dir__, ENV['HOME'] + '/.config/buchungsstreber', '/etc/buchungsstreber'].each do |path|
-      f = File.expand_path('./config.yml', path)
+    [ENV['CWD'], ENV['HOME'] + '/.config/buchungsstreber', '/etc/buchungsstreber', __dir__ + '/..'].each do |path|
+      f = File.expand_path('config.yml', path)
       if File.exist?(f)
         return YAML.load_file f
       end
