@@ -9,4 +9,4 @@ TODO
 * Onboarding: Erstellung Konfiguration beim ersten Run
 * Angabe Arbeitszeit in Konfiguration
 * Angabe Arbeitszeit am Tag
-
+* Angabe minimale Buchungszeit (Viertelstunde, …)
