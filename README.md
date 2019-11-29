@@ -9,7 +9,7 @@ in einer Textdatei gepflegte Buchungen automatisch in ein oder mehrere Redmine-S
 Voraussetzungen
 ---------------
 
-- Ruby 2.0
+- Ruby 2.x
 - bundler (optional)
 - schlechte Buchungsmoral
   
@@ -17,7 +17,7 @@ Installation
 ------------
 
 1. Repository auschecken
-2. Ruby-Gems installieren: `bundler install`
+2. Ruby-Gems installieren: `bundle install --path vendor/bundle`
    (oder ohne bundler: `gem install colorize`)
 3. `example.config.yml` nach `config.yml` kopieren
 4. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
