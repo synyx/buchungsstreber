@@ -1,3 +1,7 @@
 Gemfile.lock
 archive/
 config.yml
+
+# Bundler / RSpec
+.bundle
+vendor/
