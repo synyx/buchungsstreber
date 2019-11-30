@@ -1,0 +1,10 @@
+---
+image: "ruby:2.6"
+
+before_script:
+  - gem install bundler --no-document
+  - bundle install --jobs $(nproc) --path vendor/bundle "${FLAGS[@]}"
+
+rspec:
+  script:
+    - bundle exec rspec
