@@ -1,6 +1,5 @@
 require 'parser/buch_timesheet'
 require 'validator'
-require 'mock_redmine'
 
 RSpec.describe BuchTimesheet, '#parse' do
   context 'with file' do
@@ -21,7 +20,11 @@ RSpec.describe BuchTimesheet, '#parse' do
 
     it 'makes for a valid timesheet' do
       r = BuchTimesheet.new([]).parse('spec/examples/test.B')
-      v = r.map {|x| Validator.new.validate(x, MockRedmine.new) }
+      redmine = double("redmine")
+      allow(redmine).to receive(:valid_activity?).and_return(true)
+
+      v = r.map {|x| Validator.new.validate(x, redmine) }
+
       expect(v).to_not include(false)
     end
   end
