@@ -8,3 +8,5 @@ before_script:
 rspec:
   script:
     - bundle exec rspec
+  tags:
+    - docker
