@@ -56,13 +56,7 @@ end
 min_date, max_date = daily_hours.keys.minmax
 puts "Zu buchende Stunden (#{min_date} bis #{max_date}):".bold
 daily_hours.each do |date, hours|
-  if hours < 4 || hours > 12
-    color = :red
-  elsif hours < 7 || hours > 9
-    color = :yellow
-   else
-     color = nil
-  end
+  color = Utils.classify_workhours(hours, config)
   puts "#{date.strftime("%a")}: #{hours}".colorize(color)
 end
 

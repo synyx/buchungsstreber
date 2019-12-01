@@ -6,6 +6,7 @@ class Config
     archive_path: 'archive',
     templates: {},
     redmines: {},
+    hours: 8
   }.freeze
 
   SEARCH_PATH = [
