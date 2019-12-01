@@ -10,3 +10,17 @@ rspec:
     - bundle exec rspec
   tags:
     - docker
+  artifacts:
+    paths:
+      - coverage/
+
+pages:
+  stage: deploy
+  dependencies:
+    - rspec
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 7 days
