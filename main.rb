@@ -15,9 +15,9 @@ VERSION = "1.1.0"
 
 config = Config.load
 
-timesheet_file = File.expand_path(config["timesheet_file"], __dir__)
-timesheet_parser = TimesheetParser.new timesheet_file, config["templates"]
-redmines = Redmines.new(config["redmines"])
+timesheet_file = File.expand_path(config[:timesheet_file], __dir__)
+timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
+redmines = Redmines.new(config[:redmines])
 
 entries = timesheet_parser.parse
 
@@ -81,5 +81,5 @@ end
 
 puts "Buchungen erfolgreich gespeichert".green.bold
 
-archive_path = File.expand_path(config["archive_path"], __dir__)
+archive_path = File.expand_path(config[:archive_path], __dir__)
 timesheet_parser.archive(archive_path, min_date)
