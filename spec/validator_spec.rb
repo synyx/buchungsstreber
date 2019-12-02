@@ -94,3 +94,25 @@ describe Validator do
     end
   end
 end
+
+describe Validator do
+  let(:default_entry) do
+    {
+        time: 1,
+        activity: 'foo',
+        issue: '1234',
+        text: 'test',
+        date: Date.today,
+        redmine: 's'
+    }.freeze
+  end
+  let(:redmine) do
+    redmine = double("redmine")
+    allow(redmine).to receive(:valid_activity?).and_return(false)
+    redmine
+  end
+
+  it 'fails on invalid activity' do
+    expect { subject.validate(default_entry, redmine) }.to fail_with('invalid activity')
+  end
+end
