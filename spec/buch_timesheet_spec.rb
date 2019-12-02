@@ -10,7 +10,7 @@ RSpec.describe BuchTimesheet, '#parse' do
     redmine
   end
 
-  context 'with file' do
+  context 'with example file' do
     it 'parses the file' do
       expect(subject).to_not be_empty
     end
