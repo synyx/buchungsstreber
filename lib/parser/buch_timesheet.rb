@@ -43,6 +43,10 @@ class BuchTimesheet
     result
   end
 
+  def archive(file_path, archive_path, date)
+    raise 'not implemened'
+  end
+
 private
 
   def parse_time(time_descr)
