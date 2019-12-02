@@ -29,3 +29,13 @@ RSpec.describe BuchTimesheet, '#parse' do
     end
   end
 end
+
+RSpec.describe BuchTimesheet, '#parse' do
+  include FakeFS::SpecHelpers
+
+  subject { BuchTimesheet.new([]) }
+
+  it 'has not implemented archiving' do
+    expect { subject.archive('file', '/archive', Date.today) }.to raise_exception(/not impl/)
+  end
+end
