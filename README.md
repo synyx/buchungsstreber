@@ -45,6 +45,8 @@ Die Aktivität wäre dabei "Orga" und die Beschreibung "Nachbereitung".
 Entwicklung
 -----------
 
+[![coverage report](https://gitlab.synyx.de/synyx/buchungsstreber/badges/master/coverage.svg)](https://gitlab.synyx.de/synyx/buchungsstreber/commits/master)
+
 Ab und zu mal tests ausfuehren.
 
 ```
