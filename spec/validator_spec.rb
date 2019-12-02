@@ -18,55 +18,56 @@ describe Validator do
     redmine
   end
 
-  it 'succeeds' do
+  it 'succeeds on valid entry' do
     entry = default_entry
     r = subject.validate(entry, redmine)
     expect(r).to be(true)
   end
 
-  it 'fails on missing time' do
-    entry = default_entry.merge(time: nil)
-    expect { subject.validate(entry, redmine) }.to fail_with('missing time')
+  context 'time' do
+    it 'fails on missing time' do
+      entry = default_entry.merge(time: nil)
+      expect { subject.validate(entry, redmine) }.to fail_with('missing time')
+    end
+
+    it 'fails on negative time' do
+      entry = default_entry.merge(time: -1)
+      expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
+    end
+
+    it 'fails on zero time' do
+      entry = default_entry.merge(time: 0)
+      expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
+    end
+
+    it 'fails on too much hours' do
+      entry = default_entry.merge(time: 17)
+      expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
+    end
+
+    it 'fails when time is not dividable by 4' do
+      entry = default_entry.merge(time: 0.60)
+      expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
+    end
   end
 
-  it 'fails on negative time' do
-    entry = default_entry.merge(time: -1)
-    expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
+  context 'date' do
+    it 'fails on missing date' do
+      entry = default_entry.merge(date: nil)
+      expect { subject.validate(entry, redmine) }.to fail_with('missing date')
+    end
+
+    it 'fails on date too far in the future' do
+      entry = default_entry.merge(date: Date.today + 1)
+      expect { subject.validate(entry, redmine) }.to fail_with('has date from the future')
+    end
   end
 
-  it 'fails on zero time' do
-    entry = default_entry.merge(time: 0)
-    expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
-  end
-
-  it 'fails on too much hours' do
-    entry = default_entry.merge(time: 17)
-    expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
-  end
-
-  it 'fails when time is not dividable by 4' do
-    entry = default_entry.merge(time: 0.60)
-    expect { subject.validate(entry, redmine) }.to fail_with('invalid time')
-  end
-
-  it 'fails on missing date' do
-    entry = default_entry.merge(date: nil)
-    expect { subject.validate(entry, redmine) }.to fail_with('missing date')
-  end
-
-  it 'fails on date too far in the future' do
-    entry = default_entry.merge(date: Date.today + 1)
-    expect { subject.validate(entry, redmine) }.to fail_with('has date from the future')
-  end
-
-  it 'fails on missing activity' do
-    entry = default_entry.merge(activity: nil)
-    expect { subject.validate(entry, redmine) }.to fail_with('missing activity')
-  end
-
-  xit 'fails on invalid activity' do
-    entry = default_entry.merge(activity: 'blahflubbls')
-    expect { subject.validate(entry, redmine) }.to fail_with('invalid activity')
+  context 'issue' do
+    it 'fails on missing activity' do
+      entry = default_entry.merge(activity: nil)
+      expect { subject.validate(entry, redmine) }.to fail_with('missing activity')
+    end
   end
 
   context 'issue' do
