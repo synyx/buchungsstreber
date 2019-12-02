@@ -5,3 +5,4 @@ config.yml
 # Bundler / RSpec
 .bundle
 vendor/
+coverage
