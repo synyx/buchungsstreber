@@ -51,11 +51,11 @@ private
 
   def parse_time(time_descr)
     case time_descr
-    when /(\d+):(\d+)/
+    when /^(\d+):(\d+)$/
       hours = $1.to_i
       minutes = $2.to_i
       hours + minutes / 60.0
-    when /\d+(?:\.\d+)?/
+    when /^\d+(?:\.\d+)?$/
       time_descr.to_f
     else
       raise "invalid time: #{time_descr}"
