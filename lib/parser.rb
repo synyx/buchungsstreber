@@ -6,9 +6,9 @@ require_relative 'parser/buch_timesheet'
 class TimesheetParser
 
   def initialize(file, templates)
-    @parser = choose_parser(file)
     @file = file
     @templates = templates
+    @parser = choose_parser(file)
   end
 
   def parse
