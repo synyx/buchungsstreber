@@ -15,12 +15,11 @@ VERSION = "1.1.0"
 
 config = Config.load
 
-timesheet_parser = TimesheetParser.new config["templates"]
+timesheet_file = File.expand_path(config["timesheet_file"], __dir__)
+timesheet_parser = TimesheetParser.new timesheet_file, config["templates"]
 redmines = Redmines.new(config["redmines"])
 
-timesheet_file = File.expand_path(config["timesheet_file"], __dir__)
-
-entries = timesheet_parser.parse timesheet_file
+entries = timesheet_parser.parse
 
 title = "BUCHUNGSSTREBER v#{VERSION}"
 puts title.bold
@@ -83,4 +82,4 @@ end
 puts "Buchungen erfolgreich gespeichert".green.bold
 
 archive_path = File.expand_path(config["archive_path"], __dir__)
-timesheet_parser.archive(timesheet_file, archive_path, min_date)
+timesheet_parser.archive(archive_path, min_date)

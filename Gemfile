@@ -5,4 +5,5 @@ end
 group :development do
   gem 'rspec'
   gem 'simplecov'
+  gem 'fakefs'
 end
