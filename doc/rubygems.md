@@ -21,3 +21,13 @@ Update (bzw. Installation wenn nicht schon geschehen) geht danach ueber:
 ```shell script
 gem update buchungsstreber
 ```
+
+## Neue Version releasen
+
+```shell script
+vim lib/buchungsstreber/version.rb
+git commit
+git tag v<version>
+bundle exec rake build
+gem nexus pkg/buchungsstreber-<version>.gem
+```
