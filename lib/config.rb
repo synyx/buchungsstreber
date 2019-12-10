@@ -5,7 +5,6 @@ class Config
     timesheet_file: 'buchungen.yml',
     archive_path: 'archive',
     templates: {},
-    redmines: {},
     hours: 8
   }.freeze
 
@@ -17,6 +16,7 @@ class Config
   ].freeze
 
   def self.load(file = nil)
+    # Find the first file named `config.yml` in SEARCH_PATH if not given
     file ||= SEARCH_PATH.map { |p| File.expand_path('config.yml', p) }.find { |f| File.exist?(f) }
 
     return parse_config file if File.exist?(file)
@@ -25,9 +25,9 @@ class Config
 
   def self.parse_config(file)
     config = YAML.load_file file
-    config = config.each_with_object({}) do |e, memo|
+    config = config.each_with_object(DEFAULT_CONFIG.dup) do |e, memo|
       key, value = e[0].to_sym, e[1]
-      memo[key] = value || DEFAULT_CONFIG[key]
+      memo[key] = value
     end
     config
   end

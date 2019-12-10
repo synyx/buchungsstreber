@@ -11,5 +11,13 @@ describe Config do
     it 'returns keys as symbols' do
       config.each { |k, _| expect(k).to be_a(Symbol) }
     end
+
+    it 'adds additional configuration from file' do
+      expect(config[:redmines]).to_not be_nil
+    end
+
+    it 'uses default configuration values' do
+      expect(config[:hours]).to be(8)
+    end
   end
 end
