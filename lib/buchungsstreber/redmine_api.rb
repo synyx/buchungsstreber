@@ -66,6 +66,8 @@ class RedmineApi
     end
 
     issue["issue"]["subject"]
+  rescue JSON::ParserError => e
+    raise "Fehler beim Laden des Issues (\##{issue_id}): #{result.message}, Rückgabe #{result.body}"
   end
 
   private
