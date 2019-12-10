@@ -1,3 +1,21 @@
 #!/usr/bin/env ruby
 
-require 'buchungsstreber'
+require 'thor'
+
+require 'buchungsstreber/version'
+
+class BuchungsstreberCLI < Thor
+
+  desc 'execute [file]', 'Handle a file'
+  def execute(file = nil)
+    puts "Hello #{file}"
+  end
+  default_task :execute
+
+  desc 'version', 'Prints the version'
+  def version
+    puts Buchungsstreber::VERSION
+  end
+end
+
+BuchungsstreberCLI.start(ARGV)
