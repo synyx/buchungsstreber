@@ -116,12 +116,14 @@ module Buchungsstreber
 
       template = File.expand_path('example.config.yml', __dir__ + '/..')
       target = File.expand_path(Config::DEFAULT_NAME, Config::USER_CONFIG_PATH)
+      timesheet_file = File.expand_path('buchungen.yml', Config::USER_CONFIG_PATH)
+      archive_path = File.expand_path('archive', Config::USER_CONFIG_PATH)
 
-      config = YAML.load_file(template)
-      config['timesheet_file'] = File.expand_path('buchungen.yml', Config::USER_CONFIG_PATH)
-      config['archive_path'] = File.expand_path('archive', Config::USER_CONFIG_PATH)
+      config = File.read(template)
+      config.gsub!(/^(timesheet_file):.*/, "\\1: #{timesheet_file}")
+      config.gsub!(/^(archive_path):.*/, "\\1: #{archive_path}")
 
-      File.open(target, "w") { |io| YAML.dump(config, io) }
+      File.open(target, "w") { |io| io.write(config) }
       target
     end
   end
