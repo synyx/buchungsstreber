@@ -23,7 +23,7 @@ module Buchungsstreber
         e.save_entries
         e.archive
       end
-    rescue RuntimeError => e
+    rescue Exception => e
       puts pretty_error(e, options[:debug])
     end
     default_task :execute
@@ -37,9 +37,10 @@ module Buchungsstreber
 
     def pretty_error(e, debug = false)
       if !debug
-        e.message
+        e.class.name + ': ' + e.message[0..80]
       else
-        msg = [e.message]
+        msg = ['']
+        msg << [e.class.name + ': ' + e.message]
         msg << e.backtrace.select { |x| x =~ /lib\/buchungsstreber\// }.map { |x| "  " + x }
         msg << '  ...'
         msg.join("\n")
