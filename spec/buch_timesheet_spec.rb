@@ -1,3 +1,4 @@
+require 'parser'
 require 'parser/buch_timesheet'
 require 'validator'
 

@@ -1,9 +1,6 @@
-
-require_relative 'parser/yaml_timesheet'
-require_relative 'parser/buch_timesheet'
-
 # TimesheetParser selects the correct parser depending on the extension.
 class TimesheetParser
+  PARSERS = []
 
   def initialize(file, templates)
     @file = file
@@ -21,13 +18,13 @@ class TimesheetParser
   private
 
   def choose_parser(file)
-    case File.extname(file)
-    when '.yaml', '.yml'
-      YamlTimesheet
-    when '.B'
-      BuchTimesheet
-    else
-      throw "Unknown file extension, cannot parse #{file}"
+    parser = PARSERS.find { |p| p.respond_to?(:parses?) and p.parses?(file) }
+    parser or throw "Unknown file extension, cannot parse #{file}"
+  end
+
+  module Base
+    def self.extended(klass)
+      PARSERS << klass
     end
   end
 end

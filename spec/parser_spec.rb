@@ -1,4 +1,6 @@
 require 'parser'
+require 'parser/yaml_timesheet'
+require 'parser/buch_timesheet'
 
 describe TimesheetParser do
   it 'initializes yaml parser' do

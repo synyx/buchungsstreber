@@ -3,9 +3,14 @@ require "date"
 require "time"
 
 class YamlTimesheet
+  extend TimesheetParser::Base
 
   def initialize(templates)
     @templates = templates
+  end
+
+  def self.parses?(file)
+    return %w(.yml .yaml).include?(File.extname(file))
   end
 
   def parse(file_path)

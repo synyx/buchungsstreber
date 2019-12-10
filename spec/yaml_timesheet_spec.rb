@@ -1,4 +1,5 @@
 require 'date'
+require 'parser'
 require 'parser/yaml_timesheet'
 require 'validator'
 

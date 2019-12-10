@@ -3,9 +3,14 @@ require 'date'
 # BuchTimesheep parses the layout used by jo.
 #
 class BuchTimesheet
+  extend TimesheetParser::Base
 
   def initialize(templates)
     @templates = templates
+  end
+
+  def self.parses?(file)
+    return File.extname(file) == '.B'
   end
 
   def parse(file)
