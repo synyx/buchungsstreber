@@ -1,6 +1,4 @@
-source "https://rubygems.org" do
-  gem 'rainbow'
-end
+source "https://rubygems.org"
 
 # Specify your gem's dependencies in buchungsstreber.gemspec
 gemspec
