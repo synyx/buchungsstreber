@@ -3,14 +3,14 @@ require 'parser/yaml_timesheet'
 require 'validator'
 
 describe YamlTimesheet do
-  TEMPLATES = {
+  templates = {
       'BeispielDaily' => {
         'activity' => 'Daily',
         'issue' => 'S99999',
         'text' => 'Daily',
       }
   }.freeze
-  subject { YamlTimesheet.new(TEMPLATES).parse('example.buchungen.yml') }
+  subject { YamlTimesheet.new(templates).parse('example.buchungen.yml') }
 
   let(:redmine) do
     redmine = double("redmine")
@@ -42,14 +42,14 @@ end
 describe YamlTimesheet, '#archive' do
   include FakeFS::SpecHelpers
 
-  TEMPLATES = {
+  templates = {
     'BeispielDaily' => {
       'activity' => 'Daily',
       'issue' => 'S99999',
       'text' => 'Daily',
     }
   }.freeze
-  subject { YamlTimesheet.new(TEMPLATES) }
+  subject { YamlTimesheet.new(templates) }
 
   it 'archives correctly' do
     # Provide the example file in the fake filesystem

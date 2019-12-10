@@ -2,12 +2,14 @@ require 'parser'
 
 describe TimesheetParser do
   it 'initializes yaml parser' do
-    p = TimesheetParser.new('../example.buchungen.yml', {})
+    file = '../example.buchungen.yml'
+    p = TimesheetParser.new(file, {})
     expect(p).to_not be_nil
   end
 
   it 'initializes B parser' do
-    p = TimesheetParser.new('examples/test.B', {})
+    file = 'examples/test.B'
+    p = TimesheetParser.new(file, {})
     expect(p).to_not be_nil
   end
 
