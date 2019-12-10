@@ -4,19 +4,19 @@ require "yaml"
 require "rainbow/refinement"
 require "date"
 require "fileutils"
-require_relative "lib/aggregator"
-require_relative "lib/validator"
-require_relative "lib/parser"
-require_relative 'lib/parser/yaml_timesheet'
-require_relative 'lib/parser/buch_timesheet'
-require_relative "lib/redmine_api"
-require_relative "lib/utils"
-require_relative "lib/redmines"
-require_relative 'lib/config'
+
+require_relative 'buchungsstreber/aggregator'
+require_relative 'buchungsstreber/version'
+require_relative 'buchungsstreber/validator'
+require_relative 'buchungsstreber/parser'
+require_relative 'buchungsstreber/redmine_api'
+require_relative 'buchungsstreber/utils'
+require_relative 'buchungsstreber/redmines'
+require_relative 'buchungsstreber/config'
+
+VERSION = Buchungsstreber::VERSION
 
 using Rainbow
-
-VERSION = "1.1.0"
 
 config = Config.load
 

@@ -1,4 +1,4 @@
-require 'parser'
+require 'buchungsstreber/parser'
 
 RSpec.shared_examples 'a timesheet parser' do |extension, templates|
   subject { described_class.new(templates || {}).parse("spec/examples/test#{extension}") }

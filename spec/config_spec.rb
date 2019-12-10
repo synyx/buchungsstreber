@@ -1,6 +1,6 @@
-require 'config'
+require 'buchungsstreber/config'
 
-describe Config do
+RSpec.describe Config do
   context 'when default configuration is loaded' do
     config = Config.load('example.config.yml')
 

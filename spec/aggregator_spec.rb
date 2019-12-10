@@ -1,5 +1,6 @@
 require 'date'
-require 'aggregator'
+
+require 'buchungsstreber/aggregator'
 
 RSpec.describe Aggregator, '#aggregate' do
   normal_entry = {

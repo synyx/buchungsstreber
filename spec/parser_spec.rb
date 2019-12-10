@@ -1,8 +1,8 @@
-require 'parser'
-require 'parser/yaml_timesheet'
-require 'parser/buch_timesheet'
+require 'buchungsstreber/parser'
+require 'buchungsstreber/parser/yaml_timesheet'
+require 'buchungsstreber/parser/buch_timesheet'
 
-describe TimesheetParser do
+RSpec.describe TimesheetParser do
   it 'initializes yaml parser' do
     file = '../example.buchungen.yml'
     p = TimesheetParser.new(file, {})
