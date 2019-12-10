@@ -16,6 +16,16 @@ require_relative 'buchungsstreber/utils'
 require_relative 'buchungsstreber/redmines'
 require_relative 'buchungsstreber/config'
 
+module Buchungsstreber
+
+  class Executor
+    def initialize(config_file = nil)
+      @config = Config.load
+    end
+  end
+end
+
+if File.basename($0) == File.basename(__FILE__)
 VERSION = Buchungsstreber::VERSION
 
 using Rainbow
@@ -90,3 +100,4 @@ puts "Buchungen erfolgreich gespeichert".green.bold
 
 archive_path = File.expand_path(config[:archive_path], __dir__)
 timesheet_parser.archive(archive_path, min_date)
+end

@@ -2,20 +2,26 @@
 
 require 'thor'
 
-require 'buchungsstreber/version'
+require 'buchungsstreber'
 
-class BuchungsstreberCLI < Thor
+module Buchungsstreber
+  class CLI < Thor
+    desc 'watch [file]', 'watch file for changes'
+    def watch(file = nil)
+      puts "Hello #{file}"
+    end
 
-  desc 'execute [file]', 'Handle a file'
-  def execute(file = nil)
-    puts "Hello #{file}"
-  end
-  default_task :execute
+    desc 'execute [file]', 'Handle a file'
+    def execute(file = nil)
+      puts "Hello #{file}"
+    end
+    default_task :execute
 
-  desc 'version', 'Prints the version'
-  def version
-    puts Buchungsstreber::VERSION
+    desc 'version', 'Prints the version'
+    def version
+      puts Buchungsstreber::VERSION
+    end
   end
 end
 
-BuchungsstreberCLI.start(ARGV)
+Buchungsstreber::CLI.start(ARGV)
