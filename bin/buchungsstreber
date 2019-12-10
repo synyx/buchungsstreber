@@ -12,8 +12,9 @@ module Buchungsstreber
     end
 
     desc 'execute [file]', 'Handle a file'
+    method_options config: :string, aliases: 'c', required: false
     def execute(file = nil)
-      puts "Hello #{file}"
+      e = Executor.new(file)
     end
     default_task :execute
 
