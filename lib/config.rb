@@ -19,8 +19,9 @@ class Config
     # Find the first file named `config.yml` in SEARCH_PATH if not given
     file ||= SEARCH_PATH.map { |p| File.expand_path('config.yml', p) }.find { |f| File.exist?(f) }
 
-    return parse_config file if File.exist?(file)
-    throw 'no config.yml file found'
+    throw 'Configuration file not found.' unless File.exist?(file)
+
+    parse_config file
   end
 
   def self.parse_config(file)

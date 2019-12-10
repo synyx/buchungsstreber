@@ -19,5 +19,9 @@ describe Config do
     it 'uses default configuration values' do
       expect(config[:hours]).to be(8)
     end
+
+    it 'throws exception if file not found' do
+      expect { Config.load('__non_existant__.yml') }.to raise_error(/file not found/)
+    end
   end
 end
