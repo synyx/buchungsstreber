@@ -1,7 +1,12 @@
 Changes
 =======
 
-## next
+## v1.5.0
+
+* Make installable as a ruby gem
+* Provide commandline app `buchungsstreber`
+
+# v1.2.0
 
 * Add configuration option for working hours (8h by default)
     ```yaml
