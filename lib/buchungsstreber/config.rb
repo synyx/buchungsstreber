@@ -8,20 +8,26 @@ class Config
     hours: 8
   }.freeze
 
+  DEFAULT_NAME = 'config.yml'
+  USER_CONFIG_PATH = ENV['HOME'] + '/.config/buchungsstreber'
   SEARCH_PATH = [
     ENV['CWD'],
-    ENV['HOME'] + '/.config/buchungsstreber',
+    USER_CONFIG_PATH,
     '/etc/buchungsstreber',
     __dir__ + '/..'
   ].freeze
 
   def self.load(file = nil)
     # Find the first file named `config.yml` in SEARCH_PATH if not given
-    file ||= SEARCH_PATH.map { |p| File.expand_path('config.yml', p) }.find { |f| File.exist?(f) }
+    file ||= find_config
 
     throw 'Configuration file not found.' unless file and File.exist?(file)
 
     parse_config file
+  end
+
+  def self.find_config
+    SEARCH_PATH.map { |p| File.expand_path(DEFAULT_NAME, p) }.find { |f| File.exist?(f) }
   end
 
   def self.parse_config(file)

@@ -110,5 +110,19 @@ module Buchungsstreber
       archive_path = File.expand_path(@config[:archive_path], __dir__)
       @timesheet_parser.archive(archive_path, @min_date)
     end
+
+    def self.init_config
+      FileUtils.mkdir_p(Config::USER_CONFIG_PATH)
+
+      template = File.expand_path('example.config.yml', __dir__ + '/..')
+      target = File.expand_path(Config::DEFAULT_NAME, Config::USER_CONFIG_PATH)
+
+      config = YAML.load_file(template)
+      config['timesheet_file'] = File.expand_path('buchungen.yml', Config::USER_CONFIG_PATH)
+      config['archive_path'] = File.expand_path('archive', Config::USER_CONFIG_PATH)
+
+      File.open(target, "w") { |io| YAML.dump(config, io) }
+      target
+    end
   end
 end

@@ -6,12 +6,8 @@ require 'buchungsstreber'
 
 module Buchungsstreber
   class CLI < Thor
-    desc 'watch [file]', 'watch file for changes'
-    def watch(file = nil)
-      puts "Hello #{file}"
-    end
 
-    desc 'execute [file]', 'Handle a file'
+    desc 'buchen [file]', 'Buchung durchfuehren'
     method_options config: :string, aliases: '-c', required: false
     method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
     def execute(file = nil)
@@ -28,7 +24,26 @@ module Buchungsstreber
     end
     default_task :execute
 
-    desc 'version', 'Prints the version'
+    desc 'init', 'Konfiguration initialisieren'
+    method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
+    def init
+      if (f = Config.find_config)
+        puts "Buchungsstreber bereits konfiguriert in #{f}"
+        return
+      end
+
+      f = Executor.init_config
+      puts "Konfiguration in #{f} erstellt."
+      puts ''
+      puts 'Schritte zum friedvollen Buchen:'
+      puts ' * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen.'
+      puts ' * Buchungsdatei oeffnen (siehe Konfig-Datei)'
+      puts ' * `buchungsstreber` ausfuehren'
+    rescue Exception => e
+      puts pretty_error(e, options[:debug])
+    end
+
+    desc 'version', 'Version ausgeben'
     def version
       puts Buchungsstreber::VERSION
     end
