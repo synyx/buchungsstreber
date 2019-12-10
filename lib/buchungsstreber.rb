@@ -22,7 +22,7 @@ module Buchungsstreber
     def initialize(file = nil, config_file = nil)
       @config = Config.load(config_file)
 
-      timesheet_file = File.expand_path(@config[:timesheet_file], __dir__)
+      timesheet_file = file || File.expand_path(@config[:timesheet_file], __dir__)
       @timesheet_parser = TimesheetParser.new timesheet_file,  @config[:templates]
       @redmines = Redmines.new(@config[:redmines])
 
