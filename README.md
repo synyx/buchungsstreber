@@ -30,6 +30,10 @@ or via git repository:
 Nutzung
 -------
 
+```shell script
+buchungsstreber help
+```
+
 Buchungen werden als Plaintext erfasst, jede Zeile entspricht dabei einer Buchung.
 Eine "Datums-Überschrift" spezifiert das Datum der darunter folgenden Buchungen.
 

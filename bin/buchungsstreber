@@ -48,6 +48,16 @@ module Buchungsstreber
       puts Buchungsstreber::VERSION
     end
 
+    desc 'config', 'Konfiguration editieren'
+    def config
+      Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
+    end
+
+    desc 'edit', 'Buchungen editieren'
+    def edit
+      Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.load[:timesheet_file])
+    end
+
     private
 
     def pretty_error(e, debug = false)
@@ -56,7 +66,7 @@ module Buchungsstreber
       else
         msg = ['']
         msg << [e.class.name + ': ' + e.message]
-        msg << e.backtrace.select { |x| x =~ /lib\/buchungsstreber\// }.map { |x| "  " + x }
+        msg << e.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  " + x }
         msg << '  ...'
         msg.join("\n")
       end
