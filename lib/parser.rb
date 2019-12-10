@@ -7,7 +7,7 @@ class TimesheetParser
 
   def initialize(file, templates)
     @file = file
-    @parser = choose_parser(file, templates)
+    @parser = choose_parser(file).new(templates)
   end
 
   def parse
@@ -20,12 +20,12 @@ class TimesheetParser
 
   private
 
-  def choose_parser(file, templates)
+  def choose_parser(file)
     case File.extname(file)
     when '.yaml', '.yml'
-      YamlTimesheet.new(templates)
+      YamlTimesheet
     when '.B'
-      BuchTimesheet.new(templates)
+      BuchTimesheet
     else
       throw "Unknown file extension, cannot parse #{file}"
     end
