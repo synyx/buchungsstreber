@@ -20,7 +20,7 @@ module Buchungsstreber
 
   class Executor
     def initialize(config_file = nil)
-      @config = Config.load
+      @config = Config.load(config_file)
     end
   end
 end
