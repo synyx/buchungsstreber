@@ -12,15 +12,38 @@ module Buchungsstreber
     end
 
     desc 'execute [file]', 'Handle a file'
-    method_options config: :string, aliases: 'c', required: false
+    method_options config: :string, aliases: '-c', required: false
+    method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
     def execute(file = nil)
-      e = Executor.new(file)
+      e = Executor.new(file, options[:config])
+
+      e.print_title
+      e.show_overview
+      if e.valid? and e.actualize?
+        e.save_entries
+        e.archive
+      end
+    rescue RuntimeError => e
+      puts pretty_error(e, options[:debug])
     end
     default_task :execute
 
     desc 'version', 'Prints the version'
     def version
       puts Buchungsstreber::VERSION
+    end
+
+    private
+
+    def pretty_error(e, debug = false)
+      if !debug
+        e.message
+      else
+        msg = [e.message]
+        msg << e.backtrace.select { |x| x =~ /lib\/buchungsstreber\// }.map { |x| "  " + x }
+        msg << '  ...'
+        msg.join("\n")
+      end
     end
   end
 end
