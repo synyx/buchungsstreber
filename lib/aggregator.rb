@@ -5,7 +5,7 @@ class Aggregator
     aggregated_entries = []
     entries.each do |entry|
       if entry[:text]
-        aggregated_entries << entry
+        aggregated_entries << entry.dup
       else
         possible_aggregations = aggregated_entries.select { |aggregated_entry| aggregatable?(aggregated_entry, entry) }
         unless possible_aggregations.empty?
