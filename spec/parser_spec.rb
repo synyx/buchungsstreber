@@ -36,7 +36,7 @@ describe TimesheetParser do
 end
 
 class MockParser
-  extend TimesheetParser::Base
+  include TimesheetParser::Base
 
   def self.parses?(x)
     x == 'mock'
