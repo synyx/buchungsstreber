@@ -8,7 +8,9 @@ class Aggregator
         aggregated_entries << entry.dup
       else
         possible_aggregations = aggregated_entries.select { |aggregated_entry| aggregatable?(aggregated_entry, entry) }
-        unless possible_aggregations.empty?
+        if possible_aggregations.empty?
+          aggregated_entries << entry.dup
+        else
           possible_aggregations[-1][:time] += entry[:time]
         end
       end

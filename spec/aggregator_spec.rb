@@ -35,6 +35,14 @@ RSpec.describe Aggregator, '#aggregate' do
       expect(aggregated_entries.length).to eq(1)
       expect(aggregated_entries[0][:time]).to eq(2.0)
     end
+
+    it 'aggregates #1234 when another entry separates the aggregatables' do
+      entries = [normal_entry, other_entry, aggregatable_entry]
+      aggregated_entries = Aggregator.aggregate(entries)
+      expect(aggregated_entries).to_not be_empty
+      expect(aggregated_entries.length).to eq(2)
+      expect(aggregated_entries[0][:time]).to eq(2.0)
+    end
   end
 
 end
