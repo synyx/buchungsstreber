@@ -30,9 +30,7 @@ or via git repository:
 Nutzung
 -------
 
-```shell script
-buchungsstreber help
-```
+Bei erstmaliger Anwendung hilft das [TUTORIAL](./doc/tutorial.md).
 
 Buchungen werden als Plaintext erfasst, jede Zeile entspricht dabei einer Buchung.
 Eine "Datums-Überschrift" spezifiert das Datum der darunter folgenden Buchungen.
