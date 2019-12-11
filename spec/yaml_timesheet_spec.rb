@@ -3,41 +3,17 @@ require 'parser'
 require 'parser/yaml_timesheet'
 require 'validator'
 
-describe YamlTimesheet do
+require_relative 'timesheet_examples'
+
+RSpec.describe YamlTimesheet, '#common' do
   templates = {
       'BeispielDaily' => {
-        'activity' => 'Daily',
-        'issue' => 'S99999',
-        'text' => 'Daily',
+          'activity' => 'Daily',
+          'issue' => 'S99999',
+          'text' => 'Daily',
       }
   }.freeze
-  subject { YamlTimesheet.new(templates).parse('example.buchungen.yml') }
-
-  let(:redmine) do
-    redmine = double("redmine")
-    allow(redmine).to receive(:valid_activity?).and_return(true)
-    redmine
-  end
-
-  context 'with example file' do
-    it 'parses the file' do
-      expect(subject).to_not be_empty
-    end
-
-    it 'parses comma times correctly' do
-      expect(subject[0][:time]).to eq(0.25)
-    end
-
-    it 'parses colon times correctly' do
-      expect(subject[3][:time]).to eq(0.75)
-    end
-
-    it 'makes for a valid timesheet' do
-      v = subject.map { |x| Validator.new.validate(x, redmine) }
-
-      expect(v).to_not include(false)
-    end
-  end
+  it_should_behave_like 'a timesheet parser', '.yml', templates
 end
 
 describe YamlTimesheet, '#archive' do

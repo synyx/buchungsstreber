@@ -41,7 +41,7 @@ class BuchTimesheet
         # continuation
         result[-1][:text] += $1
       else
-        throw "bad line #{line}"
+        throw "invalid line #{line}"
       end
     end
 

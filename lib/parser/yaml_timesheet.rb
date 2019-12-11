@@ -15,10 +15,13 @@ class YamlTimesheet
 
   def parse(file_path)
     timesheet = YAML.load_file(file_path)
+    throw 'invalid line: file should contain map' unless timesheet.is_a?(Hash)
     result = []
 
     timesheet.each do |date, entries|
       next if entries.nil?
+      throw 'invalid line: entries should be an array' unless entries.is_a?(Array)
+
       entries.each do |entry|
         result << parse_entry(entry, date)
       end
@@ -54,6 +57,8 @@ class YamlTimesheet
     end
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
+
+    raise "invalid line: #{entry}" unless time and activity and issue
 
     {
       time: qarter_time(parse_time(time)),

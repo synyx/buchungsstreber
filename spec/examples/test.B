@@ -2,10 +2,10 @@
 % syntax: <redmine char>#<ticket nr> <hours> [<time id>] [<activity>] <text>
 2016-07-21 GEBUCHT
 
-#1234	1.5	supp	asdf asdf support Support 
+#1234	0.25	supp	asdf asdf support Support
 s#1234	1.7	retro	fjfjfjjf
 s#1234	1.12	retro	fjfjfjjf
-s#25888	1.75	foobar done to support meh
+s#25888	0.75	foobar done to support meh
 s#1234	1	retro	fjfjfjjf
 #123	1.75	supp	asdf
 #1234	1:15	daily	asdf
