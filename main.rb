@@ -4,6 +4,7 @@ require "yaml"
 require "colorize"
 require "date"
 require "fileutils"
+require_relative "lib/aggregator"
 require_relative "lib/validator"
 require_relative "lib/parser"
 require_relative 'lib/parser/yaml_timesheet'
@@ -22,6 +23,7 @@ timesheet_parser = TimesheetParser.new timesheet_file, config["templates"]
 redmines = Redmines.new(config["redmines"])
 
 entries = timesheet_parser.parse
+entries = Aggregator.aggregate(entries)
 
 title = "BUCHUNGSSTREBER v#{VERSION}"
 puts title.bold
