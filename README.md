@@ -41,6 +41,7 @@ Eine Buchungs-Zeile hat dabei immer folgendes Format (getrennt durch Tabs oder L
 In diesem Fall würden für den *01.01.2019* eineinhalb Stunden auf das Ticket #12345 gebucht. 
 Die Aktivität wäre dabei "Orga" und die Beschreibung "Nachbereitung".
 
+Ein vollstaendige Beschreibung findest du unter [YAML Format](./doc/yaml_format.md).
 
 Entwicklung
 -----------
