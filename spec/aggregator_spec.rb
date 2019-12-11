@@ -45,4 +45,26 @@ RSpec.describe Aggregator, '#aggregate' do
     end
   end
 
+  context 'aggregation conditions' do
+    it 'does not aggregate with different redmine' do
+      other = aggregatable_entry.merge(redmine: '_').freeze
+      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      expect(aggregated_entries.length).to eq(2)
+    end
+    it 'does not aggregate with different issue' do
+      other = aggregatable_entry.merge(issue: 5432).freeze
+      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      expect(aggregated_entries.length).to eq(2)
+    end
+    it 'does not aggregate with different date' do
+      other = aggregatable_entry.merge(date: Date.today - 1).freeze
+      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      expect(aggregated_entries.length).to eq(2)
+    end
+    it 'does not aggregate with different activity' do
+      other = aggregatable_entry.merge(activity: 'different').freeze
+      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      expect(aggregated_entries.length).to eq(2)
+    end
+  end
 end
