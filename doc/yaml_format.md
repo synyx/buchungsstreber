@@ -1,6 +1,6 @@
 # YAML Buchungsformat
 
-## Standard-Form:
+## Standard-Form
 
 ```yaml
 Datum:
