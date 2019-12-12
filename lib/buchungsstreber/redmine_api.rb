@@ -34,10 +34,15 @@ class RedmineApi
   end
 
   def get_time(day)
-    get("/time_entries?")
+    from, to = day.to_s, (day + 1).to_s
+    get("/time_entries", from: from, to: to, user_id: user_id)
   end
 
   private
+
+  def user_id
+    @user_id ||= get("/users/current") { |u| u['user']['id'] }
+  end
 
   def post(path, dto)
     uri = URI.parse(@config["server"]["url"] + path + ".json")
