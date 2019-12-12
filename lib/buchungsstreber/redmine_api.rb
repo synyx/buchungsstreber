@@ -33,6 +33,10 @@ class RedmineApi
     end
   end
 
+  def get_time(day)
+    get("/time_entries?")
+  end
+
   private
 
   def post(path, dto)
@@ -44,7 +48,7 @@ class RedmineApi
         "Content-Type" =>"application/json",
         "X-Redmine-API-Key" => @config["server"]["apikey"]
     }
-    request = Net::HTTP::Post.new(uri.path, header)
+    request = Net::HTTP::Post.new(uri, header)
     request.body = dto.to_json
     result = https.request(request)
     result.body.force_encoding("utf-8")
@@ -57,8 +61,9 @@ class RedmineApi
     true
   end
 
-  def get(path)
+  def get(path, params = nil)
     uri = URI.parse(@config["server"]["url"] + path + ".json")
+    uri.query = URI.encode_www_form(params)
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
 
@@ -66,13 +71,13 @@ class RedmineApi
         "Content-Type" =>"application/json",
         "X-Redmine-API-Key" => @config["server"]["apikey"]
     }
-    request = Net::HTTP::Get.new(uri.path, header)
+    request = Net::HTTP::Get.new(uri, header)
     result = https.request(request)
     result.body.force_encoding("utf-8")
 
     body = JSON.parse(result.body)
     unless result.code == "200"
-      raise "Fehler beim Laden des Issues (\##{issue_id}): #{result.message}, Rückgabe #{result.body}"
+      raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}"
     end
 
     yield body
