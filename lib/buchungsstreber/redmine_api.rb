@@ -36,18 +36,14 @@ class RedmineApi
   def get_times(day)
     get("/time_entries", from: day.to_s, to: day.to_s, user_id: user_id) do |time_entries|
       time_entries['time_entries'].map do |entry|
-        possible_activities = @config['activities'].select { |x, y| y == entry['activity']['id'] }
-        # use shortest one for displaying
-        activity = possible_activities.to_a.sort { |x| x[0].length }[0][0]
-        {
-          id: entry['id'],
-          issue: entry['issue']['id'],
-          date: Date.parse(entry['spent_on']),
-          time: entry['hours'],
-          activity: activity.freeze,
-          text: entry['comments'].freeze,
-        }
+        from_time_entry(entry)
       end
+    end
+  end
+
+  def get_time(id)
+    get("/time_entries/#{id}") do |entry|
+      from_time_entry(entry['time_entry'])
     end
   end
 
@@ -104,6 +100,20 @@ class RedmineApi
   end
 
   private
+
+  def from_time_entry(entry)
+    possible_activities = @config['activities'].select { |x, y| y == entry['activity']['id'] }
+    # use shortest one for displaying
+    activity = possible_activities.to_a.sort { |x| x[0].length }[0][0]
+    {
+      id: entry['id'],
+      issue: entry['issue']['id'],
+      date: Date.parse(entry['spent_on']),
+      time: entry['hours'],
+      activity: activity.freeze,
+      text: entry['comments'].freeze,
+    }
+  end
 
   def load_config(config)
     raise "Fehler: Redmine API-Key nicht gesetzt" if config["server"]["apikey"].nil?
