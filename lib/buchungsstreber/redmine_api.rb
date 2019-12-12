@@ -33,9 +33,22 @@ class RedmineApi
     end
   end
 
-  def get_time(day)
-    from, to = day.to_s, (day + 1).to_s
-    get("/time_entries", from: from, to: to, user_id: user_id)
+  def get_times(day)
+    get("/time_entries", from: day.to_s, to: day.to_s, user_id: user_id) do |time_entries|
+      time_entries['time_entries'].map do |entry|
+        possible_activities = @config['activities'].select { |x, y| y == entry['activity']['id'] }
+        # use shortest one for displaying
+        activity = possible_activities.to_a.sort { |x| x[0].length }[0][0]
+        {
+          id: entry['id'],
+          issue: entry['issue']['id'],
+          date: Date.parse(entry['spent_on']),
+          time: entry['hours'],
+          activity: activity.freeze,
+          text: entry['comments'].freeze,
+        }
+      end
+    end
   end
 
   private
@@ -50,8 +63,8 @@ class RedmineApi
     https.use_ssl = true
 
     header = {
-        "Content-Type" =>"application/json",
-        "X-Redmine-API-Key" => @config["server"]["apikey"]
+      "Content-Type" => "application/json",
+      "X-Redmine-API-Key" => @config["server"]["apikey"]
     }
     request = Net::HTTP::Post.new(uri, header)
     request.body = dto.to_json
@@ -68,13 +81,13 @@ class RedmineApi
 
   def get(path, params = nil)
     uri = URI.parse(@config["server"]["url"] + path + ".json")
-    uri.query = URI.encode_www_form(params)
+    uri.query = URI.encode_www_form(params) if params
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
 
     header = {
-        "Content-Type" =>"application/json",
-        "X-Redmine-API-Key" => @config["server"]["apikey"]
+      "Content-Type" => "application/json",
+      "X-Redmine-API-Key" => @config["server"]["apikey"]
     }
     request = Net::HTTP::Get.new(uri, header)
     result = https.request(request)
@@ -85,7 +98,7 @@ class RedmineApi
       raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}"
     end
 
-    yield body
+    (yield body if block_given?) || body
   rescue JSON::ParserError => e
     raise "Fehler beim Laden des Issues (\##{issue_id}): #{e}, Rückgabe #{result.body}"
   end
