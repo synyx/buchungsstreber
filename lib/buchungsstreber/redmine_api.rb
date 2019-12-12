@@ -11,16 +11,6 @@ class RedmineApi
   end
 
   def add_time(entry)
-    uri = URI.parse(@config["server"]["url"] + "/time_entries.json")
-    https = Net::HTTP.new(uri.host, uri.port)
-    https.use_ssl = true
-
-    header = {
-        "Content-Type" =>"application/json",
-        "X-Redmine-API-Key" => @config["server"]["apikey"]
-    }
-    request = Net::HTTP::Post.new(uri.path, header)
-
     entry_dto = {
       "time_entry" => {
         "issue_id" => entry[:issue],
@@ -30,17 +20,7 @@ class RedmineApi
         "comments" => entry[:text]
       }
     }
-
-    request.body = entry_dto.to_json
-    result = https.request(request)
-    result.body.force_encoding("utf-8")
-
-    unless result.code == "201"
-      warn "Fehler beim Buchen (#{@config["name"]}): #{result.message}, (#{entry}) #{entry_dto} -> Rückgabe #{result.body}"
-      return false
-    end
-
-    true
+    post("/time_entries.json", entry_dto)
   end
 
   def valid_activity?(activity)
@@ -48,7 +28,37 @@ class RedmineApi
   end
 
   def get_issue(issue_id)
-    uri = URI.parse(@config["server"]["url"] + "/issues/" + issue_id.to_s + ".json")
+    get("/issues/#{issue_id}") do |issue|
+      issue["issue"]["subject"]
+    end
+  end
+
+  private
+
+  def post(path, dto)
+    uri = URI.parse(@config["server"]["url"] + path + ".json")
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+
+    header = {
+        "Content-Type" =>"application/json",
+        "X-Redmine-API-Key" => @config["server"]["apikey"]
+    }
+    request = Net::HTTP::Post.new(uri.path, header)
+    request.body = dto.to_json
+    result = https.request(request)
+    result.body.force_encoding("utf-8")
+
+    unless result.code == "201"
+      warn "Fehler bei POST (#{@config["name"]}): #{result.message}, Rückgabe #{result.body}"
+      return false
+    end
+
+    true
+  end
+
+  def get(path)
+    uri = URI.parse(@config["server"]["url"] + path + ".json")
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
 
@@ -60,12 +70,12 @@ class RedmineApi
     result = https.request(request)
     result.body.force_encoding("utf-8")
 
-    issue = JSON.parse(result.body)
+    body = JSON.parse(result.body)
     unless result.code == "200"
       raise "Fehler beim Laden des Issues (\##{issue_id}): #{result.message}, Rückgabe #{result.body}"
     end
 
-    issue["issue"]["subject"]
+    yield body
   rescue JSON::ParserError => e
     raise "Fehler beim Laden des Issues (\##{issue_id}): #{e}, Rückgabe #{result.body}"
   end
