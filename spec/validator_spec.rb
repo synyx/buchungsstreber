@@ -98,12 +98,12 @@ end
 RSpec.describe Validator do
   let(:default_entry) do
     {
-        time: 1,
-        activity: 'foo',
-        issue: '1234',
-        text: 'test',
-        date: Date.today,
-        redmine: 's'
+      time: 1,
+      activity: 'foo',
+      issue: '1234',
+      text: 'test',
+      date: Date.today,
+      redmine: 's'
     }.freeze
   end
   let(:redmine) do
@@ -114,5 +114,64 @@ RSpec.describe Validator do
 
   it 'fails on invalid activity' do
     expect { subject.validate(default_entry, redmine) }.to fail_with('invalid activity')
+  end
+end
+
+
+RSpec.describe Validator, '#status!' do
+  subject { Validator }
+  let(:default_entry) do
+    {
+      time: 1,
+      activity: 'foo',
+      issue: '1234',
+      text: 'test',
+      date: Date.today,
+      redmine: 's'
+    }.freeze
+  end
+  let(:redmine) do
+    redmine = double("redmine")
+    allow(redmine).to receive(:valid_activity?).and_return(false)
+    allow(redmine).to receive(:same_activity?).and_return(true)
+    redmine
+  end
+
+  before(:each) do
+    # reset cache
+    subject.instance_eval('@cache = {}')
+  end
+
+  it 'recognizes existing entries' do
+    expect(redmine).to receive(:get_times).with(Date.today).and_return([default_entry])
+    status = subject.status!(default_entry.dup, redmine)
+    expect(status).to contain_exactly(:existing)
+  end
+
+  it 'recognizes entries with different time' do
+    other = default_entry.merge(time: 1.5)
+    expect(redmine).to receive(:get_times).with(Date.today).and_return([other])
+    status = subject.status!(default_entry.dup, redmine)
+    expect(status).to contain_exactly(:time_different)
+  end
+
+  it 'recognizes entries with different activity' do
+    expect(redmine).to receive(:same_activity?).and_return(false)
+    expect(redmine).to receive(:get_times).with(Date.today).and_return([default_entry])
+    status = subject.status!(default_entry.dup, redmine)
+    expect(status).to contain_exactly(:activity_different)
+  end
+
+  it 'recognizes entries with different text' do
+    other = default_entry.merge(text: 'different')
+    expect(redmine).to receive(:get_times).with(Date.today).and_return([other])
+    status = subject.status!(default_entry.dup, redmine)
+    expect(status).to contain_exactly(:text_different)
+  end
+
+  it 'recoginzes entry as missing if redmine found nothing' do
+    expect(redmine).to receive(:get_times).with(Date.today).and_return([])
+    status = subject.status!(default_entry.dup, redmine)
+    expect(status).to contain_exactly(:missing)
   end
 end

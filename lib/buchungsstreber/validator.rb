@@ -54,22 +54,21 @@ class Validator
   def self.status!(entry, redmine)
     @cache ||= {}
     @cache[entry[:date]] ||= times = redmine.get_times(entry[:date])
+    return [:missing] unless times
 
     redmine_entries = times.select { |t| t[:issue] == entry[:issue] }
+    return [:missing] if redmine_entries.empty?
+
     redmine_entries.each_with_object([]) do |redmine_entry, memo|
-      if redmine_entry
-        entry[:id] = redmine_entry[:id]
-        if redmine_entry[:time] != entry[:time]
-          memo << :time_different
-        elsif !redmine.same_activity?(redmine_entry[:activity], entry[:activity])
-          memo << :activity_different
-        elsif redmine_entry[:text] != entry[:text]
-          memo << :text_different
-        else
-          memo << :existing
-        end
+      entry[:id] = redmine_entry[:id]
+      if redmine_entry[:time] != entry[:time]
+        memo << :time_different
+      elsif !redmine.same_activity?(redmine_entry[:activity], entry[:activity])
+        memo << :activity_different
+      elsif redmine_entry[:text] != entry[:text]
+        memo << :text_different
       else
-        memo << :missing
+        memo << :existing
       end
     end.sort.uniq
   end
