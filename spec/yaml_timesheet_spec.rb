@@ -16,6 +16,17 @@ RSpec.describe YamlTimesheet, '#common' do
   it_should_behave_like 'a timesheet parser', '.yml', templates
 end
 
+RSpec.describe YamlTimesheet, '#parse' do
+  subject { YamlTimesheet.new({}).parse('spec/examples/aggregatable.yml') }
+
+  it 'parses aggragatable entries' do
+    entries = subject.select { |e| e[:issue] == '123' }
+    expect(entries).to_not be_nil
+    expect(entries.length).to eq(2)
+    expect(entries[-1][:text]).to be_nil
+  end
+end
+
 describe YamlTimesheet, '#archive' do
   include FakeFS::SpecHelpers
 

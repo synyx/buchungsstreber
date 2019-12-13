@@ -25,7 +25,7 @@ class BuchTimesheet
       when /^%/
         # ignore comment lines
         next
-      when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]*\s+)?(?<text>.*)/i
+      when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]+\s+)?(?<text>.+)/i
         result << {
             time: qarter_time(parse_time($~[:time])),
             activity: ($~[:activity] ? $~[:activity].strip : nil),
@@ -33,6 +33,13 @@ class BuchTimesheet
             text: $~[:text],
             date: parse_date(current),
             redmine: $~[:redmine]
+        }
+      when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)/
+        result << {
+          time: qarter_time(parse_time($~[:time])),
+          issue: $~[:issue],
+          date: parse_date(current),
+          redmine: $~[:redmine]
         }
       when /^$/
         # ignore empty lines
