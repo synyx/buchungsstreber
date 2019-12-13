@@ -1,10 +1,13 @@
 require 'simplecov'
 require 'pp'
+require 'aruba/rspec'
 require 'fakefs/spec_helpers'
 
 require_relative 'support/custom_expectations/write_expectations'
 
 RSpec.configure do |config|
+  config.include Aruba::Api
+
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true # rspec 4.0 default
   end
@@ -30,6 +33,11 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = :random
+end
+
+Aruba.configure do |config|
+  # Use aruba working directory
+  config.home_directory = File.join(config.root_directory, config.working_directory)
 end
 
 SimpleCov.start
