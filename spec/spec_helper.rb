@@ -38,6 +38,10 @@ end
 Aruba.configure do |config|
   # Use aruba working directory
   config.home_directory = File.join(config.root_directory, config.working_directory)
+  config.command_launcher = :in_process
+
+  require 'buchungsstreber/cli/runner'
+  config.main_class = Buchungsstreber::CLI::Runner
 end
 
 SimpleCov.start

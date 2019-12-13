@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 
 require "yaml"
-require "rainbow/refinement"
 require "date"
 require "fileutils"
 
@@ -112,12 +111,12 @@ module Buchungsstreber
     end
 
     def self.init_config
-      FileUtils.mkdir_p(Config::USER_CONFIG_PATH)
+      FileUtils.mkdir_p(Config.user_config_path)
 
       template = File.expand_path('example.config.yml', __dir__ + '/..')
-      target = File.expand_path(Config::DEFAULT_NAME, Config::USER_CONFIG_PATH)
-      timesheet_file = File.expand_path('buchungen.yml', Config::USER_CONFIG_PATH)
-      archive_path = File.expand_path('archive', Config::USER_CONFIG_PATH)
+      target = File.expand_path(Config::DEFAULT_NAME, Config.user_config_path)
+      timesheet_file = File.expand_path('buchungen.yml', Config.user_config_path)
+      archive_path = File.expand_path('archive', Config.user_config_path)
 
       config = File.read(template)
       config.gsub!(/^(timesheet_file):.*/, "\\1: #{timesheet_file}")

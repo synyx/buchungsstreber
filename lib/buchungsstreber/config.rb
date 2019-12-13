@@ -9,13 +9,6 @@ class Config
   }.freeze
 
   DEFAULT_NAME = 'config.yml'
-  USER_CONFIG_PATH = ENV['HOME'] + '/.config/buchungsstreber'
-  SEARCH_PATH = [
-    ENV['CWD'],
-    USER_CONFIG_PATH,
-    '/etc/buchungsstreber',
-    __dir__ + '/..'
-  ].freeze
 
   def self.load(file = nil)
     # Find the first file named `config.yml` in SEARCH_PATH if not given
@@ -27,7 +20,22 @@ class Config
   end
 
   def self.find_config
-    SEARCH_PATH.map { |p| File.expand_path(DEFAULT_NAME, p) }.find { |f| File.exist?(f) }
+    search_path.map { |p| File.expand_path(DEFAULT_NAME, p) }.find { |f| File.exist?(f) }
+  end
+
+  def self.user_config_path
+    ENV['HOME'] + '/.config/buchungsstreber'
+  end
+
+  private
+
+  def self.search_path
+    [
+      ENV['CWD'],
+      user_config_path,
+      '/etc/buchungsstreber',
+      __dir__ + '/..'
+    ].freeze
   end
 
   def self.parse_config(file)
