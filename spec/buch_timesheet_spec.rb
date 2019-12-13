@@ -20,8 +20,6 @@ RSpec.describe BuchTimesheet, '#parse' do
 end
 
 RSpec.describe BuchTimesheet, '#archive' do
-  include FakeFS::SpecHelpers
-
   subject { BuchTimesheet.new({}) }
 
   it 'has not implemented archiving' do

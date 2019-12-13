@@ -28,8 +28,10 @@ RSpec.describe YamlTimesheet, '#parse' do
   end
 end
 
-RSpec.describe YamlTimesheet, '#archive' do
-  include FakeFS::SpecHelpers
+RSpec.describe YamlTimesheet, '#archive', type: :aruba do
+  let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
+  let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
+  let(:example_file) { File.expand_path('../example.buchungen.yml', __dir__) }
 
   templates = {
     'BeispielDaily' => {
@@ -41,12 +43,10 @@ RSpec.describe YamlTimesheet, '#archive' do
   subject { YamlTimesheet.new(templates) }
 
   it 'archives correctly' do
-    # Provide the example file in the fake filesystem
-    config = File.expand_path('examples', __dir__)
-    FakeFS::FileSystem.clone(config)
-    timesheet_path = "#{config}/test.yml"
+    FileUtils.mkdir_p(File.dirname(timesheet_path))
+    FileUtils.copy(example_file, timesheet_path)
 
-    subject.archive(timesheet_path, '/archive', Date.parse('2019-06-18'))
+    subject.archive(timesheet_path, archive_path, Date.parse('2019-06-18'))
 
     # Read the file (options for systems with non-utf8 locale)
     text = File.read(timesheet_path, mode: 'rb', encoding: 'UTF-8')

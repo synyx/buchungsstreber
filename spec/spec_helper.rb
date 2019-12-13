@@ -1,7 +1,5 @@
 require 'simplecov'
-require 'pp'
 require 'aruba/rspec'
-require 'fakefs/spec_helpers'
 
 require_relative 'support/custom_expectations/write_expectations'
 
