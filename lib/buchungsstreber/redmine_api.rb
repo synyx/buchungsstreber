@@ -27,6 +27,10 @@ class RedmineApi
     @config["activities"].key? activity
   end
 
+  def same_activity?(a, b)
+    valid_activity?(a) and valid_activity?(b) and @config["activities"][a] == @config["activities"][b]
+  end
+
   def get_issue(issue_id)
     get("/issues/#{issue_id}") do |issue|
       issue["issue"]["subject"]

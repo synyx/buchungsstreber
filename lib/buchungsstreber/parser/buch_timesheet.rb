@@ -37,7 +37,7 @@ class BuchTimesheet
         result << {
             time: qarter_time(parse_time($~[:time])),
             activity: ($~[:activity] ? $~[:activity].strip : nil),
-            issue: $~[:issue],
+            issue: $~[:issue].to_i,
             text: $~[:text],
             date: parse_date(current),
             redmine: $~[:redmine],
