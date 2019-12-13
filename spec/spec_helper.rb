@@ -42,4 +42,17 @@ Aruba.configure do |config|
   config.main_class = Buchungsstreber::CLI::Runner
 end
 
-SimpleCov.start
+SimpleCov.command_name "specs:#{Process.pid}_#{ENV['TEST_ENV_NUMBER']}_#{rand(20000)}"
+SimpleCov.root(File.join(File.expand_path(File.dirname(__FILE__)), '..'))
+
+SimpleCov.start do
+  filters.clear
+  add_filter do |src|
+    !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /project/
+  end
+  add_filter '/tmp/'
+  add_filter '/vendor/'
+
+  add_group 'Specs', 'spec'
+  add_group 'Libraries', 'lib'
+end

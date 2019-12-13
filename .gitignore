@@ -8,3 +8,4 @@ vendor/
 coverage
 .rspec_status
 pkg/
+tmp/
