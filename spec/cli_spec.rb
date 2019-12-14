@@ -34,10 +34,10 @@ RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1,
       set_environment_variable('EDITOR', 'ed')
       run_command('buchungsstreber config')
       c = find_command('buchungsstreber config')
-      c.write(',/apikey:.*/apikey: anything/')
-      c.write(',/url:.*/url: http:\/\/localhost\/')
-      c.write('w')
-      c.write('q')
+      c.write(",/apikey:.*/apikey: anything/\n")
+      c.write(",/url:.*/url: http:\\/\\/localhost\\/\n")
+      c.write("w\n")
+      c.write("q\n")
       expect(c).to be_successfully_executed
 
       set_environment_variable('EDITOR', 'cat')
