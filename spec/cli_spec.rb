@@ -34,6 +34,7 @@ RSpec.describe 'CLI App', type: :aruba do
       set_environment_variable('EDITOR', 'ed')
       c = run_command('buchungsstreber config')
       c.write(',/apikey:.*/apikey: anything/')
+      c.write(',/url:.*/url: http:\/\/localhost\/')
       c.write('w')
       c.write('q')
       expect(c).to be_successfully_executed
@@ -43,13 +44,14 @@ RSpec.describe 'CLI App', type: :aruba do
 
     it 'does not allow a second run to init' do
       run_command('buchungsstreber init')
-      expect(last_command_started).to have_output(/^bereits konfiguriert/)
-      expect(last_command_started).to_not be_successfully_executed
+      expect(last_command_started).to have_output(/bereits konfiguriert/)
     end
 
     it 'runs config command' do
       run_command('buchungsstreber config')
       expect(last_command_started).to have_output(/^timesheet_file:/)
+      expect(last_command_started).to have_output(/^url: htt/)
+      expect(last_command_started).to have_output(/^apikey: anything/)
       expect(last_command_started).to be_successfully_executed
     end
 
@@ -61,7 +63,13 @@ RSpec.describe 'CLI App', type: :aruba do
     end
 
     it 'adds times to redmine' do
-      expect(true).to be(true)
+      c = run_command('buchungsstreber')
+      c.write('y')
+      expect(c).to have_output(/BeispasdfasdfasdfielDaily/)
+      expect(a_request(:post, "localhost").
+        with(body: "abc", headers: {'Content-Length' => 3})).
+        to have_been_made.once
+
     end
   end
 end

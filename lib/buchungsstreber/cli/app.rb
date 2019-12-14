@@ -31,7 +31,6 @@ module Buchungsstreber
       def init
         if (f = Config.find_config)
           puts "Buchungsstreber bereits konfiguriert in #{f}"
-          return
         end
 
         f = Executor.init_config

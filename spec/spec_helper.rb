@@ -1,5 +1,6 @@
 require 'simplecov'
 require 'aruba/rspec'
+require 'webmock/rspec'
 
 require_relative 'support/custom_expectations/write_expectations'
 
@@ -41,3 +42,5 @@ Aruba.configure do |config|
   require 'buchungsstreber/cli/runner'
   config.main_class = Buchungsstreber::CLI::Runner
 end
+
+WebMock.disable_net_connect!(allow: lambda{|uri| uri =~ /synyx|example|localhost/ })

@@ -11,7 +11,7 @@ module Buchungsstreber
 
         unless kernel.respond_to?(:exec)
           kernel.send(:define_singleton_method, :exec) do |cmd, *params|
-            stdout_str, stderr_str, status = Open3.capture3(cmd, *params)
+            stdout_str, stderr_str, status = Open3.capture3(cmd, *params, stdin_data: stdin)
             stdout.write(stdout_str)
             stderr.write(stderr_str)
             status.exitstatus
