@@ -25,6 +25,23 @@ RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1,
     end
   end
 
+  context 'single' do
+    it 'works' do
+      run_command('buchungsstreber init')
+      set_environment_variable('EDITOR', 'cat')
+      run_command('buchungsstreber config')
+      expect(last_command_started).to be_successfully_executed
+      expect(last_command_started).to have_output(/^timesheet_file:/)
+    end
+  end
+
+  def run_spawn_command(*args)
+    launcher = aruba.config.command_launcher
+    Aruba.configure { |config| config.command_launcher = :spawn }
+    run_command(*args)
+    Aruba.configure { |config| config.command_launcher = launcher }
+  end
+
   context 'Configured buchungsstreber' do
     before(:each) do
       run_command('buchungsstreber init')
@@ -32,12 +49,13 @@ RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1,
 
       # Make sure the api-keys are set
       set_environment_variable('EDITOR', 'ed')
-      run_command('buchungsstreber config')
+      run_spawn_command('buchungsstreber config')
       c = find_command('buchungsstreber config')
       c.write(",/apikey:.*/apikey: anything/\n")
       c.write(",/url:.*/url: http:\\/\\/localhost\\/\n")
       c.write("w\n")
       c.write("q\n")
+      c.close_input
       expect(c).to be_successfully_executed
 
       set_environment_variable('EDITOR', 'cat')
