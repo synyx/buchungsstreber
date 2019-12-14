@@ -98,7 +98,7 @@ module Buchungsstreber
 
       @entries.each do |entry|
         puts "Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}"
-        success = @redmines.get(entry[:redmine]).add_time entry
+        success = @redmines.get(entry[:redmine]).add_time(entry)
         puts success ? "→ OK".green : "→ FEHLER".red.bold
       end
 

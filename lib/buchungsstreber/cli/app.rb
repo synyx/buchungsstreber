@@ -9,13 +9,12 @@ module Buchungsstreber
       desc 'buchen [file]', 'Buchung durchfuehren'
       method_options config: :string, aliases: '-c', required: false
       method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
-
       def execute(file = nil)
         e = Executor.new(file, options[:config])
 
         e.print_title
         e.show_overview
-        if e.valid? and e.actualize?
+        if e.valid? and (is_automated? or e.actualize?)
           e.save_entries
           e.archive
         end
@@ -53,13 +52,15 @@ module Buchungsstreber
       desc 'config', 'Konfiguration editieren'
 
       def config
-        @@kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
+        return $stdout.write(File.read(Config.find_config)) if is_automated?
+        Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
       end
 
       desc 'edit', 'Buchungen editieren'
 
       def edit
-        @@kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.load[:timesheet_file])
+        return $stdout.write(File.read(Config.load[:timesheet_file])) if is_automated?
+        Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.load[:timesheet_file])
       end
 
       private
@@ -74,6 +75,10 @@ module Buchungsstreber
           msg << '  ...'
           msg.join("\n")
         end
+      end
+
+      def is_automated?
+        !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO)
       end
     end
   end

@@ -1,6 +1,6 @@
 require 'yaml'
 
-RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1, io_wait_timeout: 0.8 do
+RSpec.describe 'CLI App', type: :aruba do
   let(:config_file) { expand_path('~/.config/buchungsstreber/config.yml') }
   let(:entry_file) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
@@ -35,32 +35,30 @@ RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1,
     end
   end
 
-  def run_spawn_command(*args)
-    launcher = aruba.config.command_launcher
-    Aruba.configure { |config| config.command_launcher = :spawn }
-    run_command(*args)
-    Aruba.configure { |config| config.command_launcher = launcher }
-  end
-
   context 'Configured buchungsstreber' do
     before(:each) do
       run_command('buchungsstreber init')
       expect(last_command_started).to be_successfully_executed
 
       # Make sure the api-keys are set
-      set_environment_variable('EDITOR', 'ed')
-      run_spawn_command('buchungsstreber config')
-      c = find_command('buchungsstreber config')
-      c.write(",/apikey:.*/apikey: anything/\n")
-      c.write(",/url:.*/url: http:\\/\\/localhost\\/\n")
-      c.write("w\n")
-      c.write("q\n")
-      c.close_input
-      expect(c).to be_successfully_executed
-
-      set_environment_variable('EDITOR', 'cat')
+      run_command('buchungsstreber config')
+      expect(last_command_started).to be_successfully_executed
+      config = YAML.load(last_command_started.stdout)
+      config['redmines'].each do |r|
+        r['server']['url'] = 'https://localhost'
+        r['server']['apikey'] = 'anything'
+      end
+      File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
     end
 
+    entry = {
+      Date.today => ['0.25   Orga    S8484   Blog']
+    }
+    issue_8484 = {
+      "issue" => {
+        "subject" => "Blog",
+      }
+    }
     it 'does not allow a second run to init' do
       run_command('buchungsstreber init')
       expect(last_command_started).to have_output(/bereits konfiguriert/)
@@ -69,8 +67,8 @@ RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1,
     it 'runs config command' do
       run_command('buchungsstreber config')
       expect(last_command_started).to have_output(/^timesheet_file:/)
-      expect(last_command_started).to have_output(/^url: htt/)
-      expect(last_command_started).to have_output(/^apikey: anything/)
+      expect(last_command_started).to have_output(/url: htt/)
+      expect(last_command_started).to have_output(/apikey: anything/)
       expect(last_command_started).to be_successfully_executed
     end
 
@@ -82,13 +80,17 @@ RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1,
     end
 
     it 'adds times to redmine' do
-      c = run_command('buchungsstreber')
-      c.write('y')
-      expect(c).to have_output(/BeispasdfasdfasdfielDaily/)
-      expect(a_request(:post, "localhost").
-        with(body: "abc", headers: {'Content-Length' => 3})).
-        to have_been_made.once
+      validation_stub = stub_request(:get, "https://localhost/issues/8484.json").
+        to_return(status: 200, body: JSON.dump(issue_8484))
+      add_time_stub = stub_request(:post, "https://localhost/time_entries.json").
+        to_return(status: 201)
 
+      File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
+      c = run_command('buchungsstreber execute')
+      expect(c).to have_output(/BUCHUNGSSTREBER/)
+
+      expect(validation_stub).to have_been_requested.at_least_once
+      expect(add_time_stub).to have_been_requested.at_least_once
     end
   end
 end

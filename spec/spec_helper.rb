@@ -43,4 +43,4 @@ Aruba.configure do |config|
   config.main_class = Buchungsstreber::CLI::Runner
 end
 
-WebMock.disable_net_connect!(allow: lambda{|uri| uri =~ /synyx|example|localhost/ })
+WebMock.disable_net_connect!(net_http_connect_on_start: true)
