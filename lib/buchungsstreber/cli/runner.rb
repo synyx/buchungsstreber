@@ -11,20 +11,63 @@ module Buchungsstreber
 
         unless kernel.respond_to?(:exec)
           kernel.send(:define_singleton_method, :exec) do |cmd, *params|
-            rc = nil
-            Open3.popen3(cmd, *params) do |in_, out_, err_, t|
-              out_reader = Thread.new { STDERR.puts stdout.write(out_.read) }
-              err_reader = Thread.new { STDERR.puts stderr.write(err_.read) }
-              in_writer = Thread.new { while s = stdin.gets("\n"); STDERR.puts(s); in_.write(s); end }
-              STDOUT.puts([1, out_reader, err_reader, in_writer].inspect)
-              STDERR.puts("waiting for threads to exit")
-              #[out_reader, err_reader, in_writer].each { |th| th.join }
-              #STDOUT.puts([2, out_reader, err_reader, in_writer].inspect)
-              rc = t.value.exitstatus
-              #STDOUT.puts([3, out_reader, err_reader, in_writer].inspect)
+            Thread.new do
+              STDERR.puts("entering exec #{cmd} #{params.inspect}")
+              rc = nil
+              l = lambda do |i,o|
+                lambda do
+                  begin
+                    STDERR.puts(['setup',i,o,i.closed?,o.closed?].inspect)
+                    while true
+                      begin
+                        #STDERR.puts(['in',i,o,i.closed?,o.closed?].inspect)
+                        result = i.read_nonblock(1024)
+                        STDERR.puts '<%s->%s> | %s' % [i,o,result.inspect]
+                        o.write(result)
+                      rescue IO::WaitReadable
+                        STDERR.puts(['readable1',i,o,i.closed?,o.closed?].inspect)
+                        IO.select([i])
+                        STDERR.puts(['readable2',i,o,i.closed?,o.closed?].inspect)
+                        retry
+                      rescue IO::WaitWritable
+                        STDERR.puts(['writeable1',i,o,i.closed?,o.closed?].inspect)
+                        IO.select(nil, [o])
+                        STDERR.puts(['writeable2',i,o,i.closed?,o.closed?].inspect)
+                        retry
+                      rescue IOError => e
+                        retry unless e.message =~ /closed/
+                        i.close
+                        o.close
+                        break
+                      rescue EOFError
+                        #STDERR.puts '<%s> EOF' % i
+                        if i.closed?
+                          o.close
+                          break
+                        end
+                        #Kernel.sleep(0.2)
+                        retry
+                      end
+                    end
+                  rescue Exception => e
+                    STDERR.puts([e.class.name, e.message, e.backtrace].inspect)
+                  end
+                end
+              end
+              Open3.popen3(cmd, *params) do |in_, out_, err_, t|
+                out_reader = Thread.new(&l.call(out_, stdout))
+                err_reader = Thread.new(&l.call(err_, stderr))
+                in_writer = Thread.new(&l.call(stdin, in_))
+                #STDOUT.puts([1, out_reader, err_reader, in_writer].inspect)
+                STDERR.puts("waiting for threads to exit")
+                #[out_reader, err_reader, in_writer].each { |th| th.join }
+                #STDOUT.puts([2, out_reader, err_reader, in_writer].inspect)
+                rc = t.value.exitstatus
+                #STDOUT.puts([3, out_reader, err_reader, in_writer].inspect)
+              end
+              STDERR.puts("exiting exec")
+              kernel.exit(rc)
             end
-            STDERR.puts("exiting exec")
-            kernel.exit(rc)
           end
         end
       end
