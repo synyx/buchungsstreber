@@ -70,6 +70,7 @@ RSpec.describe 'CLI App', type: :aruba do
     it 'does not allow a second run to init' do
       run_command('buchungsstreber init')
       expect(last_command_started).to have_output(/bereits konfiguriert/)
+      expect(last_command_started).to_not have_output(/erstellt/)
     end
 
     it 'runs config command' do
