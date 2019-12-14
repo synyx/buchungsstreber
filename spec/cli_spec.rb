@@ -1,6 +1,6 @@
 require 'yaml'
 
-RSpec.describe 'CLI App', type: :aruba do
+RSpec.describe 'CLI App', type: :aruba, startup_wait_time: 0.9, exit_timeout: 1, io_wait_timeout: 0.8 do
   let(:config_file) { expand_path('~/.config/buchungsstreber/config.yml') }
   let(:entry_file) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
@@ -32,7 +32,8 @@ RSpec.describe 'CLI App', type: :aruba do
 
       # Make sure the api-keys are set
       set_environment_variable('EDITOR', 'ed')
-      c = run_command('buchungsstreber config')
+      run_command('buchungsstreber config')
+      c = find_command('buchungsstreber config')
       c.write(',/apikey:.*/apikey: anything/')
       c.write(',/url:.*/url: http:\/\/localhost\/')
       c.write('w')
