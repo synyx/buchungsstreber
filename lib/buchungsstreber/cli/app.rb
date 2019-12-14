@@ -19,17 +19,17 @@ module Buchungsstreber
           e.archive
         end
       rescue Exception => e
-        puts pretty_error(e, options[:debug])
+        handle_error(e, options[:debug])
       end
 
       default_task :execute
 
       desc 'init', 'Konfiguration initialisieren'
       method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
-
       def init
         if (f = Config.find_config)
           puts "Buchungsstreber bereits konfiguriert in #{f}"
+          exit
         end
 
         f = Executor.init_config
@@ -40,32 +40,38 @@ module Buchungsstreber
         puts ' * Buchungsdatei oeffnen (siehe Konfig-Datei)'
         puts ' * `buchungsstreber` ausfuehren'
       rescue Exception => e
-        puts pretty_error(e, options[:debug])
+        handle_error(e, options[:debug])
       end
 
       desc 'version', 'Version ausgeben'
-
       def version
         puts Buchungsstreber::VERSION
       end
 
       desc 'config', 'Konfiguration editieren'
-
       def config
         return $stdout.write(File.read(Config.find_config)) if is_automated?
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
+      rescue Exception => e
+        handle_error(e, options[:debug])
       end
 
       desc 'edit', 'Buchungen editieren'
-
       def edit
         return $stdout.write(File.read(Config.load[:timesheet_file])) if is_automated?
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.load[:timesheet_file])
+      rescue Exception => e
+        handle_error(e, options[:debug])
       end
 
       private
 
-      def pretty_error(e, debug = false)
+      def handle_error(e, debug = false)
+        puts pretty_error(e, debug)
+        exit 1
+      end
+
+      def pretty_error(e, debug)
         if !debug
           e.class.name + ': ' + e.message[0..80]
         else

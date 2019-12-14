@@ -23,15 +23,23 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/erstellt/)
       expect(config_file).to be_an_existing_file
     end
-  end
 
-  context 'single' do
-    it 'works' do
-      run_command('buchungsstreber init')
-      set_environment_variable('EDITOR', 'cat')
+    it 'does nothing when running config' do
       run_command('buchungsstreber config')
-      expect(last_command_started).to be_successfully_executed
-      expect(last_command_started).to have_output(/^timesheet_file:/)
+      expect(last_command_started).to have_output(/Error/)
+      expect(last_command_started).to_not be_successfully_executed
+    end
+
+    it 'does nothing when running edit' do
+      run_command('buchungsstreber edit')
+      expect(last_command_started).to have_output(/Error/)
+      expect(last_command_started).to_not be_successfully_executed
+    end
+
+    it 'does nothing when running execute' do
+      run_command('buchungsstreber execute --debug')
+      expect(last_command_started).to have_output(/Error/)
+      expect(last_command_started).to_not be_successfully_executed
     end
   end
 
