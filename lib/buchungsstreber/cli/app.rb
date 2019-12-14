@@ -5,11 +5,11 @@ require 'buchungsstreber'
 module Buchungsstreber
   module CLI
     class App < Thor
+      class_option :debug, :type => :boolean
 
       desc 'buchen [file]', 'Buchung durchfuehren'
-      method_options config: :string, aliases: '-c', required: false
-      method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
-      def execute(file = nil)
+      method_options config: :string
+      def buchen(file = nil)
         e = Executor.new(file, options[:config])
 
         e.print_title
@@ -25,7 +25,6 @@ module Buchungsstreber
       default_task :execute
 
       desc 'init', 'Konfiguration initialisieren'
-      method_options debug: :boolean, aliases: '-d', required: false, lazy_default: true
       def init
         if (f = Config.find_config)
           puts "Buchungsstreber bereits konfiguriert in #{f}"
@@ -45,7 +44,7 @@ module Buchungsstreber
 
       desc 'version', 'Version ausgeben'
       def version
-        puts Buchungsstreber::VERSION
+        say "v#{Buchungsstreber::VERSION}"
       end
 
       desc 'config', 'Konfiguration editieren'
