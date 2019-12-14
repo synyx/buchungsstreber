@@ -5,8 +5,9 @@ SimpleCov.start
 
 SimpleCov.configure do
   filters.clear
-  load_profile "bundler_filter"
-  load_profile "hidden_filter"
+  load_profile 'bundler_filter'
+  load_profile 'hidden_filter'
+  add_filter 'spec/support'
   add_filter do |src|
     !(src.filename =~ /^#{SimpleCov.root}/)
   end
