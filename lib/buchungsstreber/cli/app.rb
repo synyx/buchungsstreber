@@ -22,6 +22,26 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
+      desc '', 'Buchen'
+      def execute
+        unless Config.find_config
+          invoke :init
+          invoke :config if yes?('Konfiguration editieren?')
+        end
+
+        entries = Buchungsstreber.entries
+        tbl = entries[:entries].map do |e|
+          [
+            e[:date].strftime("%a:"),
+            style("#{e[:time]}h", :bold),
+            '@',
+            style(e[:title], {true => :blue, false => :red}[e[:valid]], 50),
+            style(e[:text], 30)
+          ]
+        end
+        print_table(tbl, indent: 2)
+      end
+
       default_task :execute
 
       desc 'init', 'Konfiguration initialisieren'
@@ -64,6 +84,12 @@ module Buchungsstreber
       end
 
       private
+
+      def style(string, *styles)
+        len = styles.find { |x| x.is_a?(Numeric) }
+        s = Utils.fixed_length(string, len) if len
+        set_color(s, *styles.select { |x| x.is_a?(Symbol) })
+      end
 
       def handle_error(e, debug = false)
         puts pretty_error(e, debug)

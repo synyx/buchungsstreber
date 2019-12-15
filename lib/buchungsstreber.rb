@@ -16,13 +16,58 @@ require_relative 'buchungsstreber/redmines'
 require_relative 'buchungsstreber/config'
 
 module Buchungsstreber
+  def self.entries(file = nil, config_file = nil)
+    config = Config.load(config_file)
+    timesheet_file = file || File.expand_path(config[:timesheet_file])
+    timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
+    redmines = Redmines.new(config[:redmines])
+    entries = timesheet_parser.parse
+
+    result = {
+      daily_hours: Hash.new(0),
+      valid: true,
+      entries: [],
+    }
+
+    validator = Validator.new
+    entries.each do |entry|
+      redmine = redmines.get(entry[:redmine])
+      valid, err = fake_stderr do
+        validator.validate(entry, redmine)
+      end
+      result[:verr] = err unless valid
+      result[:valid] &= valid
+      result[:daily_hours][entry[:date]] += entry[:time]
+
+      title =
+        begin
+          redmine.get_issue(entry[:issue])
+        rescue RuntimeError => e
+          valid = false
+          "<error: #{e.message}>"
+        end
+
+      result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid}
+    end
+
+    result
+  end
+
+  def self.fake_stderr
+    original_stderr = $stderr
+    $stderr = StringIO.new
+    res = yield
+    [res, $stderr.string]
+  ensure
+    $stderr = original_stderr
+  end
 
   class Executor
     def initialize(file = nil, config_file = nil)
       @config = Config.load(config_file)
 
       timesheet_file = file || File.expand_path(@config[:timesheet_file])
-      @timesheet_parser = TimesheetParser.new timesheet_file,  @config[:templates]
+      @timesheet_parser = TimesheetParser.new timesheet_file, @config[:templates]
       @redmines = Redmines.new(@config[:redmines])
 
       @entries = @timesheet_parser.parse
