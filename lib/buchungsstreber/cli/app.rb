@@ -6,6 +6,7 @@ module Buchungsstreber
   module CLI
     class App < Thor
       class_option :debug, :type => :boolean
+      class_option :long, :type => :boolean
 
       desc 'buchen [file]', 'Buchung durchfuehren'
       method_options config: :string
@@ -35,7 +36,7 @@ module Buchungsstreber
             e[:date].strftime("%a:"),
             style("#{e[:time]}h", :bold),
             '@',
-            style(e[:title], {true => :blue, false => :red}[e[:valid]], 50),
+            style("#{e[:verr]}#{e[:title]}", {true => :blue, false => :red}[e[:valid]], 50),
             style(e[:text], 30)
           ]
         end
@@ -87,8 +88,8 @@ module Buchungsstreber
 
       def style(string, *styles)
         len = styles.find { |x| x.is_a?(Numeric) }
-        s = Utils.fixed_length(string, len) if len
-        set_color(s, *styles.select { |x| x.is_a?(Symbol) })
+        string = Utils.fixed_length(string, len) if len && !options[:long]
+        set_color(string, *styles.select { |x| x.is_a?(Symbol) })
       end
 
       def handle_error(e, debug = false)

@@ -35,7 +35,7 @@ module Buchungsstreber
       valid, err = fake_stderr do
         validator.validate(entry, redmine)
       end
-      result[:verr] = err unless valid
+      err = "<error: #{err}>" unless valid
       result[:valid] &= valid
       result[:daily_hours][entry[:date]] += entry[:time]
 
@@ -47,7 +47,7 @@ module Buchungsstreber
           "<error: #{e.message}>"
         end
 
-      result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid}
+      result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid, verr: err}
     end
 
     result
