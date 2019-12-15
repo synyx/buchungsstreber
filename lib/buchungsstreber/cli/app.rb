@@ -32,11 +32,13 @@ module Buchungsstreber
 
         entries = Buchungsstreber.entries
         tbl = entries[:entries].map do |e|
+          status_color = {true => :blue, false => :red}[e[:valid]]
+          err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
             e[:date].strftime("%a:"),
             style("#{e[:time]}h", :bold),
             '@',
-            style("#{e[:verr]}#{e[:title]}", {true => :blue, false => :red}[e[:valid]], 50),
+            style(err + e[:title], status_color, 50),
             style(e[:text], 30)
           ]
         end
@@ -87,9 +89,12 @@ module Buchungsstreber
       private
 
       def style(string, *styles)
+        styles.compact!
         len = styles.find { |x| x.is_a?(Numeric) }
+        styles = styles.select { |x| x.is_a?(Symbol) }
         string = Utils.fixed_length(string, len) if len && !options[:long]
-        set_color(string, *styles.select { |x| x.is_a?(Symbol) })
+        string = set_color(string, *styles) unless styles.empty?
+        string
       end
 
       def handle_error(e, debug = false)

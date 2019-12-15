@@ -31,23 +31,25 @@ module Buchungsstreber
 
     validator = Validator.new
     entries.each do |entry|
+      errors = []
       redmine = redmines.get(entry[:redmine])
       valid, err = fake_stderr do
         validator.validate(entry, redmine)
       end
-      err = "<error: #{err}>" unless valid
+      errors << err unless valid
       result[:valid] &= valid
       result[:daily_hours][entry[:date]] += entry[:time]
 
       title =
         begin
           redmine.get_issue(entry[:issue])
-        rescue RuntimeError => e
+        rescue StandardError => e
           valid = false
-          "<error: #{e.message}>"
+          errors << e.message
+          nil
         end
 
-      result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid, verr: err}
+      result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid, errors: errors}
     end
 
     result
