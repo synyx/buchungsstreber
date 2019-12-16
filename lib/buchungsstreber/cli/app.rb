@@ -36,14 +36,6 @@ module Buchungsstreber
 
         return unless entries[:valid]
 
-        min_date, max_date = entries[:daily_hours].keys.minmax
-        puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
-        tbl = entries[:daily_hours].map do |date, hours|
-          color = Utils.classify_workhours(hours, entries[:work_hours])
-          ["#{date.strftime("%a")}:", style("#{hours}h", color)]
-        end
-        print_table(tbl, indent: 2)
-
         if is_automated? || yes?('Buchungen in Redmine übernehmen? (y/N)')
           invoke :buchen, [], entries: entries
           invoke :archivieren, [], entries: entries
@@ -58,6 +50,14 @@ module Buchungsstreber
       def buchen
         entries = options[:entries] || Buchungsstreber.entries
         puts style("Wuerde jetzt buchen", :orange)
+        return
+
+        min_date, max_date = entries[:daily_hours].keys.minmax
+        puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
+        entries[:daily_hours].map do |date, hours|
+          color = Utils.classify_workhours(hours, entries[:work_hours])
+          ["#{date.strftime("%a")}:", style("#{hours}h", color)]
+        end
       end
 
       desc 'archivieren', 'Jetzige Eintraege Archiviren'
