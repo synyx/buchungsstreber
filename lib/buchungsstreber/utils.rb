@@ -9,8 +9,8 @@ class Utils
     str.ljust(length, " ")
   end
 
-  def self.classify_workhours(worked_hours, config)
-    time_difference = (config[:hours] - worked_hours).abs
+  def self.classify_workhours(worked_hours, work_hours)
+    time_difference = (work_hours - worked_hours).abs
     if time_difference > 4
       :red
     elsif time_difference > 1

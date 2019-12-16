@@ -25,6 +25,7 @@ module Buchungsstreber
 
     result = {
       daily_hours: Hash.new(0),
+      work_hours: config[:hours],
       valid: true,
       entries: [],
     }

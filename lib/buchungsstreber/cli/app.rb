@@ -8,23 +8,13 @@ module Buchungsstreber
       class_option :debug, :type => :boolean
       class_option :long, :type => :boolean
 
-      desc 'buchen [file]', 'Buchung durchfuehren'
-      method_options config: :string
-      def buchen(file = nil)
-        e = Executor.new(file, options[:config])
-
-        e.print_title
-        e.show_overview
-        if e.valid? and (is_automated? or e.actualize?)
-          e.save_entries
-          e.archive
-        end
-      rescue Exception => e
-        handle_error(e, options[:debug])
-      end
-
       desc '', 'Buchen'
       def execute
+        title = "BUCHUNGSSTREBER v#{VERSION}"
+        puts style(title, :bold)
+        puts '~' * title.length
+        puts ''
+
         unless Config.find_config
           invoke :init
           invoke :config if yes?('Konfiguration editieren?')
@@ -36,16 +26,45 @@ module Buchungsstreber
           err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
             e[:date].strftime("%a:"),
-            style("#{e[:time]}h", :bold),
+            style("%sh" % e[:time], :bold),
             '@',
             style(err + e[:title], status_color, 50),
             style(e[:text], 30)
           ]
         end
         print_table(tbl, indent: 2)
+
+        return unless entries[:valid]
+
+        min_date, max_date = entries[:daily_hours].keys.minmax
+        puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
+        tbl = entries[:daily_hours].map do |date, hours|
+          color = Utils.classify_workhours(hours, entries[:work_hours])
+          ["#{date.strftime("%a")}:", style("#{hours}h", color)]
+        end
+        print_table(tbl, indent: 2)
+
+        if is_automated? || yes?('Buchungen in Redmine übernehmen? (y/N)')
+          invoke :buchen, [], entries: entries
+          invoke :archivieren, [], entries: entries
+        end
+      rescue Exception => e
+        handle_error(e, options[:debug])
       end
 
       default_task :execute
+
+      desc 'buchen', 'Buchen in Redmine'
+      def buchen
+        entries = options[:entries] || Buchungsstreber.entries
+        puts style("Wuerde jetzt buchen", :orange)
+      end
+
+      desc 'archivieren', 'Jetzige Eintraege Archiviren'
+      def archivieren
+        entries = options[:entries] || Buchungsstreber.entries
+        puts style("Wuerde jetzt archivieren", :orange)
+      end
 
       desc 'init', 'Konfiguration initialisieren'
       def init
