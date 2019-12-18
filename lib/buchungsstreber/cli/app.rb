@@ -36,6 +36,15 @@ module Buchungsstreber
 
         return unless entries[:valid]
 
+        min_date, max_date = entries[:daily_hours].keys.minmax
+        puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
+        tbl = entries[:daily_hours].map do |date, hours|
+
+          color = Utils.classify_workhours(hours, entries[:work_hours])
+          ["#{date.strftime("%a")}:", style("#{hours}h", color)]
+        end
+        print_table(tbl, indent: 2)
+
         if is_automated? || yes?('Buchungen in Redmine übernehmen? (y/N)')
           invoke :buchen, [], entries: entries
           invoke :archivieren, [], entries: entries
@@ -49,15 +58,17 @@ module Buchungsstreber
       desc 'buchen', 'Buchen in Redmine'
       def buchen
         entries = options[:entries] || Buchungsstreber.entries
-        puts style("Wuerde jetzt buchen", :orange)
-        return
+        redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
-        min_date, max_date = entries[:daily_hours].keys.minmax
-        puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
-        entries[:daily_hours].map do |date, hours|
-          color = Utils.classify_workhours(hours, entries[:work_hours])
-          ["#{date.strftime("%a")}:", style("#{hours}h", color)]
+        puts style('Buche', :bold)
+        entries[:entries].each do |entry|
+          print style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
+          $stdout.flush
+          success = redmines.get(entry[:redmine]).add_time entry
+          puts success ? style("→ OK", :green) : style("→ FEHLER", :red, :bold)
         end
+
+        puts style("Buchungen erfolgreich gespeichert", :green, :bold)
       end
 
       desc 'archivieren', 'Jetzige Eintraege Archiviren'
