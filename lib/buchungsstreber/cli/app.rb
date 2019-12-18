@@ -74,7 +74,12 @@ module Buchungsstreber
       desc 'archivieren', 'Jetzige Eintraege Archiviren'
       def archivieren
         entries = options[:entries] || Buchungsstreber.entries
-        puts style("Wuerde jetzt archivieren", :orange)
+        min_date, _ = entries[:daily_hours].keys.minmax
+        config = Config.load
+        archive_path = config[:archive_path]
+        timesheet_file = File.expand_path(config[:timesheet_file])
+        timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
+        timesheet_parser.archive(archive_path, min_date)
       end
 
       desc 'init', 'Konfiguration initialisieren'
