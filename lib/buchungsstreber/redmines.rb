@@ -9,6 +9,13 @@ class Redmines
   end
 
   def get(prefix)
-    @redmines[prefix] || @default
+    case
+    when prefix == nil
+      @default
+    when !@redmines.key?(prefix)
+      throw "unknown redmine prefix #{prefix}"
+    else
+      @redmines[prefix]
+    end
   end
 end
