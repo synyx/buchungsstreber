@@ -10,7 +10,9 @@ class Generator
       config = @config[g.name.split(':').last.downcase]
       generator = g.new(config)
       memo << generator.generate(date)
-    end.flatten.compact.uniq
+    end.flatten.compact.uniq do |e|
+      [e[:issue], e[:date], e[:comment], e[:text], e[:time], e[:activity], e[:redmine]].map(&:to_s).map(&:downcase).join
+    end
   end
 
   module Base

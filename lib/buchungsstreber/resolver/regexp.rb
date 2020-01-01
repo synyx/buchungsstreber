@@ -8,7 +8,7 @@ class Resolver::Regexp
   def resolve(entry)
     text = [entry[:text], entry[:comment]].join("\n")
     @config.each do |c|
-      re = Regexp.compile(c['re'], Regexp::IGNORECASE | Regexp::MULTILINE)
+      re = Regexp.compile(c['re'], Regexp::MULTILINE)
       if re.match(text)
         entry[:issue] ||= c['entry']['issue']
         entry[:redmine] ||= c['entry']['redmine']
