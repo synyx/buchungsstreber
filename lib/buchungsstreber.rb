@@ -10,168 +10,79 @@ require_relative 'buchungsstreber/validator'
 require_relative 'buchungsstreber/parser'
 require_relative 'buchungsstreber/parser/buch_timesheet'
 require_relative 'buchungsstreber/parser/yaml_timesheet'
+require_relative 'buchungsstreber/generator'
 require_relative 'buchungsstreber/redmine_api'
 require_relative 'buchungsstreber/utils'
 require_relative 'buchungsstreber/redmines'
 require_relative 'buchungsstreber/config'
 
 module Buchungsstreber
-  def self.entries(file = nil, config_file = nil)
-    config = Config.load(config_file)
-    timesheet_file = file || File.expand_path(config[:timesheet_file])
-    timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
-    redmines = Redmines.new(config[:redmines])
-    entries = timesheet_parser.parse
 
-    result = {
-      daily_hours: Hash.new(0),
-      work_hours: config[:hours],
-      valid: true,
-      entries: [],
-    }
+  class Context
+    attr_reader :redmines, :timesheet_parser, :timesheet_file, :config
 
-    validator = Validator.new
-    entries.each do |entry|
-      errors = []
-      redmine = redmines.get(entry[:redmine])
-      valid, err = fake_stderr do
-        validator.validate(entry, redmine)
-      end
-      errors << err unless valid
-      result[:valid] &= valid
-      result[:daily_hours][entry[:date]] += entry[:time]
-
-      title =
-        begin
-          redmine.get_issue(entry[:issue])
-        rescue StandardError => e
-          valid = false
-          errors << e.message
-          nil
-        end
-
-      result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid, errors: errors}
-    end
-
-    result
-  end
-
-  def self.fake_stderr
-    original_stderr = $stderr
-    $stderr = StringIO.new
-    res = yield
-    [res, $stderr.string]
-  ensure
-    $stderr = original_stderr
-  end
-
-  class Executor
     def initialize(file = nil, config_file = nil)
       @config = Config.load(config_file)
 
-      timesheet_file = file || File.expand_path(@config[:timesheet_file])
-      @timesheet_parser = TimesheetParser.new timesheet_file, @config[:templates]
+      @timesheet_file = file || File.expand_path(@config[:timesheet_file])
+      @timesheet_parser = TimesheetParser.new(@timesheet_file, @config[:templates])
       @redmines = Redmines.new(@config[:redmines])
 
-      @entries = @timesheet_parser.parse
+      @config[:generators].keys.each do |gc|
+        require_relative "buchungsstreber/generator/#{gc}"
+      end
+      @generator = Generator.new(@config[:generators])
     end
 
-    def print_title
-      title = "BUCHUNGSSTREBER v#{VERSION}"
-      puts title.bold
-      puts "~" * title.length
-      puts ""
-    end
+    def entries
+      entries = @timesheet_parser.parse
 
-    def show_overview
+      result = {
+        daily_hours: Hash.new(0),
+        work_hours: @config[:hours],
+        valid: true,
+        entries: [],
+      }
 
-      puts "Buchungsübersicht:".bold
       validator = Validator.new
-      daily_hours = Hash.new(0)
-      valid = true
-      @entries.each do |entry|
+      entries.each do |entry|
+        errors = []
         redmine = @redmines.get(entry[:redmine])
-        valid &= validator.validate(entry, redmine)
-        daily_hours[entry[:date]] += entry[:time]
-
-        weekday = entry[:date].strftime("%a")
-        print "#{weekday}: "
-        time_s = (entry[:time].to_s + "h").ljust(5)
-        print time_s.bold
-        print " @ "
-        begin
-          issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
-          print issue_title.blue
-        rescue RuntimeError => e
-          valid = false
-          print Utils.fixed_length("<error: #{e.message}>", 50).red
+        valid, err = fake_stderr do
+          validator.validate(entry, redmine)
         end
-        print ": "
-        text = Utils.fixed_length(entry[:text], 30)
-        puts text
-      end
-      puts ""
+        errors << err unless valid
+        result[:valid] &= valid
+        result[:daily_hours][entry[:date]] += entry[:time]
 
-      @valid = valid
+        title =
+          begin
+            redmine.get_issue(entry[:issue])
+          rescue StandardError => e
+            valid = false
+            errors << e.message
+            nil
+          end
 
-      unless valid
-        puts "Ungültige Buchungen gefunden – Abbruch!".red.bold
-        return
-      end
-
-      @min_date, @max_date = daily_hours.keys.minmax
-      puts "Zu buchende Stunden (#{@min_date} bis #{@max_date}):".bold
-      daily_hours.each do |date, hours|
-        color = Utils.classify_workhours(hours, @config)
-        puts "#{date.strftime("%a")}: #{hours}".colorize(color)
+        result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid, errors: errors}
       end
 
+      result
     end
 
-    def valid?
-      @valid
+    def generate(date)
+      @generator.generate(date)
     end
 
-    def actualize?
-      puts "Buchungen in Redmine übernehmen? (j/N)"
-      cont = gets.chomp
-      unless cont == "j" || cont == "y"
-        puts "Abbruch"
-        return false
-      end
-      true
-    end
+    private
 
-    def save_entries
-
-      @entries.each do |entry|
-        puts "Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}"
-        success = @redmines.get(entry[:redmine]).add_time(entry)
-        puts success ? "→ OK".green : "→ FEHLER".red.bold
-      end
-
-      puts "Buchungen erfolgreich gespeichert".green.bold
-    end
-
-    def archive
-      archive_path = File.expand_path(@config[:archive_path])
-      @timesheet_parser.archive(archive_path, @min_date)
-    end
-
-    def self.init_config
-      FileUtils.mkdir_p(Config.user_config_path)
-
-      template = File.expand_path('example.config.yml', __dir__ + '/..')
-      target = File.expand_path(Config::DEFAULT_NAME, Config.user_config_path)
-      timesheet_file = File.expand_path('buchungen.yml', Config.user_config_path)
-      archive_path = File.expand_path('archive', Config.user_config_path)
-
-      config = File.read(template)
-      config.gsub!(/^(timesheet_file):.*/, "\\1: #{timesheet_file}")
-      config.gsub!(/^(archive_path):.*/, "\\1: #{archive_path}")
-
-      File.open(target, "w") { |io| io.write(config) }
-      target
+    def fake_stderr
+      original_stderr = $stderr
+      $stderr = StringIO.new
+      res = yield
+      [res, $stderr.string]
+    ensure
+      $stderr = original_stderr
     end
   end
 end

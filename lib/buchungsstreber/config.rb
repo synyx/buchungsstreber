@@ -5,7 +5,8 @@ class Config
     timesheet_file: 'buchungen.yml',
     archive_path: 'archive',
     templates: {},
-    hours: 8
+    hours: 8,
+    generators: {},
   }.freeze
 
   DEFAULT_NAME = 'config.yml'

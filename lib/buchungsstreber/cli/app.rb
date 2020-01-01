@@ -1,4 +1,5 @@
 require 'thor'
+require 'tempfile'
 
 require 'buchungsstreber'
 
@@ -20,7 +21,7 @@ module Buchungsstreber
           invoke :config if yes?('Konfiguration editieren?')
         end
 
-        entries = Buchungsstreber.entries
+        entries = Buchungsstreber::Context.new.entries
         tbl = entries[:entries].map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
           err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
@@ -57,7 +58,7 @@ module Buchungsstreber
 
       desc 'buchen', 'Buchen in Redmine'
       def buchen
-        entries = options[:entries] || Buchungsstreber.entries
+        entries = options[:entries] || Buchungsstreber::Context.new.entries
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
         puts style('Buche', :bold)
@@ -75,12 +76,11 @@ module Buchungsstreber
 
       desc 'archivieren', 'Jetzige Eintraege Archiviren'
       def archivieren
-        entries = options[:entries] || Buchungsstreber.entries
-        min_date, _ = entries[:daily_hours].keys.minmax
-        config = Config.load
-        archive_path = config[:archive_path]
-        timesheet_file = File.expand_path(config[:timesheet_file])
-        timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
+        buchungsstreber = Buchungsstreber::Context.new
+        entries = options[:entries] || buchungsstreber.entries
+        min_date, = entries[:daily_hours].keys.minmax
+        archive_path = buchungsstreber.config[:archive_path]
+        timesheet_parser = buchungsstreber.timesheet_parser
         timesheet_parser.archive(archive_path, min_date)
       rescue StandardError => e
         handle_error(e, options[:debug])
@@ -117,10 +117,34 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'edit', 'Buchungen editieren'
-      def edit
-        return $stdout.write(File.read(Config.load[:timesheet_file])) if is_automated?
-        Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.load[:timesheet_file])
+      desc 'edit [date]', 'Buchungen editieren'
+      def edit(date = nil)
+        buchungsstreber = Buchungsstreber::Context.new
+        config = buchungsstreber.config
+        timesheet_file = buchungsstreber.timesheet_file
+
+        # If a date is given, generate a new entry if there isn't already one
+        if date
+          date = Date.parse(date)
+
+          entries = buchungsstreber.entries
+
+          unless entries[:daily_hours].keys.include?(date)
+            entries = buchungsstreber.generate(date)
+            parser = buchungsstreber.timesheet_parser
+            newday = parser.format(entries)
+            tmpfile = Tempfile.new('buchungsstreber')
+            begin
+              tmpfile.write(newday + "\n\n" + File.read(timesheet_file))
+              timesheet_file = tmpfile.path
+            ensure
+              tmpfile.close
+            end
+          end
+        end
+
+        return $stdout.write(File.read(timesheet_file)) if is_automated?
+        Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', timesheet_file)
       rescue StandardError => e
         handle_error(e, options[:debug])
       end

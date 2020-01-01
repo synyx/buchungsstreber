@@ -10,7 +10,7 @@ class Redmines
 
   def get(prefix)
     case
-    when prefix == nil
+    when prefix.nil? || prefix == ''
       @default
     when !@redmines.key?(prefix)
       throw "unknown redmine prefix #{prefix}"

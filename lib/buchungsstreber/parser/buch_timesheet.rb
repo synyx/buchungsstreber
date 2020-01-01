@@ -55,6 +55,19 @@ class BuchTimesheet
     result
   end
 
+  def format(entries)
+    buf = ""
+    days = entries.group_by {|e| e[:date] }.to_a.sort_by { |x| x[0] }
+    days.each do |day, entries|
+      buf << "#{day}\n\n"
+      entries.each do |e|
+        buf << "% #{e[:comment]}\n" if e[:comment]
+        buf << "#{e[:redmine]}##{e[:issue]}\t#{qarter_time(e[:time] || 0.0)}\t#{e[:activity]}\t#{e[:text]}\n"
+      end
+    end
+    buf
+  end
+
   def archive(file_path, archive_path, date)
     raise 'not implemened'
   end

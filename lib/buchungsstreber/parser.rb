@@ -15,6 +15,10 @@ class TimesheetParser
     @parser.archive(@file, archive_path, date)
   end
 
+  def format(entries)
+    @parser.format(entries)
+  end
+
   private
 
   def choose_parser(file)
