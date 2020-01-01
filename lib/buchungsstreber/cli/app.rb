@@ -133,9 +133,10 @@ module Buchungsstreber
             entries = buchungsstreber.generate(date)
             parser = buchungsstreber.timesheet_parser
             newday = parser.format(entries)
-            tmpfile = Tempfile.new('buchungsstreber')
+            prev =  File.read(timesheet_file)
+            tmpfile = File.open(timesheet_file, 'w+')
             begin
-              tmpfile.write(newday + "\n\n" + File.read(timesheet_file))
+              tmpfile.write(newday + "\n\n" + prev)
               timesheet_file = tmpfile.path
             ensure
               tmpfile.close
