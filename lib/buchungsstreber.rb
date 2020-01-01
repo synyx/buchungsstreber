@@ -11,6 +11,7 @@ require_relative 'buchungsstreber/parser'
 require_relative 'buchungsstreber/parser/buch_timesheet'
 require_relative 'buchungsstreber/parser/yaml_timesheet'
 require_relative 'buchungsstreber/generator'
+require_relative 'buchungsstreber/resolver'
 require_relative 'buchungsstreber/redmine_api'
 require_relative 'buchungsstreber/utils'
 require_relative 'buchungsstreber/redmines'
@@ -32,6 +33,13 @@ module Buchungsstreber
         require_relative "buchungsstreber/generator/#{gc}"
       end
       @generator = Generator.new(@config[:generators])
+
+      require_relative "buchungsstreber/resolver/templates"
+      require_relative "buchungsstreber/resolver/redmines"
+      @config[:resolvers].keys.each do |gc|
+        require_relative "buchungsstreber/resolver/#{gc}"
+      end
+      @resolver = Resolver.new(@config)
     end
 
     def entries
@@ -72,6 +80,10 @@ module Buchungsstreber
 
     def generate(date)
       @generator.generate(date)
+    end
+
+    def resolve(entry)
+      @resolver.resolve(entry)
     end
 
     private

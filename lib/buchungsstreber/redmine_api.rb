@@ -81,6 +81,7 @@ class RedmineApi
         activities[name] = id
       end
     end
+    config = config.dup
     config["activities"] = activities
 
     @config = config

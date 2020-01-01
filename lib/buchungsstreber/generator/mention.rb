@@ -13,7 +13,7 @@ class Generator::Mention
             date: date,
             issue: s[0],
             time: s[1].to_f,
-            comment: "Mention from #{s[2]} in Project #{s[4]}".chomp,
+            comment: "Mention from #{s[2]} in project #{s[4]}".chomp,
             text: s[3].chomp,
         }
       end

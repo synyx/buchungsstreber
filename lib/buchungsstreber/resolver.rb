@@ -1,8 +1,28 @@
 class Resolver
   RESOLVERS = []
 
-  def self.resolve(entry)
-    RESOLVERS.map { |r| r.new }.inject(entry) { |e,r| r.resolve(e) }
+  def initialize(config)
+    @config = config
+    @resolvers = {}
+  end
+
+  def resolve(entry)
+    RESOLVERS.each do |r|
+      resolver(r).resolve(entry)
+    end
+    # TODO: it would be better to keep track of changes to stop resolving
+    RESOLVERS.each do |r|
+      resolver(r).resolve(entry)
+    end
+    entry
+  end
+
+  private
+
+  def resolver(klass)
+    config = @config[:resolvers][klass.name.split(':').last.downcase]
+    config ||= @config[klass.name.split(':').last.downcase.to_sym] # toplevel config
+    @resolvers[klass] ||= klass.new(config)
   end
 
   module Base

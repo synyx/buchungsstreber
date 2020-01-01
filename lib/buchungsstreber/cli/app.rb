@@ -131,6 +131,11 @@ module Buchungsstreber
 
           unless entries[:daily_hours].keys.include?(date)
             entries = buchungsstreber.generate(date)
+            entries.each do |e|
+              buchungsstreber.resolve(e)
+              e[:redmine] = nil if buchungsstreber.redmines.default?(e[:redmine])
+            end
+
             parser = buchungsstreber.timesheet_parser
             newday = parser.format(entries)
             prev =  File.read(timesheet_file)
@@ -179,7 +184,7 @@ module Buchungsstreber
       end
 
       def is_automated?
-        !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO)
+        !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO) || !$stdout.tty?
       end
     end
   end

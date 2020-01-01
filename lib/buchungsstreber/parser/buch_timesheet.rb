@@ -6,7 +6,6 @@ class BuchTimesheet
   include TimesheetParser::Base
 
   def initialize(templates)
-    @templates = templates
   end
 
   def self.parses?(file)

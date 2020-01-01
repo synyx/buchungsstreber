@@ -7,6 +7,7 @@ class Config
     templates: {},
     hours: 8,
     generators: {},
+    resolvers: {},
   }.freeze
 
   DEFAULT_NAME = 'config.yml'

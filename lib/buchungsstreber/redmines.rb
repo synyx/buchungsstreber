@@ -18,4 +18,8 @@ class Redmines
       @redmines[prefix]
     end
   end
+
+  def default?(prefix)
+    get(prefix) == @default
+  end
 end
