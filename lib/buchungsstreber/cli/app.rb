@@ -49,7 +49,7 @@ module Buchungsstreber
           invoke :buchen, [], entries: entries
           invoke :archivieren, [], entries: entries
         end
-      rescue Exception => e
+      rescue StandardError => e
         handle_error(e, options[:debug])
       end
 
@@ -69,6 +69,8 @@ module Buchungsstreber
         end
 
         puts style("Buchungen erfolgreich gespeichert", :green, :bold)
+      rescue StandardError => e
+        handle_error(e, options[:debug])
       end
 
       desc 'archivieren', 'Jetzige Eintraege Archiviren'
@@ -80,6 +82,8 @@ module Buchungsstreber
         timesheet_file = File.expand_path(config[:timesheet_file])
         timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
         timesheet_parser.archive(archive_path, min_date)
+      rescue StandardError => e
+        handle_error(e, options[:debug])
       end
 
       desc 'init', 'Konfiguration initialisieren'
@@ -96,7 +100,7 @@ module Buchungsstreber
         puts ' * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen.'
         puts ' * Buchungsdatei oeffnen (siehe Konfig-Datei)'
         puts ' * `buchungsstreber` ausfuehren'
-      rescue Exception => e
+      rescue StandardError => e
         handle_error(e, options[:debug])
       end
 
@@ -109,7 +113,7 @@ module Buchungsstreber
       def config
         return $stdout.write(File.read(Config.find_config)) if is_automated?
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
-      rescue Exception => e
+      rescue StandardError => e
         handle_error(e, options[:debug])
       end
 
@@ -117,7 +121,7 @@ module Buchungsstreber
       def edit
         return $stdout.write(File.read(Config.load[:timesheet_file])) if is_automated?
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.load[:timesheet_file])
-      rescue Exception => e
+      rescue StandardError => e
         handle_error(e, options[:debug])
       end
 
