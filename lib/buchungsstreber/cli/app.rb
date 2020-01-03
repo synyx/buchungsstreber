@@ -93,7 +93,7 @@ module Buchungsstreber
           exit
         end
 
-        f = Executor.init_config
+        f = init_config
         puts "Konfiguration in #{f} erstellt."
         puts ''
         puts 'Schritte zum friedvollen Buchen:'
@@ -185,6 +185,22 @@ module Buchungsstreber
 
       def is_automated?
         !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO) || !$stdout.tty?
+      end
+
+      def init_config
+        FileUtils.mkdir_p(Config.user_config_path)
+
+        template = File.expand_path('example.config.yml', __dir__ + '/../../..')
+        target = File.expand_path(Config::DEFAULT_NAME, Config.user_config_path)
+        timesheet_file = File.expand_path('buchungen.yml', Config.user_config_path)
+        archive_path = File.expand_path('archive', Config.user_config_path)
+
+        config = File.read(template)
+        config.gsub!(/^(timesheet_file):.*/, "\\1: #{timesheet_file}")
+        config.gsub!(/^(archive_path):.*/, "\\1: #{archive_path}")
+
+        File.open(target, "w") { |io| io.write(config) }
+        target
       end
     end
   end

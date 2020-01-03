@@ -13,14 +13,14 @@ RSpec.describe 'CLI App', type: :aruba do
   context 'Unconfigured buchungsstreber' do
     it 'runs version command' do
       run_command('buchungsstreber version')
-      expect(last_command_started).to be_successfully_executed
       expect(last_command_started).to have_output(/\d+\.\d+/)
+      expect(last_command_started).to be_successfully_executed
     end
 
     it 'runs init command' do
       run_command('buchungsstreber init')
-      expect(last_command_started).to be_successfully_executed
       expect(last_command_started).to have_output(/erstellt/)
+      expect(last_command_started).to be_successfully_executed
       expect(config_file).to be_an_existing_file
     end
 
