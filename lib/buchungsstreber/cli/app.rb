@@ -176,6 +176,19 @@ module Buchungsstreber
 
         win = Curses.stdscr
 
+        addstatus = lambda do |msg|
+          win.setpos(win.maxy - 1, 0)
+          win.addstr(msg)
+          win.clrtoeol
+        end
+
+        loading = lambda do |l|
+          win.setpos(0, 0)
+          win.attron(Curses.color_pair(4) | Curses::A_BOLD) do
+            win.addstr(l)
+          end
+        end
+
         setsize = lambda do |*_|
           lines, cols = IO.console.winsize
           Curses.resizeterm(lines, cols)
@@ -190,12 +203,18 @@ module Buchungsstreber
         end
 
         buchungsstreber = Buchungsstreber::Context.new
+        entries = { entries: [] }
         redraw = lambda do |buchungsstreber|
-          win.setpos(win.maxy - 1, 0)
-          win.addstr(' Refreshing…')
+          loading.call('🔃')
           Curses.refresh
 
-          entries = buchungsstreber.entries
+          begin
+            entries.merge! buchungsstreber.entries
+            addstatus.call('')
+          rescue StandardError => e
+            addstatus.call(e.message)
+            # redraw old state
+          end
 
           entries[:entries].each_with_index do |e, i|
             status_color = {true => 3, false => 1}[e[:valid]]
@@ -216,35 +235,36 @@ module Buchungsstreber
             win.setpos(i + 2, 70)
             win.addstr(style(e[:text], win.maxx - 70))
 
-            Curses.clrtoeol
+            win.clrtoeol
           end
           win.addstr("\n")
-          (win.maxy - win.cury).times { win.deleteln }
+          (win.cury..(win.maxy-2)).each do |i|
+            win.setpos(i, 0)
+            win.clrtoeol
+          end
+          loading.call('  ')
           Curses.refresh
         end
 
-        addstatus = lambda do |msg|
-          win.setpos(win.maxy - 1, 0)
-          win.addstr(msg)
-          win.clrtoeol
-        end
-
         detailpage = lambda do |buchungsstreber, _, y|
-          entries = buchungsstreber.entries[:entries]
-          return unless y > 1 && y < entries.length + 2
-          w = Curses::Window.new(win.maxy-4, (win.maxx * 0.80).ceil, 2, (win.maxx * 0.10).ceil)
-          entry = entries[y-2]
-          w.setpos(2, 2)
-          YAML.dump(entry).lines do |line|
-            w.setpos(w.cury, 2)
-            w.addstr(line)
+          begin
+            return unless y > 1 && y < entries[:entries].length + 2
+            w = Curses::Window.new(win.maxy-4, (win.maxx * 0.80).ceil, 2, (win.maxx * 0.10).ceil)
+            entry = entries[:entries][y-2]
+            w.setpos(2, 2)
+            YAML.dump(entry).lines do |line|
+              w.setpos(w.cury, 2)
+              w.addstr(line)
+            end
+            w.box("|", "-")
+            w.refresh
+            addstatus.call([y, y-2].inspect)
+            w.getch
+            w.close
+            redraw.call(buchungsstreber)
+          rescue StandardError => e
+            addstatus.call(e.message)
           end
-          w.box("|", "-")
-          w.refresh
-          addstatus.call([y, y-2].inspect)
-          w.getch
-          w.close
-          redraw.call(buchungsstreber)
         end
 
         redraw.call(buchungsstreber)
@@ -268,7 +288,7 @@ module Buchungsstreber
             when 'q'
               exit 0
             else
-              addstatus.call('Unknown keycode `%s`' % str.inspect)
+              #addstatus.call('Unknown keycode `%s`' % str.inspect)
             end
           end
         end
