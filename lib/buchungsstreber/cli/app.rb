@@ -159,11 +159,13 @@ module Buchungsstreber
       def watch
         require 'curses'
         require 'io/console'
+        require 'yaml'
         require_relative '../../buchungsstreber/watcher'
         Curses.init_screen
         Curses.start_color
         Curses.curs_set(0)
         Curses.noecho
+        Curses.mousemask(Curses::BUTTON1_CLICKED)
         Curses.crmode
         Curses.stdscr.keypad(true)
 
@@ -217,14 +219,32 @@ module Buchungsstreber
             Curses.clrtoeol
           end
           win.addstr("\n")
-          (win.maxy - win.cury - 1).times { win.clrtoeol }
-          win.setpos(win.maxy - 1, 0)
-          win.addstr('            ')
+          (win.maxy - win.cury).times { win.deleteln }
           Curses.refresh
         end
 
-        detailpage = lambda do |buchungsstreber|
-          entries = buchungsstreber.entries
+        addstatus = lambda do |msg|
+          win.setpos(win.maxy - 1, 0)
+          win.addstr(msg)
+          win.clrtoeol
+        end
+
+        detailpage = lambda do |buchungsstreber, _, y|
+          entries = buchungsstreber.entries[:entries]
+          return unless y > 1 && y < entries.length + 2
+          w = Curses::Window.new(win.maxy-4, (win.maxx * 0.80).ceil, 2, (win.maxx * 0.10).ceil)
+          entry = entries[y-2]
+          w.setpos(2, 2)
+          YAML.dump(entry).lines do |line|
+            w.setpos(w.cury, 2)
+            w.addstr(line)
+          end
+          w.box("|", "-")
+          w.refresh
+          addstatus.call([y, y-2].inspect)
+          w.getch
+          w.close
+          redraw.call(buchungsstreber)
         end
 
         redraw.call(buchungsstreber)
@@ -240,10 +260,15 @@ module Buchungsstreber
             when Curses::KEY_RESIZE
               # Note: this is called incredibly often, use the WINCH trap above
               #setsize.call
+            when Curses::KEY_MOUSE
+              if (m = Curses.getmouse)
+                addstatus.call([m.x, m.y, m.z, '0x%x' % m.bstate].inspect)
+                detailpage.call(buchungsstreber, m.x, m.y)
+              end
             when 'q'
               exit 0
             else
-              $stderr.puts str.inspect
+              addstatus.call('Unknown keycode `%s`' % str.inspect)
             end
           end
         end
