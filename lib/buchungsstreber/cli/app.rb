@@ -22,7 +22,8 @@ module Buchungsstreber
         end
 
         entries = Buchungsstreber::Context.new.entries
-        tbl = entries[:entries].map do |e|
+        aggregated = Aggregator.aggregate(entries[:entries])
+        tbl = aggregated.map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
           err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
@@ -47,7 +48,7 @@ module Buchungsstreber
         print_table(tbl, indent: 2)
 
         if is_automated? || yes?('Buchungen in Redmine übernehmen? (y/N)')
-          invoke :buchen, [], entries: entries
+          invoke :buchen, [], entries: aggregated
           invoke :archivieren, [], entries: entries
         end
       rescue StandardError => e
@@ -58,11 +59,11 @@ module Buchungsstreber
 
       desc 'buchen', 'Buchen in Redmine'
       def buchen
-        entries = options[:entries] || Buchungsstreber::Context.new.entries
+        entries = options[:entries] || Buchungsstreber::Context.new.entries[:entries]
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
         puts style('Buche', :bold)
-        entries[:entries].each do |entry|
+        entries.each do |entry|
           print style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
           $stdout.flush
           success = redmines.get(entry[:redmine]).add_time entry
@@ -208,15 +209,19 @@ module Buchungsstreber
           loading.call('🔃')
           Curses.refresh
 
-          begin
-            entries.merge! buchungsstreber.entries
-            addstatus.call('')
-          rescue StandardError => e
-            addstatus.call(e.message)
-            # redraw old state
-          end
+          e =
+            begin
+              entries.merge! buchungsstreber.entries
+              addstatus.call('')
+              Aggregator.aggregate(entries[:entries])
+            rescue StandardError => e
+              addstatus.call(e.message)
+              # redraw old state
+              $stderr.puts e
+              entries[:entries]
+            end
 
-          entries[:entries].each_with_index do |e, i|
+          e.each_with_index do |e, i|
             status_color = {true => 3, false => 1}[e[:valid]]
             err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
 
