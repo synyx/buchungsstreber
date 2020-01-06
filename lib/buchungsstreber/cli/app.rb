@@ -155,6 +155,107 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
+      desc 'watch', 'Watch the time entry file'
+      def watch
+        require 'curses'
+        require 'io/console'
+        require_relative '../../buchungsstreber/watcher'
+        Curses.init_screen
+        Curses.start_color
+        Curses.curs_set(0)
+        Curses.noecho
+        Curses.crmode
+        Curses.stdscr.keypad(true)
+
+        Curses.init_pair(1, Curses::COLOR_RED, 0) # invalid
+        Curses.init_pair(2, Curses::COLOR_GREEN, 0) # ok
+        Curses.init_pair(3, Curses::COLOR_BLUE, 0) # valid
+        Curses.init_pair(4, Curses::COLOR_BLACK, Curses::COLOR_GREEN) # header
+
+        win = Curses.stdscr
+
+        setsize = lambda do |*_|
+          lines, cols = IO.console.winsize
+          Curses.resizeterm(lines, cols)
+          win.resize(lines, cols)
+          win.setpos(0, 0)
+          win.attron(Curses.color_pair(4) | Curses::A_BOLD) do
+            win.addstr("    %-#{win.maxx-4}s" % "BUCHUNGSSTREBER v#{Buchungsstreber::VERSION}")
+          end
+          win.setpos(win.maxy - 1, 0)
+          win.addstr("% #{win.maxx-2}s  " % ("%d / %d" % [win.maxy, win.maxx]))
+          Curses.refresh
+        end
+
+        buchungsstreber = Buchungsstreber::Context.new
+        redraw = lambda do |buchungsstreber|
+          win.setpos(win.maxy - 1, 0)
+          win.addstr(' Refreshing…')
+          Curses.refresh
+
+          entries = buchungsstreber.entries
+
+          entries[:entries].each_with_index do |e, i|
+            status_color = {true => 3, false => 1}[e[:valid]]
+            err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
+
+            win.setpos(i + 2, 2)
+            win.addstr(e[:date].strftime("%a:"))
+
+            win.setpos(i + 2, 7)
+            win.attron(Curses::A_BOLD) { win.addstr("%sh" % e[:time]) }
+
+            win.setpos(i + 2, 14)
+            win.addstr('@')
+
+            win.setpos(i + 2, 16)
+            win.attron(Curses.color_pair(status_color)) {  win.addstr(style(err + e[:title], 50)) }
+
+            win.setpos(i + 2, 70)
+            win.addstr(style(e[:text], win.maxx - 70))
+
+            Curses.clrtoeol
+          end
+          win.addstr("\n")
+          (win.maxy - win.cury - 1).times { win.clrtoeol }
+          win.setpos(win.maxy - 1, 0)
+          win.addstr('            ')
+          Curses.refresh
+        end
+
+        detailpage = lambda do |buchungsstreber|
+          entries = buchungsstreber.entries
+        end
+
+        redraw.call(buchungsstreber)
+        setsize.call
+
+        Signal.trap('SIGWINCH', setsize)
+        Thread.start(buchungsstreber) do |buchungsstreber|
+          while true
+            str = win.getch
+            case str
+            when 10
+              redraw.call(buchungsstreber)
+            when Curses::KEY_RESIZE
+              # Note: this is called incredibly often, use the WINCH trap above
+              #setsize.call
+            when 'q'
+              exit 0
+            else
+              $stderr.puts str.inspect
+            end
+          end
+        end
+        Watcher.watch(buchungsstreber.timesheet_file) do |f|
+          redraw.call(buchungsstreber)
+        end
+      rescue Interrupt, StandardError => e
+        handle_error(e, options[:debug])
+      ensure
+        Curses.close_screen
+      end
+
       private
 
       def style(string, *styles)
