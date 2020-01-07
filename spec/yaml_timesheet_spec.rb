@@ -1,61 +1,38 @@
 require 'date'
+require 'parser'
 require 'parser/yaml_timesheet'
 require 'validator'
 
-describe YamlTimesheet do
-  TEMPLATES = {
+require_relative 'timesheet_examples'
+
+RSpec.describe YamlTimesheet, '#common' do
+  templates = {
       'BeispielDaily' => {
-        'activity' => 'Daily',
-        'issue' => 'S99999',
-        'text' => 'Daily',
+          'activity' => 'Daily',
+          'issue' => 'S99999',
+          'text' => 'Daily',
       }
   }.freeze
-  subject { YamlTimesheet.new(TEMPLATES).parse('example.buchungen.yml') }
-
-  let(:redmine) do
-    redmine = double("redmine")
-    allow(redmine).to receive(:valid_activity?).and_return(true)
-    redmine
-  end
-
-  context 'with example file' do
-    it 'parses the file' do
-      expect(subject).to_not be_empty
-    end
-
-    it 'parses comma times correctly' do
-      expect(subject[0][:time]).to eq(0.25)
-    end
-
-    it 'parses colon times correctly' do
-      expect(subject[3][:time]).to eq(0.75)
-    end
-
-    it 'makes for a valid timesheet' do
-      v = subject.map { |x| Validator.new.validate(x, redmine) }
-
-      expect(v).to_not include(false)
-    end
-  end
+  it_should_behave_like 'a timesheet parser', '.yml', templates
 end
 
 describe YamlTimesheet, '#archive' do
   include FakeFS::SpecHelpers
 
-  TEMPLATES = {
+  templates = {
     'BeispielDaily' => {
       'activity' => 'Daily',
       'issue' => 'S99999',
       'text' => 'Daily',
     }
   }.freeze
-  subject { YamlTimesheet.new(TEMPLATES) }
+  subject { YamlTimesheet.new(templates) }
 
   it 'archives correctly' do
     # Provide the example file in the fake filesystem
-    config = File.expand_path('..', __dir__)
+    config = File.expand_path('examples', __dir__)
     FakeFS::FileSystem.clone(config)
-    timesheet_path = "#{config}/example.buchungen.yml"
+    timesheet_path = "#{config}/test.yml"
 
     subject.archive(timesheet_path, '/archive', Date.parse('2019-06-18'))
 

@@ -3,17 +3,25 @@ require "date"
 require "time"
 
 class YamlTimesheet
+  include TimesheetParser::Base
 
   def initialize(templates)
     @templates = templates
   end
 
+  def self.parses?(file)
+    return %w(.yml .yaml).include?(File.extname(file))
+  end
+
   def parse(file_path)
     timesheet = YAML.load_file(file_path)
+    throw 'invalid line: file should contain map' unless timesheet.is_a?(Hash)
     result = []
 
     timesheet.each do |date, entries|
       next if entries.nil?
+      throw 'invalid line: entries should be an array' unless entries.is_a?(Array)
+
       entries.each do |entry|
         result << parse_entry(entry, date)
       end
@@ -50,25 +58,15 @@ class YamlTimesheet
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
 
-    if time.include? "-"
-      time = parse_time_diff(time)
-    end
+    raise "invalid line: #{entry}" unless time and activity and issue
 
     {
-      time: time.to_f,
+      time: qarter_time(parse_time(time)),
       activity: activity,
       issue: issue,
       text: text,
       date: date,
       redmine: redmine
     }
-  end
-
-  def parse_time_diff(time_diff)
-    start, done = time_diff.split "-"
-    diff_in_s = (Time.parse(done) - Time.parse(start)).to_f
-    quarter_hours = (diff_in_s / 900).ceil
-
-    quarter_hours * 0.25
   end
 end

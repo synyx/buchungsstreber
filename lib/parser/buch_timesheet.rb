@@ -3,9 +3,14 @@ require 'date'
 # BuchTimesheep parses the layout used by jo.
 #
 class BuchTimesheet
+  include TimesheetParser::Base
 
   def initialize(templates)
     @templates = templates
+  end
+
+  def self.parses?(file)
+    return File.extname(file) == '.B'
   end
 
   def parse(file)
@@ -36,7 +41,7 @@ class BuchTimesheet
         # continuation
         result[-1][:text] += $1
       else
-        throw "bad line #{line}"
+        throw "invalid line #{line}"
       end
     end
 
@@ -48,25 +53,6 @@ class BuchTimesheet
   end
 
 private
-
-  def parse_time(time_descr)
-    case time_descr
-    when /^(\d+):(\d+)$/
-      hours = $1.to_i
-      minutes = $2.to_i
-      hours + minutes / 60.0
-    when /^\d+(?:\.\d+)?$/
-      time_descr.to_f
-    else
-      raise "invalid time: #{time_descr}"
-    end
-  end
-
-  def qarter_time(time)
-    quarter_hours = ((time * 60 * 60) / 900).ceil
-
-    quarter_hours * 0.25
-  end
 
   def parse_date(date_descr)
     Date.parse(date_descr)
