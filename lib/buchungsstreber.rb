@@ -48,8 +48,13 @@ entries.each do |entry|
   time_s = (entry[:time].to_s + "h").ljust(5)
   print time_s.bold
   print " @ "
-  issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
-  print issue_title.blue
+  begin
+    issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
+    print issue_title.blue
+  rescue StandardError => e
+    valid = false
+    print Utils.fixed_length("<error: #{e.message}>", 50).red
+  end
   print ": "
   text = Utils.fixed_length(entry[:text], 30)
   puts text
