@@ -56,13 +56,11 @@ class YamlTimesheet
       text ||= template["text"]
     end
 
-    if !issue_ref && activity =~ /^([a-z]*)(\d+)$/
+    if !issue_ref && activity =~ /^([a-z]*)(\d+)$/i
       activity, issue_ref = nil, activity
     end
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
-
-    raise "invalid line: #{entry}" unless time and activity and issue
 
     raise "invalid line: #{entry}" unless time and issue
 
