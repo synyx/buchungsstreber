@@ -8,7 +8,7 @@ Falls nicht, kann diese mit folgenden Kommandos hinzugefuegt werden:
 
 ```shell script
 set +o history
-gem source add --source https://<user>:<pass>@nexus.synyx.de/content/repositories/gems`
+gem sources --add https://<user>:<pass>@nexus.synyx.de/content/repositories/gems/
 set -o history
 ```
 
