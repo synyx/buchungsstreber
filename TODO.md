@@ -1,7 +1,6 @@
 TODO
 ====
 
-* Aggregation von Buchungen
 * Buchungen vor Eintragung auf existenz pruefen
 * Parsing von Chef Office Dokument
 * Onboarding: Doku

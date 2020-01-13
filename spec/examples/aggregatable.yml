@@ -1,0 +1,5 @@
+2019-06-17:
+  - 12:00-12:35 ES  123   Weiteres Feature implementiert
+  # Durch weglassen von Informationen werden Zeitspannen aggregiert
+  - 13:00-13:30 ES  123
+  - 0.25        ES  1234  Foo
