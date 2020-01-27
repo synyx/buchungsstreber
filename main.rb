@@ -63,9 +63,7 @@ min_date, max_date = daily_hours.keys.minmax
 puts "Zu buchende Stunden (#{min_date} bis #{max_date}):".bold
 daily_hours.each do |date, hours|
   color = Utils.classify_workhours(hours, config)
-  str = "#{date.strftime("%d.%m. (%a)")}: #{hours}"
-  str = str.color(color) if color
-  puts str
+  puts "#{date.strftime("%d.%m. (%a)")}: #{hours}".color(color)
 end
 
 puts "Buchungen in Redmine übernehmen? (j/N)"
