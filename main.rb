@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 require "yaml"
-require "colorize"
+require "rainbow/refinement"
 require "date"
 require "fileutils"
 require_relative "lib/aggregator"
@@ -13,6 +13,8 @@ require_relative "lib/redmine_api"
 require_relative "lib/utils"
 require_relative "lib/redmines"
 require_relative 'lib/config'
+
+using Rainbow
 
 VERSION = "1.1.0"
 
@@ -61,7 +63,7 @@ min_date, max_date = daily_hours.keys.minmax
 puts "Zu buchende Stunden (#{min_date} bis #{max_date}):".bold
 daily_hours.each do |date, hours|
   color = Utils.classify_workhours(hours, config)
-  puts "#{date.strftime("%d.%m. (%a)")}: #{hours}".colorize(color)
+  puts "#{date.strftime("%d.%m. (%a)")}: #{hours}".color(color)
 end
 
 puts "Buchungen in Redmine übernehmen? (j/N)"
