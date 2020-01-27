@@ -14,6 +14,8 @@ class Utils
       :red
     elsif time_difference > 1
       :yellow
+    else
+      :default
     end
   end
 end
