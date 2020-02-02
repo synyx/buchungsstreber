@@ -10,7 +10,6 @@ class Generator::Redmine
   def generate(date)
     @config.map do |rm|
       `cmr "#{rm[:url]}" #{rm[:uid]} "#{rm[:rsskey]}" "#{date}"`.lines.map do |line|
-        p [line, line =~ RE]
         if line =~ RE
           {
             issue: $~[:issue],
