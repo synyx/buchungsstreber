@@ -57,13 +57,13 @@ module Buchungsstreber
 
       default_task :execute
 
-      desc 'buchen', 'Buchen in Redmine'
-      def buchen
+      desc 'buchen [date]', 'Buchen in Redmine'
+      def buchen(date = nil)
         entries = options[:entries] || Buchungsstreber::Context.new.entries[:entries]
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
         puts style('Buche', :bold)
-        entries.each do |entry|
+        entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
           print style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
           $stdout.flush
           success = redmines.get(entry[:redmine]).add_time entry
@@ -156,8 +156,10 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'watch', 'Watch the time entry file'
-      def watch
+      desc 'watch [date]', 'Watch the time entry file'
+      def watch(date = nil)
+        date = Date.parse(date) if date
+
         require 'curses'
         require 'io/console'
         require 'yaml'
@@ -211,7 +213,7 @@ module Buchungsstreber
 
           e =
             begin
-              entries.merge! buchungsstreber.entries
+              entries.merge! buchungsstreber.entries(date)
               addstatus.call('')
               Aggregator.aggregate(entries[:entries])
             rescue StandardError => e

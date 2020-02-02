@@ -43,8 +43,8 @@ module Buchungsstreber
       @resolver = Resolver.new(@config)
     end
 
-    def entries
-      entries = @timesheet_parser.parse
+    def entries(date = nil)
+      entries = @timesheet_parser.parse.select { |x| date.nil? || date == x[:date] }
 
       result = {
         daily_hours: Hash.new(0),
