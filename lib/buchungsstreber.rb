@@ -72,8 +72,24 @@ module Buchungsstreber
             errors << e.message
             nil
           end
+        redmine =
+          if entry[:redmine].empty?
+            nil
+          else
+            entry[:redmine]
+          end
 
-        result[:entries] << {date: entry[:date], time: entry[:time], title: title, text: entry[:text], valid: valid, errors: errors}
+        result[:entries] << {
+            date: entry[:date],
+            time: entry[:time],
+            activity: entry[:activity],
+            redmine: redmine,
+            issue: entry[:issue],
+            title: title,
+            text: entry[:text],
+            valid: valid,
+            errors: errors
+        }
       end
 
       result
