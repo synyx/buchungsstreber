@@ -14,5 +14,7 @@ class Resolver::Redmines
     redmine = @redmines.get(entry[:redmine])
     issue = redmine.get_issue(entry[:issue])
     entry[:comment] = entry[:comment] + ', issue: ' + issue unless entry[:comment].include?(issue)
+  rescue StandardError => e
+    entry[:error] = e.message
   end
 end
