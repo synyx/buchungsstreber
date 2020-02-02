@@ -287,7 +287,7 @@ module Buchungsstreber
             win.addstr(e[:redmine] || '@')
 
             win.setpos(win.cury, 16)
-            win.attron(Curses.color_pair(status_color)) { win.addstr(style(err + e[:title], 50)) }
+            win.attron(Curses.color_pair(status_color)) { win.addstr(style((err || '') + (e[:title] || ''), 50)) }
 
             win.setpos(win.cury, 70)
             win.addstr(style(e[:text], win.maxx - 70))
@@ -370,7 +370,7 @@ module Buchungsstreber
       end
 
       def handle_error(e, debug = false)
-        puts pretty_error(e, debug)
+        $stderr.puts pretty_error(e, debug)
         exit 1
       end
 
