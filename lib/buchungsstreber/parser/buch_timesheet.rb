@@ -16,11 +16,20 @@ class BuchTimesheet
     result = []
 
     current = nil
+    work_hours = nil
     File.readlines(file).each do |line|
       case line
       when /^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/
         # beginning of day
         current = $1
+        if line =~ /(?<start>\d{1,2}:\d{1,2}) -> (?<pause>\d{1,2}(?:[:.]\d{1,2})?) -> (?<end>\d{1,2}:\d{1,2})/
+          s = Time.parse(current + ' ' + $~[:start])
+          p = parse_time($~[:pause])
+          e = Time.parse(current + ' ' + $~[:end])
+          work_hours = qarter_time((e - s) / 60 / 60 - p)
+        else
+          work_hours = nil
+        end
       when /^%/
         # ignore comment lines
         next
@@ -31,14 +40,16 @@ class BuchTimesheet
             issue: $~[:issue],
             text: $~[:text],
             date: parse_date(current),
-            redmine: $~[:redmine]
+            redmine: $~[:redmine],
+            work_hours: work_hours,
         }
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)/
         result << {
           time: qarter_time(parse_time($~[:time])),
           issue: $~[:issue],
           date: parse_date(current),
-          redmine: $~[:redmine]
+          redmine: $~[:redmine],
+          work_hours: work_hours,
         }
       when /^$/
         # ignore empty lines

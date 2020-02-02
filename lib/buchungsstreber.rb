@@ -48,7 +48,7 @@ module Buchungsstreber
 
       result = {
         daily_hours: Hash.new(0),
-        work_hours: @config[:hours],
+        work_hours: Hash.new(@config[:hours]),
         valid: true,
         entries: [],
       }
@@ -63,6 +63,7 @@ module Buchungsstreber
         errors << err unless valid
         result[:valid] &= valid
         result[:daily_hours][entry[:date]] += entry[:time]
+        result[:work_hours][entry[:date]] = entry[:work_hours] if entry[:work_hours]
 
         title =
           begin

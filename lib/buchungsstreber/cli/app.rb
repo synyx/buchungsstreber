@@ -42,7 +42,7 @@ module Buchungsstreber
         puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
         tbl = entries[:daily_hours].map do |date, hours|
 
-          color = Utils.classify_workhours(hours, entries[:work_hours])
+          color = Utils.classify_workhours(hours, entries[:work_hours][date])
           ["#{date.strftime("%a")}:", style("#{hours}h", color)]
         end
         print_table(tbl, indent: 2)
@@ -176,6 +176,7 @@ module Buchungsstreber
         Curses.init_pair(2, Curses::COLOR_GREEN, 0) # ok
         Curses.init_pair(3, Curses::COLOR_BLUE, 0) # valid
         Curses.init_pair(4, Curses::COLOR_BLACK, Curses::COLOR_GREEN) # header
+        Curses.init_pair(5, Curses::COLOR_YELLOW, 0) # warning
 
         win = Curses.stdscr
 
@@ -230,9 +231,17 @@ module Buchungsstreber
               dt = e[:date]
 
               hours = entries[:entries].select { |x| x[:date] == e[:date] }.map { |x| x[:time] }.sum
-              #color = Utils.classify_workhours(hours, entries[:work_hours])
+              color =
+                case Utils.classify_workhours(hours, entries[:work_hours][:planned], entries[:work_hours][dt])
+                when :red then 1
+                when :yellow then 5
+                else
+                  0
+                end
 
-              win.attron(Curses::A_BOLD) { win.addstr("%s %sh / %dh\n" % [e[:date].strftime, hours, entries[:work_hours]]) }
+              win.attron(Curses.color_pair(color) | Curses::A_BOLD) do
+                win.addstr("%s %sh / %sh\n" % [e[:date].strftime, hours, entries[:work_hours][dt]])
+              end
             end
 
             status_color = {true => 3, false => 1}[e[:valid]]
