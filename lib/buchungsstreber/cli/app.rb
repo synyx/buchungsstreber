@@ -223,23 +223,34 @@ module Buchungsstreber
               entries[:entries]
             end
 
+          win.setpos(2, 0)
+          dt = nil
           e.each_with_index do |e, i|
+            if e[:date] != dt
+              dt = e[:date]
+
+              hours = entries[:entries].select { |x| x[:date] == e[:date] }.map { |x| x[:time] }.sum
+              #color = Utils.classify_workhours(hours, entries[:work_hours])
+
+              win.attron(Curses::A_BOLD) { win.addstr("%s %sh / %dh\n" % [e[:date].strftime, hours, entries[:work_hours]]) }
+            end
+
             status_color = {true => 3, false => 1}[e[:valid]]
             err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
 
-            win.setpos(i + 2, 2)
+            win.setpos(win.cury, 2)
             win.addstr(e[:date].strftime("%a:"))
 
-            win.setpos(i + 2, 7)
+            win.setpos(win.cury, 7)
             win.attron(Curses::A_BOLD) { win.addstr("%sh" % e[:time]) }
 
-            win.setpos(i + 2, 14)
-            win.addstr('@')
+            win.setpos(win.cury, 14)
+            win.addstr(e[:redmine] || '@')
 
-            win.setpos(i + 2, 16)
-            win.attron(Curses.color_pair(status_color)) {  win.addstr(style(err + e[:title], 50)) }
+            win.setpos(win.cury, 16)
+            win.attron(Curses.color_pair(status_color)) { win.addstr(style(err + e[:title], 50)) }
 
-            win.setpos(i + 2, 70)
+            win.setpos(win.cury, 70)
             win.addstr(style(e[:text], win.maxx - 70))
 
             win.clrtoeol
