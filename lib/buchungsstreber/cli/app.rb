@@ -57,6 +57,36 @@ module Buchungsstreber
 
       default_task :execute
 
+      desc 'show date', 'Show time entries'
+      def show(date)
+        entries = Buchungsstreber::Context.new.entries(Date.parse(date))
+        aggregated = Aggregator.aggregate(entries[:entries])
+        tbl = aggregated.map do |e|
+          status_color = {true => :blue, false => :red}[e[:valid]]
+          err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
+          [
+              e[:date].strftime("%a:"),
+              style("%sh" % e[:time], :bold),
+              '@',
+              style(err + e[:title], status_color, 50),
+              style(e[:text], 30)
+          ]
+        end
+        print_table(tbl, indent: 2)
+
+        puts style("Summa summarum (#{date}):", :bold)
+        tbl = entries[:daily_hours].map do |date, hours|
+          planned = entries[:work_hours][:planned]
+          on_day = entries[:work_hours][date]
+          color = Utils.classify_workhours(hours, planned, on_day)
+          ["#{date.strftime("%a")}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
+        end
+        print_table(tbl, indent: 2)
+
+      rescue StandardError => e
+        handle_error(e, options[:debug])
+      end
+
       desc 'buchen [date]', 'Buchen in Redmine'
       def buchen(date = nil)
         entries = options[:entries] || Buchungsstreber::Context.new.entries[:entries]
