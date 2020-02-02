@@ -36,7 +36,7 @@ class RedmineApi
     result.body.force_encoding("utf-8")
 
     unless result.code == "201"
-      warn "Fehler beim Buchen (#{@config["name"]}): #{result.message}, Rückgabe #{result.body}"
+      warn "Fehler beim Buchen (#{@config["name"]}): #{result.message}, (#{entry}) #{entry_dto} -> Rückgabe #{result.body}"
       return false
     end
 
