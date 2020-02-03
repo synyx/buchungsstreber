@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Buchungsstreber\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-03 16:42+0100\n"
+"PO-Revision-Date: 2020-02-03 16:45+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:19
+msgid "Buchen"
+msgstr "Buchen"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:28
+msgid "Konfiguration editieren?"
+msgstr "Konfiguration editieren?"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:49
+msgid "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
+msgstr "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:57
+msgid "Buchungen in Redmine übernehmen? (y/N)"
+msgstr "Buchungen in Redmine übernehmen? (j/N)"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:67
+msgid "Buchungen anzeigen"
+msgstr "Buchungen anzeigen"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:84
+msgid "Summa summarum (%<date>s):"
+msgstr "Summa summarum (%<date>s):"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:97
+msgid "Buchen in Redmine"
+msgstr "Buchen in Redmine"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:107
+msgid "Buche %<time>sh auf %<issue>s: %<text>s}"
+msgstr "Buche %<time>sh auf %<issue>s: %<text>s}"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:110
+msgid "→ OK"
+msgstr "→ OK"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:110
+msgid "→ FEHLER"
+msgstr "→ FEHLER"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:113
+msgid "Buchungen erfolgreich gespeichert"
+msgstr "Buchungen erfolgreich gespeichert"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:118
+msgid "Jetzige Eintraege Archiviren"
+msgstr "Jetzige Einträge Archiviren"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:130
+msgid "Konfiguration initialisieren"
+msgstr "Konfiguration initialisieren"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:133
+msgid "Buchungsstreber bereits konfiguriert in %<file>s"
+msgstr "Buchungsstreber bereits konfiguriert in %<file>s"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:138
+msgid "Konfiguration in %<file>s erstellt."
+msgstr "Konfiguration in %<file>s erstellt."
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:140
+msgid "Schritte zum friedvollen Buchen:"
+msgstr "Schritte zum friedvollen Buchen:"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:141
+msgid " * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen."
+msgstr " * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen."
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:142
+msgid " * Buchungsdatei oeffnen (siehe Konfig-Datei)"
+msgstr " * Buchungsdatei öffnen (siehe Konfig-Datei)"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:143
+msgid " * `buchungsstreber` ausfuehren"
+msgstr " * `buchungsstreber` ausführen"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:148
+msgid "Version ausgeben"
+msgstr "Version ausgeben"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:153
+msgid "Konfiguration editieren"
+msgstr "Konfiguration editieren"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:161
+msgid "Buchungen editieren"
+msgstr "Buchungen editieren"
+
+#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:198
+msgid "Ueberwache aenderungen der Buchungsdatei"
+msgstr "Überwache aenderungen der Buchungsdatei"
