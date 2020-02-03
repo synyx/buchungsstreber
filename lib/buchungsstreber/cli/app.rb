@@ -8,6 +8,7 @@ module Buchungsstreber
     class App < Thor
       class_option :debug, :type => :boolean
       class_option :long, :type => :boolean
+      class_option :file, type: :string
 
       desc '', 'Buchen'
       def execute
@@ -21,7 +22,7 @@ module Buchungsstreber
           invoke :config if yes?('Konfiguration editieren?')
         end
 
-        entries = Buchungsstreber::Context.new.entries
+        entries = Buchungsstreber::Context.new(options[:file]).entries
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
@@ -59,7 +60,7 @@ module Buchungsstreber
 
       desc 'show date', 'Show time entries'
       def show(date)
-        entries = Buchungsstreber::Context.new.entries(Date.parse(date))
+        entries = Buchungsstreber::Context.new(options[:file]).entries(Date.parse(date))
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
@@ -89,7 +90,7 @@ module Buchungsstreber
 
       desc 'buchen [date]', 'Buchen in Redmine'
       def buchen(date = nil)
-        entries = options[:entries] || Buchungsstreber::Context.new.entries[:entries]
+        entries = options[:entries] || Buchungsstreber::Context.new(options[:file]).entries[:entries]
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
         puts style('Buche', :bold)
@@ -107,7 +108,7 @@ module Buchungsstreber
 
       desc 'archivieren', 'Jetzige Eintraege Archiviren'
       def archivieren
-        buchungsstreber = Buchungsstreber::Context.new
+        buchungsstreber = Buchungsstreber::Context.new(options[:file])
         entries = options[:entries] || buchungsstreber.entries
         min_date, = entries[:daily_hours].keys.minmax
         archive_path = buchungsstreber.config[:archive_path]
@@ -150,8 +151,7 @@ module Buchungsstreber
 
       desc 'edit [date]', 'Buchungen editieren'
       def edit(date = nil)
-        buchungsstreber = Buchungsstreber::Context.new
-        config = buchungsstreber.config
+        buchungsstreber = Buchungsstreber::Context.new(options[:file])
         timesheet_file = buchungsstreber.timesheet_file
 
         # If a date is given, generate a new entry if there isn't already one
@@ -236,7 +236,7 @@ module Buchungsstreber
           Curses.refresh
         end
 
-        buchungsstreber = Buchungsstreber::Context.new
+        buchungsstreber = Buchungsstreber::Context.new(options[:file])
         entries = { entries: [] }
         redraw = lambda do |buchungsstreber|
           loading.call('🔃')
