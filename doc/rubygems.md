@@ -14,6 +14,28 @@ set -o history
 
 In der `.gemrc` wird so eine neue source eingefuegt.
 
+## Installation
+
+```shell script
+gem install buchungsstreber
+```
+
+Alle `gem` Kommandos muessen entweder mit `sudo` ausgefuehrt werden oder mit
+der option `--user-install`, um die Gems ins Homeverzeichnis zu installieren.
+Fuer `--user-install` siehe die FAQ fuer [User Install][userinstall].
+
+  [userinstall]: https://guides.rubygems.org/faqs/#user-install
+
+### Windows
+
+* https://rubyinstaller.org/downloads/
+  Am besten als normaler Benutzer (nicht als Administrator) installieren (sonst Schmerzen).
+
+* Start Command Prompt with Ruby
+  ```shell script
+  gem install buchungsstreber
+  ```
+
 ## Update
 
 Update (bzw. Installation wenn nicht schon geschehen) geht danach ueber:
