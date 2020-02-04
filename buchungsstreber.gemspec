@@ -5,6 +5,7 @@ require 'buchungsstreber/version'
 Gem::Specification.new do |spec|
   spec.name          = 'buchungsstreber'
   spec.version       = Buchungsstreber::VERSION
+  spec.licenses      = ['MIT']
   spec.authors       = ['fhfet', 'jbuch', 'heib']
   spec.email         = ['heft@synyx.de', 'jonathan.buch@gmail.com', 'heib@synyx.de']
 
