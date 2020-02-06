@@ -1,6 +1,6 @@
-require 'parser'
-require 'parser/buch_timesheet'
-require 'validator'
+require 'buchungsstreber/parser'
+require 'buchungsstreber/parser/buch_timesheet'
+require 'buchungsstreber/validator'
 
 require_relative 'timesheet_examples'
 

@@ -6,3 +6,5 @@ config.yml
 .bundle
 vendor/
 coverage
+.rspec_status
+pkg/

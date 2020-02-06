@@ -1,9 +1,4 @@
-source "https://rubygems.org" do
-  gem 'rainbow'
-end
+source "https://rubygems.org"
 
-group :development do
-  gem 'rspec'
-  gem 'simplecov'
-  gem 'fakefs'
-end
+# Specify your gem's dependencies in buchungsstreber.gemspec
+gemspec

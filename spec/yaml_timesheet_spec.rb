@@ -1,11 +1,12 @@
 require 'date'
-require 'parser'
-require 'parser/yaml_timesheet'
-require 'validator'
+
+require 'buchungsstreber/parser'
+require 'buchungsstreber/parser/yaml_timesheet'
+require 'buchungsstreber/validator'
 
 require_relative 'timesheet_examples'
 
-RSpec.describe YamlTimesheet, '#common' do
+RSpec.describe YamlTimesheet do
   templates = {
       'BeispielDaily' => {
           'activity' => 'Daily',
@@ -27,7 +28,7 @@ RSpec.describe YamlTimesheet, '#parse' do
   end
 end
 
-describe YamlTimesheet, '#archive' do
+RSpec.describe YamlTimesheet, '#archive' do
   include FakeFS::SpecHelpers
 
   templates = {

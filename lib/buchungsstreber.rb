@@ -4,19 +4,21 @@ require "yaml"
 require "rainbow/refinement"
 require "date"
 require "fileutils"
-require_relative "lib/aggregator"
-require_relative "lib/validator"
-require_relative "lib/parser"
-require_relative 'lib/parser/yaml_timesheet'
-require_relative 'lib/parser/buch_timesheet'
-require_relative "lib/redmine_api"
-require_relative "lib/utils"
-require_relative "lib/redmines"
-require_relative 'lib/config'
+
+require_relative 'buchungsstreber/aggregator'
+require_relative 'buchungsstreber/version'
+require_relative 'buchungsstreber/validator'
+require_relative 'buchungsstreber/parser'
+require_relative 'buchungsstreber/parser/buch_timesheet'
+require_relative 'buchungsstreber/parser/yaml_timesheet'
+require_relative 'buchungsstreber/redmine_api'
+require_relative 'buchungsstreber/utils'
+require_relative 'buchungsstreber/redmines'
+require_relative 'buchungsstreber/config'
+
+VERSION = Buchungsstreber::VERSION
 
 using Rainbow
-
-VERSION = "1.1.0"
 
 config = Config.load
 
@@ -46,8 +48,13 @@ entries.each do |entry|
   time_s = (entry[:time].to_s + "h").ljust(5)
   print time_s.bold
   print " @ "
-  issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
-  print issue_title.blue
+  begin
+    issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
+    print issue_title.blue
+  rescue StandardError => e
+    valid = false
+    print Utils.fixed_length("<error: #{e.message}>", 50).red
+  end
   print ": "
   text = Utils.fixed_length(entry[:text], 30)
   puts text

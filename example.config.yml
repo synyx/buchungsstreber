@@ -12,7 +12,7 @@ redmines:
       9: [Entwicklung, E]
       10: [Konzeption, Kzpt]
       11: [Kombination, Komb]
-      12: [Organisation, Orga]
+      12: [Organisation, Orga, Daily]
       13: [Besprechung, Besp]
       19: [Systemadministration, Sys, Adm]
       21: [Analyse, Ana]
@@ -32,7 +32,7 @@ redmines:
     activities:
       16: [AdministrationTechnisch, Adm, AT]
       10: [Analyse, Ana]
-      26: [DailyWeekly, Dly, Wkly]
+      26: [DailyWeekly, Daily, Dly, Wkly]
       8: [Design, Dsgn]
       17: [Dokumentation, Doku]
       22: [EinarbeitungGeben, EinG]

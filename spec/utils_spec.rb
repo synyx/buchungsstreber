@@ -1,6 +1,6 @@
-require 'utils'
+require 'buchungsstreber/utils'
 
-describe Utils, '#classify_workhours' do
+RSpec.describe Utils, '#classify_workhours' do
 
   context 'when being overworked' do
     it 'return :red when worked over 4 hours more or less' do
