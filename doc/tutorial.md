@@ -37,12 +37,13 @@ $ buchungsstreber config
 
 ### Windows
 
-Um Farben angezeigt zu bekommen, muss folgende Umgebungsvariable gesetzt sein.
-Zusaetzlich muss generell das Encoding stimmen.
+Fuer Windows werden einige Umgebungsvariablen auto-gesetzt, falls nicht
+anderweitig definiert:
 
 ```shell script
 set THOR_SHELL=Color
 set RUBYOPT=-E utf-8
+set EDITOR=notepad
 ```
 
 ## Meine erste Buchung
