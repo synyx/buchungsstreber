@@ -29,13 +29,14 @@ RSpec.describe BuchTimesheet, '#archive' do
   it 'has implemented archiving' do
     FileUtils.mkdir_p(File.dirname(timesheet_path))
     FileUtils.copy(example_file, timesheet_path)
+    archive_file = "#{archive_path}/2016-07-21.B"
 
     subject.archive(timesheet_path, archive_path, Date.parse('2016-07-21'))
 
-    # Read the file (options for systems with non-utf8 locale)
-    expect(File.size(timesheet_path)).to eq(0)
+    # The archived file is identical to the current file
+    expect(File.size(timesheet_path)).to eq(File.size(archive_file))
 
-    text = File.read("#{archive_path}/2016-07-21.B")
+    text = File.read(archive_file)
     expect(text).to match(/2016-07-21/)
     expect(text).to match(/2016-07-22/)
   end

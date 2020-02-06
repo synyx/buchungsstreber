@@ -85,8 +85,6 @@ class BuchTimesheet
     File.open("#{archive_path}/#{archive_filename}", File::WRONLY | File::CREAT | File::EXCL) do |f|
       f.write(File.read(file_path))
     end
-
-    File.truncate(file_path, 0)
   end
 
   private
