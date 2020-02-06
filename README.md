@@ -60,4 +60,6 @@ Ab und zu mal tests ausfuehren.
 
 ```
 bundle exec rspec
+
+bundle exec ./bin/buchungsstreber
 ```
