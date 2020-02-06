@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'buchungsstreber/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'buchungsstreber'
+  spec.name          = 'buchungsstreber-beta'
   spec.version       = Buchungsstreber::VERSION
   spec.licenses      = ['MIT']
   spec.authors       = ['fhfet', 'jbuch', 'heib']
