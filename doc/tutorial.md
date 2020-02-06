@@ -35,6 +35,14 @@ $ buchungsstreber config
 # $EDITOR (oder vim) oeffnet sich, zumindest die API-Keys sind einzutragen.
 ```
 
+### Windows
+
+Um Farben angezeigt zu bekommen, muss folgende Umgebungsvariable gesetzt sein.
+
+```shell script
+set THOR_SHELL=Color
+```
+
 ## Meine erste Buchung
 
 ```
