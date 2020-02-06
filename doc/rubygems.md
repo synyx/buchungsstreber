@@ -7,7 +7,7 @@ Paketquelle schon vorhanden sein.
 Falls nicht, kann diese mit folgenden Kommandos hinzugefuegt werden:
 
 ```shell script
-gem source add --source https://nexus.synyx.de/content/repositories/gems/
+gem source --add https://nexus.synyx.de/content/repositories/gems/
 ```
 
 In der `.gemrc` wird so eine neue source eingefuegt.
