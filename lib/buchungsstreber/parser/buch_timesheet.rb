@@ -79,10 +79,17 @@ class BuchTimesheet
   end
 
   def archive(file_path, archive_path, date)
-    raise 'not implemened'
+    FileUtils.mkdir_p archive_path unless File.directory? archive_path
+    archive_filename = date.strftime("%Y-%m-%d") + ".B"
+
+    File.open("#{archive_path}/#{archive_filename}", File::WRONLY | File::CREAT | File::EXCL) do |f|
+      f.write(File.read(file_path))
+    end
+
+    File.truncate(file_path, 0)
   end
 
-private
+  private
 
   def parse_date(date_descr)
     Date.parse(date_descr)
