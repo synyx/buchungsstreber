@@ -17,8 +17,7 @@ Installation
 ------------
 
 1. `gem install buchungsstreber` (Mit eingerichteter [Paketquelle][rubygems])
-2. `buchungsstreber init`
-3. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
+2. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
 
   [rubygems]: doc/rubygems.md
 
@@ -26,8 +25,7 @@ or via git repository:
 
 1. Repository auschecken
 2. Ruby-Gems installieren: `bundle install --path vendor/bundle`
-3. `bundle exec buchungsstreber init`
-4. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
+3. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
 
 Nutzung
 -------
