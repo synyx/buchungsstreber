@@ -19,7 +19,7 @@ module Buchungsstreber
 
         unless Config.find_config
           invoke :init
-          invoke :config if yes?('Konfiguration editieren?')
+          invoke :config if is_automated? || yes?('Konfiguration editieren?')
         end
 
         entries = Buchungsstreber::Context.new(options[:file]).entries
