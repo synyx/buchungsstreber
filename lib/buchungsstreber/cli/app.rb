@@ -69,7 +69,7 @@ module Buchungsstreber
               e[:date].strftime("%a:"),
               style("%sh" % e[:time], :bold),
               '@',
-              style(err + e[:title], status_color, 50),
+              style((err || '') + (e[:title] || ''), status_color, 50),
               style(e[:text], 30)
           ]
         end
