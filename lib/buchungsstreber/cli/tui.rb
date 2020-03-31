@@ -136,30 +136,30 @@ module Buchungsstreber
 
       def buchen(date = nil)
         redmines = @buchungsstreber.redmines
-        entries = @entries[:entries].select { |e| date.nil? || Date.parse(date) == e[:date] }
+        entries = @entries[:entries].select { |e| date.nil? || date == e[:date] }
 
         w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
         w.setpos(2, 2)
-        w.attron(Curses::A_BOLD) { w.addstr("Buche\n\n") }
+        w.attron(Curses::A_BOLD) { w.addstr("Buche\n") }
         w.box("|", "-")
         w.refresh
 
         entries.each do |entry|
-          w.setpos(w.cury, 4)
-          w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
+          w.setpos(w.cury+1, 5)
+          w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", w.maxx - 15)
           w.refresh
           success = redmines.get(entry[:redmine]).add_time entry
           color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
-          w.attron(color) do
-            w.addstr success ? "→ OK\n" : "→ FEHLER\n"
-          end
+          Kernel.sleep(1)
+          w.attron(color) { w.addstr(success ? "→ OK" : "→ FEHLER") }
+          w.setpos(w.cury, 3)
+          w.attron(color) { w.addstr(success ? '✓' : 'X') }
           w.refresh
         end
 
-        w.setpos(w.cury, 2)
-        w.addstr "\nBuchungen abgearbeitet\n"
+        w.setpos(w.cury+2, 2)
+        w.addstr "Buchungen abgearbeitet\n"
 
-        w.box("|", "-")
         w.refresh
         w.getch
         w.close
