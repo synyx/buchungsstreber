@@ -77,15 +77,9 @@ module Buchungsstreber
           if e[:date] != dt
             dt = e[:date]
             hours = @entries[:entries].select { |x| x[:date] == e[:date] }.map { |x| x[:time] }.sum
-            color =
-                case Utils.classify_workhours(hours, @entries[:work_hours][:planned], @entries[:work_hours][dt])
-                when :red then 1
-                when :yellow then 5
-                else
-                  0
-                end
+            color = color_pair(Utils.classify_workhours(hours, @entries[:work_hours][:planned], @entries[:work_hours][dt]))
 
-            @win.attron(Curses.color_pair(color) | Curses::A_BOLD) do
+            @win.attron(color | Curses::A_BOLD) do
               @win.addstr("%s %sh / %sh\n" % [e[:date].strftime, hours, @entries[:work_hours][dt]])
             end
           end
@@ -140,6 +134,40 @@ module Buchungsstreber
         addstatus(e.message)
       end
 
+      def buchen(date = nil)
+        redmines = @buchungsstreber.redmines
+        entries = @entries[:entries].select { |e| date.nil? || Date.parse(date) == e[:date] }
+
+        w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
+        w.setpos(2, 2)
+        w.attron(Curses::A_BOLD) { w.addstr("Buche\n\n") }
+        w.box("|", "-")
+        w.refresh
+
+        entries.each do |entry|
+          w.setpos(w.cury, 4)
+          w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
+          w.refresh
+          success = redmines.get(entry[:redmine]).add_time entry
+          color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
+          w.attron(color) do
+            w.addstr success ? "→ OK\n" : "→ FEHLER\n"
+          end
+          w.refresh
+        end
+
+        w.setpos(w.cury, 2)
+        w.addstr "\nBuchungen abgearbeitet\n"
+
+        w.box("|", "-")
+        w.refresh
+        w.getch
+        w.close
+        redraw
+      rescue StandardError => e
+        addstatus(e.message)
+      end
+
       def setsize(*args)
         lines, cols = IO.console.winsize
         Curses.resizeterm(lines, cols)
@@ -177,6 +205,8 @@ module Buchungsstreber
           if (m = Curses.getmouse)
             detailpage(m.x, m.y)
           end
+        when 'b'
+          buchen(@date)
         when 'q'
           exit 0
         else
@@ -187,12 +217,20 @@ module Buchungsstreber
       def style(string, *styles)
         styles.compact!
         len = styles.find { |x| x.is_a?(Numeric) }
-        styles = styles.select { |x| x.is_a?(Symbol) }
         string = Utils.fixed_length(string, len) if len && !@options[:long]
-        string = set_color(string, *styles) unless styles.empty?
         string
       end
 
+      def color_pair(color)
+        c = case color
+            when :red then 1
+            when :green then 2
+            when :yellow then 5
+            else
+              0
+            end
+        Curses.color_pair(c)
+      end
     end
   end
 end
