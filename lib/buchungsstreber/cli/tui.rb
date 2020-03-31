@@ -181,6 +181,10 @@ module Buchungsstreber
         Curses.refresh
       end
 
+      def show_help
+        addstatus("h/? help | q quit | <enter> refresh")
+      end
+
       def addstatus(msg)
         @win.setpos(@win.maxy - 1, 0)
         @win.addstr(msg)
@@ -205,6 +209,8 @@ module Buchungsstreber
           if (m = Curses.getmouse)
             detailpage(m.x, m.y)
           end
+        when '?', 'h', Curses::KEY_F1
+          show_help
         when 'b'
           buchen(@date)
         when 'q'
