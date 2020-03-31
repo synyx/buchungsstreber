@@ -133,7 +133,6 @@ module Buchungsstreber
         end
         w.box("|", "-")
         w.refresh
-        addstatus([y, y-2].inspect)
         w.getch
         w.close
         redraw
@@ -176,7 +175,6 @@ module Buchungsstreber
           #setsize.call
         when Curses::KEY_MOUSE
           if (m = Curses.getmouse)
-            addstatus([m.x, m.y, m.z, '0x%x' % m.bstate].inspect)
             detailpage(m.x, m.y)
           end
         when 'q'
