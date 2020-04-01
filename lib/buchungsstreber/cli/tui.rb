@@ -59,15 +59,13 @@ module Buchungsstreber
 
         e =
             begin
-              $stderr.puts @entries.inspect
               @entries.merge! @buchungsstreber.entries(@date)
-              $stderr.puts @entries.inspect
               addstatus('')
               Aggregator.aggregate(@entries[:entries])
             rescue StandardError => e
               addstatus(e.message)
               # redraw old state
-              $stderr.puts e
+              $stderr.puts e if @options[:debug]
               @entries[:entries]
             end
 
