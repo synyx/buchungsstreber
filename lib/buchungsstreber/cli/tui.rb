@@ -135,6 +135,7 @@ module Buchungsstreber
       def buchen(date = nil)
         redmines = @buchungsstreber.redmines
         entries = @entries[:entries].select { |e| date.nil? || date == e[:date] }
+        entries = Aggregator.aggregate(entries)
 
         w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
         w.setpos(2, 2)
