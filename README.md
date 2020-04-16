@@ -17,7 +17,6 @@ Installation
 ------------
 
 1. `gem install buchungsstreber` (Mit eingerichteter [Paketquelle][rubygems])
-2. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
 
   [rubygems]: doc/rubygems.md
 
@@ -25,12 +24,22 @@ or via git repository:
 
 1. Repository auschecken
 2. Ruby-Gems installieren: `bundle install --path vendor/bundle`
-3. Config-Datei anpassen – mindestens die eigenen API-Keys eintragen
+
+Konfiguration
+------------
+
+1. Konfigurationspfad für Buchungstreber erstellen:
+`mkdir ~/.config/buchungsstreber`
+
+2. Config-Datei anhand der [Beispiel-Config](example.config.yml) erstellen –
+mindestens die eigenen Redmine-API-Keys eintragen, ggf. auch den Pfad zur
+Buchungs-Datei `timesheet_file` und den Archiv-Ordner `archive_path` anpassen:
+`vim ~/.config/buchungsstreber/config.yml`
 
 Nutzung
 -------
 
-Buchungen werden als Plaintext erfasst, jede Zeile entspricht dabei einer Buchung.
+Buchungen werden als Plaintext erfasst, vgl. [Beispiel](example.buchungen.yml). Jede Zeile entspricht dabei einer Buchung.
 Eine "Datums-Überschrift" spezifiert das Datum der darunter folgenden Buchungen.
 
 Eine Buchungs-Zeile hat dabei immer folgendes Format (getrennt durch Tabs oder Leerzeichen):
@@ -50,6 +59,14 @@ Vollstaendige Beschreibungen fuer:
 
 * [YAML Format](./doc/yaml_format.md)
 * [Buch Format](./doc/buch_format.md)
+
+### Let's buch it
+
+Sobald ein paar Buchungen eingetragen sind, sollte der Buchungsstreber einfach
+gestartet werden können durch: `buchungsstreber`
+
+Keine Sorge, der Buchungsstreber validiert erst einmal die Einträge in der
+Buchungs-Datei und bucht nicht direkt los.
 
 Entwicklung
 -----------
