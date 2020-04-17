@@ -70,6 +70,11 @@ module Buchungsstreber
             end
 
         @win.setpos(2, 0)
+        if e.empty?
+          @win.attron(Curses::A_BOLD) do
+            @win.addstr("%s %sh / %sh\n" % [@date.strftime, 0.0, @entries[:work_hours][@date]])
+          end
+        end
         dt = nil
         e.each_with_index do |e, i|
           if e[:date] != dt
