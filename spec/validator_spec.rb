@@ -2,6 +2,7 @@ require 'date'
 require 'buchungsstreber/validator'
 
 RSpec.describe Validator do
+  subject { Validator }
   let(:default_entry) do
     {
       time: 1,
@@ -96,6 +97,7 @@ RSpec.describe Validator do
 end
 
 RSpec.describe Validator do
+  subject { Validator }
   let(:default_entry) do
     {
       time: 1,

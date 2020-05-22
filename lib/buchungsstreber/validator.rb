@@ -1,6 +1,6 @@
 class Validator
 
-  def validate(entry, redmine)
+  def self.validate(entry, redmine)
     date = entry[:date]
     unless date
       warn "Entry is missing date: #{entry}"

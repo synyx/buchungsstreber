@@ -53,12 +53,11 @@ module Buchungsstreber
         entries: [],
       }
 
-      validator = Validator.new
       entries.each do |entry|
         errors = []
         redmine = @redmines.get(entry[:redmine])
         valid, err = fake_stderr do
-          validator.validate(entry, redmine)
+          Validator.validate(entry, redmine)
         end
         errors << err unless valid
         result[:valid] &= valid
