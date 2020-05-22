@@ -45,6 +45,7 @@ redmines:
       29: [Retro, Ret]
       23: [Review, Rev]
       25: [Workshop, Ws]
+      66: [Monthly]
 templates:
   BeispielDaily:
     activity: Daily
