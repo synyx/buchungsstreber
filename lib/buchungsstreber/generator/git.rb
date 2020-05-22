@@ -14,17 +14,27 @@ class Generator::Git
     user = ENV['USER']
 
     git_dirs = @config[:dirs].each_with_object([]) do |basedir, memo|
-      memo << `find #{basedir} -maxdepth 5 -name .git -a -type d -print0`.split("\0")
+      memo << `find "#{basedir}" -maxdepth 5 -name .git -a -type d -print0`.split("\0")
     end.flatten.sort.uniq
     git_dirs.each do |dir|
-      gitlog = `git --git-dir #{dir} log --committer=#{user} --after="#{d1}" --before="#{d2}" --pretty=oneline --all`
+      gitlog = `git --git-dir "#{dir}" log --committer=#{user} --after="#{d1}" --before="#{d2}" --pretty=oneline --all`
       gitlog.lines.each do |line|
         hash, subject = line.split(/ /, 2)
-        commit = `git --git-dir #{dir} cat-file -p #{hash}`
-        if commit =~ /(?:fix|ref|close).*#(\d{3,})/
+        commit = `git --git-dir "#{dir} cat-file -p #{hash}`
+        issue = case commit
+                when /(?:fix|ref|close|see).*#(\d{3,})/
+                  $1
+                when /(?:branch|into) '(?:(\d{4,5})\D|[^']*\D(\d{4,5})')/
+                  $1 || $2
+                when /#(\d{4,5})(\W|$)/
+                  $1 if $1.to_i > 6700
+                else
+                  nil
+                end
+        if issue
           entry = {
               date: date,
-              issue: $1.to_i,
+              issue: issue.to_i,
               text: subject.chomp,
           }
           entries << entry
