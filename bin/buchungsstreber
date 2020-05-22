@@ -1,3 +1,11 @@
 #!/usr/bin/env ruby
 
-require 'buchungsstreber'
+require 'buchungsstreber/cli/runner'
+
+if Gem.win_platform?
+  ENV['THOR_SHELL'] ||= 'Color'
+  ENV['RUBYOPT'] ||= '-E utf-8'
+  ENV['EDITOR'] ||= 'notepad'
+end
+
+Buchungsstreber::CLI::Runner.new(ARGV.dup).execute!

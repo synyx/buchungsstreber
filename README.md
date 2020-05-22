@@ -39,6 +39,8 @@ Buchungs-Datei `timesheet_file` und den Archiv-Ordner `archive_path` anpassen:
 Nutzung
 -------
 
+Bei erstmaliger Anwendung hilft das [TUTORIAL](./doc/tutorial.md).
+
 Buchungen werden als Plaintext erfasst, vgl. [Beispiel](example.buchungen.yml). Jede Zeile entspricht dabei einer Buchung.
 Eine "Datums-Überschrift" spezifiert das Datum der darunter folgenden Buchungen.
 

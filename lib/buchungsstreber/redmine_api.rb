@@ -36,7 +36,7 @@ class RedmineApi
     result.body.force_encoding("utf-8")
 
     unless result.code == "201"
-      warn "Fehler beim Buchen (#{@config["name"]}): #{result.message}, Rückgabe #{result.body}"
+      warn "Fehler beim Buchen (#{@config["name"]}): #{result.message}, (#{entry}) #{entry_dto} -> Rückgabe #{result.body}"
       return false
     end
 
@@ -66,6 +66,8 @@ class RedmineApi
     end
 
     issue["issue"]["subject"]
+  rescue JSON::ParserError => e
+    raise "Fehler beim Laden des Issues (\##{issue_id}): #{e}, Rückgabe #{result.body}"
   end
 
   private
@@ -79,6 +81,7 @@ class RedmineApi
         activities[name] = id
       end
     end
+    config = config.dup
     config["activities"] = activities
 
     @config = config

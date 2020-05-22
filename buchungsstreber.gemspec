@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'buchungsstreber/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'buchungsstreber'
+  spec.name          = 'buchungsstreber-beta'
   spec.version       = Buchungsstreber::VERSION
   spec.licenses      = ['MIT']
   spec.authors       = ['fhfet', 'jbuch', 'heib']
@@ -28,12 +28,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'rainbow'
+  spec.add_dependency 'thor', '~> 0'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'simplecov'
-  spec.add_development_dependency 'fakefs'
-
+  spec.add_development_dependency 'aruba', '~> 0.14.0'
+  spec.add_development_dependency 'simplecov', '~> 0.17.0'
+  spec.add_development_dependency 'webmock', '~> 3.0'
 end

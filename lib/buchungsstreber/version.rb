@@ -1,3 +1,3 @@
 module Buchungsstreber
-  VERSION = '1.5.3'.freeze
+  VERSION = '2.1.3'.freeze
 end

@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 
 require "yaml"
-require "rainbow/refinement"
 require "date"
 require "fileutils"
 
@@ -11,82 +10,109 @@ require_relative 'buchungsstreber/validator'
 require_relative 'buchungsstreber/parser'
 require_relative 'buchungsstreber/parser/buch_timesheet'
 require_relative 'buchungsstreber/parser/yaml_timesheet'
+require_relative 'buchungsstreber/aggregator'
+require_relative 'buchungsstreber/generator'
+require_relative 'buchungsstreber/resolver'
 require_relative 'buchungsstreber/redmine_api'
 require_relative 'buchungsstreber/utils'
 require_relative 'buchungsstreber/redmines'
 require_relative 'buchungsstreber/config'
 
-VERSION = Buchungsstreber::VERSION
+module Buchungsstreber
 
-using Rainbow
+  class Context
+    attr_reader :redmines, :timesheet_parser, :timesheet_file, :config
 
-config = Config.load
+    def initialize(file = nil, config_file = nil)
+      @config = Config.load(config_file)
 
-timesheet_file = File.expand_path(config[:timesheet_file], __dir__)
-timesheet_parser = TimesheetParser.new(timesheet_file, config[:templates])
-redmines = Redmines.new(config[:redmines])
+      @timesheet_file = file || File.expand_path(@config[:timesheet_file])
+      @timesheet_parser = TimesheetParser.new(@timesheet_file, @config[:templates])
+      @redmines = Redmines.new(@config[:redmines])
 
-entries = timesheet_parser.parse
-entries = Aggregator.aggregate(entries)
+      @config[:generators].keys.each do |gc|
+        require_relative "buchungsstreber/generator/#{gc}"
+      end
+      @generator = Generator.new(@config[:generators])
 
-title = "BUCHUNGSSTREBER v#{VERSION}"
-puts title.bold
-puts "~" * title.length
-puts ""
+      require_relative "buchungsstreber/resolver/templates"
+      require_relative "buchungsstreber/resolver/redmines"
+      @config[:resolvers].keys.each do |gc|
+        require_relative "buchungsstreber/resolver/#{gc}"
+      end
+      @resolver = Resolver.new(@config)
+    end
 
-puts "Buchungsübersicht:".bold
-validator = Validator.new
-daily_hours = Hash.new(0)
-valid = true
-entries.each do |entry|
-  redmine = redmines.get(entry[:redmine])
-  valid &= validator.validate(entry, redmine)
-  daily_hours[entry[:date]] += entry[:time]
+    def entries(date = nil)
+      entries = @timesheet_parser.parse.select { |x| date.nil? || date == x[:date] }
 
-  weekday = entry[:date].strftime("%a")
-  print "#{weekday}: "
-  time_s = (entry[:time].to_s + "h").ljust(5)
-  print time_s.bold
-  print " @ "
-  begin
-    issue_title = Utils.fixed_length(redmine.get_issue(entry[:issue]), 50)
-    print issue_title.blue
-  rescue StandardError => e
-    valid = false
-    print Utils.fixed_length("<error: #{e.message}>", 50).red
+      result = {
+        daily_hours: Hash.new(0),
+        work_hours: Hash.new(@config[:hours]),
+        valid: true,
+        entries: [],
+      }
+
+      validator = Validator.new
+      entries.each do |entry|
+        errors = []
+        redmine = @redmines.get(entry[:redmine])
+        valid, err = fake_stderr do
+          validator.validate(entry, redmine)
+        end
+        errors << err unless valid
+        result[:valid] &= valid
+        result[:daily_hours][entry[:date]] += entry[:time]
+        result[:work_hours][entry[:date]] = entry[:work_hours] if entry[:work_hours]
+
+        title =
+          begin
+            redmine.get_issue(entry[:issue])
+          rescue StandardError => e
+            valid = false
+            errors << e.message
+            nil
+          end
+        redmine =
+          if entry[:redmine].empty?
+            nil
+          else
+            entry[:redmine]
+          end
+
+        result[:entries] << {
+            date: entry[:date],
+            time: entry[:time],
+            activity: entry[:activity],
+            redmine: redmine,
+            issue: entry[:issue],
+            title: title,
+            text: entry[:text],
+            valid: valid,
+            errors: errors
+        }
+      end
+
+      result
+    end
+
+    def generate(date)
+      @generator.generate(date)
+    end
+
+    def resolve(entry)
+      @resolver.resolve(entry)
+    end
+
+    private
+
+    def fake_stderr
+      original_stderr = $stderr
+      $stderr = StringIO.new
+      res = yield
+      [res, $stderr.string]
+    ensure
+      $stderr = original_stderr
+    end
   end
-  print ": "
-  text = Utils.fixed_length(entry[:text], 30)
-  puts text
 end
-puts ""
-
-unless valid
-  puts "Ungültige Buchungen gefunden – Abbruch!".red.bold
-  exit
-end
-
-min_date, max_date = daily_hours.keys.minmax
-puts "Zu buchende Stunden (#{min_date} bis #{max_date}):".bold
-daily_hours.each do |date, hours|
-  color = Utils.classify_workhours(hours, config)
-  puts "#{date.strftime("%d.%m. (%a)")}: #{hours}".color(color)
-end
-
-puts "Buchungen in Redmine übernehmen? (j/N)"
-cont = gets.chomp
-unless cont == "j" || cont == "y"
-  puts "Abbruch"
-  exit
-end
-
-entries.each do |entry|
-  puts "Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}"
-  success = redmines.get(entry[:redmine]).add_time entry
-  puts success ? "→ OK".green : "→ FEHLER".red.bold
-end
-
-puts "Buchungen erfolgreich gespeichert".green.bold
-
-archive_path = File.expand_path(config[:archive_path], __dir__)
-timesheet_parser.archive(archive_path, min_date)

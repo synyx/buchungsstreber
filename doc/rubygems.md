@@ -36,7 +36,7 @@ Fuer `--user-install` siehe die FAQ fuer [User Install][userinstall].
 
 ## Update
 
-Update (bzw. Installation wenn nicht schon geschehen) geht danach ueber:
+Update geht danach ueber:
 
 ```shell script
 gem update buchungsstreber
