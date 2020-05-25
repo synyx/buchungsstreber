@@ -186,7 +186,7 @@ module Buchungsstreber
       end
 
       def show_help
-        addstatus("h/? help | q quit | ↑ next day | ↓ previous day | <enter> refresh")
+        addstatus("h/? help | q quit | ← next day | → previous day | <enter> refresh")
       end
 
       def addstatus(msg)
@@ -213,10 +213,10 @@ module Buchungsstreber
           if (m = Curses.getmouse)
             detailpage(m.x, m.y)
           end
-        when Curses::KEY_DOWN
+        when Curses::KEY_DOWN, Curses::KEY_LEFT
           @date -= 1
           redraw
-        when Curses::KEY_UP
+        when Curses::KEY_UP, Curses::KEY_RIGHT
           @date += 1
           redraw
         when '?', 'h', Curses::KEY_F1
