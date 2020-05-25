@@ -130,9 +130,7 @@ module Buchungsstreber
         end
         w.box("|", "-")
         w.refresh
-        w.getch
-        w.close
-        redraw
+        w
       rescue StandardError => e
         addstatus(e.message)
       end
@@ -180,8 +178,7 @@ module Buchungsstreber
 
         w.refresh
         w.getch
-        w.close
-        redraw
+        w
       rescue StandardError => e
         addstatus(e.message)
       end
@@ -217,6 +214,16 @@ module Buchungsstreber
       end
 
       def on_input(keycode)
+        if @subwindow
+          case keycode
+          when ?\n, ?\r, ?q, ?\e, Curses::KEY_CANCEL
+            @subwindow.close
+            @subwindow = nil
+            redraw
+          end
+          return
+        end
+
         case keycode
         when 10
           redraw
@@ -225,7 +232,7 @@ module Buchungsstreber
           #setsize.call
         when Curses::KEY_MOUSE
           if (m = Curses.getmouse)
-            detailpage(m.x, m.y)
+            @subwindow = detailpage(m.x, m.y)
           end
         when Curses::KEY_DOWN, Curses::KEY_LEFT
           @date -= 1
@@ -233,10 +240,10 @@ module Buchungsstreber
         when Curses::KEY_UP, Curses::KEY_RIGHT
           @date += 1
           redraw
-        when '?', 'h', Curses::KEY_F1
+        when '?', 'h', Curses::KEY_F1, Curses::KEY_HELP
           show_help
         when 'b'
-          buchen(@date)
+          @subwindow = buchen(@date)
         when 'q'
           exit 0
         else
