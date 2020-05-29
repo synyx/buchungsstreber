@@ -153,6 +153,7 @@ module Buchungsstreber
           w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", w.maxx - 15)
           w.refresh
 
+          redmine = redmines.get(entry[:redmine]).
           status = Validator.status!(entry, redmine)
           case
           when status.grep(/(time|activity)_different/).any?
