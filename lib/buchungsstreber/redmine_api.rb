@@ -20,7 +20,7 @@ class RedmineApi
         "comments" => entry[:text]
       }
     }
-    post("/time_entries.json", entry_dto)
+    post("/time_entries", entry_dto)
   end
 
   def valid_activity?(activity)
