@@ -67,7 +67,7 @@ class YamlTimesheet
     {
       time: qarter_time(parse_time(time)),
       activity: activity,
-      issue: issue.to_i,
+      issue: issue,
       text: text,
       date: date,
       redmine: redmine
