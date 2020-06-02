@@ -205,7 +205,7 @@ module Buchungsstreber
         len = styles.find { |x| x.is_a?(Numeric) }
         styles = styles.select { |x| x.is_a?(Symbol) }
         string = Utils.fixed_length(string, len) if len && !options[:long]
-        string = set_color(string, *styles) unless styles.empty?
+        string = set_color(string, *styles) unless styles.empty? rescue string
         string
       end
 
