@@ -85,8 +85,8 @@ module Buchungsstreber
             activity: entry[:activity],
             redmine: redmine,
             issue: entry[:issue],
-            title: title,
-            text: entry[:text],
+            title: ascii(title),
+            text: ascii(entry[:text]),
             valid: valid,
             errors: errors
         }
@@ -112,6 +112,17 @@ module Buchungsstreber
       [res, $stderr.string]
     ensure
       $stderr = original_stderr
+    end
+
+    def ascii(str)
+      return nil if str.nil?
+      encoding_options = {
+          :invalid           => :replace,  # Replace invalid byte sequences
+          :undef             => :replace,  # Replace anything not defined in ASCII
+          :replace           => '',        # Use a blank for those replacements
+          :universal_newline => true       # Always break lines with \n
+      }
+      str.encode(Encoding.find('ASCII'), **encoding_options)
     end
   end
 end
