@@ -155,22 +155,21 @@ module Buchungsstreber
 
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
+
           case
           when status.grep(/(time|activity)_different/).any?
             success = false
             color = color_pair(:red) | Curses::A_BOLD
-            w.attron(color) { w.addstr("→ Bereits gebucht (#{status.join(', ')}") }
+            w.attron(color) { w.addstr("→ DIFF #{$1}") }
           when status.include?(:existing)
             success = true
             color = color_pair(:green)
-            w.attron(color) { w.addstr("→ Bereits gebucht") }
+            w.attron(color) { w.addstr("→ ACK") }
           else
             success = redmine.add_time entry
             color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
             w.attron(color) { w.addstr(success ? "→ OK" : "→ FEHLER") }
           end
-
-          Kernel.sleep(1)
           w.setpos(w.cury, 3)
           w.attron(color) { w.addstr(success ? '✓' : 'X') }
           w.refresh

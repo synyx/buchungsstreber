@@ -51,6 +51,10 @@ class RedmineApi
     end
   end
 
+  def prefix
+    @config['prefix'].dup
+  end
+
   private
 
   def user_id

@@ -136,6 +136,7 @@ RSpec.describe Validator, '#status!' do
     redmine = double("redmine")
     allow(redmine).to receive(:valid_activity?).and_return(false)
     allow(redmine).to receive(:same_activity?).and_return(true)
+    allow(redmine).to receive(:prefix).and_return('z')
     redmine
   end
 

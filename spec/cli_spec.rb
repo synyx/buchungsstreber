@@ -98,7 +98,7 @@ RSpec.describe 'CLI App', type: :aruba do
         to_return(status: 200, body: JSON.dump(issue_8484))
       user_stub = stub_request(:get, "https://localhost/users/current.json").
           to_return(status: 200, body: JSON.dump(current_user))
-      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=2020-05-29&to=2020-05-29&user_id=1").
+      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{Date.today}&to=#{Date.today}&user_id=1").
           to_return(status: 200, body: JSON.dump({'time_entries'=>[]}))
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json").
         to_return(status: 201)
