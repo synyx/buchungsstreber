@@ -28,6 +28,7 @@ class RedmineApi
   end
 
   def same_activity?(a, b)
+    $stderr.puts [a,@config["activities"][a], b,@config["activities"][b]].inspect
     valid_activity?(a) and valid_activity?(b) and @config["activities"][a] == @config["activities"][b]
   end
 
@@ -49,6 +50,10 @@ class RedmineApi
     get("/time_entries/#{id}") do |entry|
       from_time_entry(entry['time_entry'])
     end
+  end
+
+  def prefix
+    @config['prefix'].dup
   end
 
   private
