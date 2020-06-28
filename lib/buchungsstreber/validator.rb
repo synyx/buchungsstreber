@@ -1,6 +1,6 @@
 class Validator
 
-  def validate(entry, redmine)
+  def self.validate(entry, redmine)
     date = entry[:date]
     unless date
       warn "Entry is missing date: #{entry}"
@@ -49,5 +49,27 @@ class Validator
     end
 
     true
+  end
+
+  def self.status!(entry, redmine)
+    @cache ||= {}
+    @cache[entry[:date]] ||= times = redmine.get_times(entry[:date])
+    return [:missing] unless times
+
+    redmine_entries = times.select { |t| t[:issue] == entry[:issue] }
+    return [:missing] if redmine_entries.empty?
+
+    redmine_entries.each_with_object([]) do |redmine_entry, memo|
+      entry[:id] = redmine_entry[:id]
+      if redmine_entry[:time] != entry[:time]
+        memo << :time_different
+      elsif !redmine.same_activity?(redmine_entry[:activity], entry[:activity])
+        memo << :activity_different
+      elsif redmine_entry[:text] != entry[:text]
+        memo << :text_different
+      else
+        memo << :existing
+      end
+    end.sort.uniq
   end
 end

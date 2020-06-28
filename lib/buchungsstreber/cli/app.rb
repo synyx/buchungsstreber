@@ -97,8 +97,17 @@ module Buchungsstreber
         entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
           print style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
           $stdout.flush
-          success = redmines.get(entry[:redmine]).add_time entry
-          puts success ? style("→ OK", :green) : style("→ FEHLER", :red, :bold)
+          redmine = redmines.get(entry[:redmine])
+          status = Validator.status!(entry, redmine)
+          case
+          when status.grep(/(time|activity)_different/).any?
+            puts style("→ Bereits gebucht (#{status.join(', ')})", :red, :bold)
+          when status.include?(:existing)
+            puts style('→ Bereits gebucht', :green)
+          else
+            success = redmine.add_time entry
+            puts success ? style("→ OK", :green) : style("→ FEHLER", :red, :bold)
+          end
         end
 
         puts style("Buchungen erfolgreich gespeichert", :green, :bold)
