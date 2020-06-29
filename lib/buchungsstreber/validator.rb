@@ -52,9 +52,7 @@ class Validator
   end
 
   def self.status!(entry, redmine)
-    @cache ||= {}
-    key = redmine.prefix+entry[:date].to_s
-    times = (@cache[key] ||= redmine.get_times(entry[:date]))
+    times = redmine.get_times(entry[:date])
     return [:missing] unless times
 
     redmine_entries = times.select { |t| t[:issue].to_i == entry[:issue].to_i }
