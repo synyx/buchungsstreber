@@ -1,5 +1,6 @@
-require 'thor'
+require 'date'
 require 'tempfile'
+require 'thor'
 require 'i18n'
 require_relative '../i18n/config'
 
@@ -201,11 +202,12 @@ module Buchungsstreber
 
       desc 'watch [date]', _('Ueberwache aenderungen der Buchungsdatei')
       def watch(date = nil)
-        date = Date.parse(date) if date
+        date_ = date = Date.today.iso8601 if date == 'today'
+        date_ = Date.parse(date) if date
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
 
         require_relative 'tui'
-        tui = Buchungsstreber::TUI::App.new(buchungsstreber, date, options)
+        tui = Buchungsstreber::TUI::App.new(buchungsstreber, date_, options)
         tui.start
       rescue Interrupt, StandardError => e
         handle_error(e, options[:debug])
