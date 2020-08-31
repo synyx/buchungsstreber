@@ -107,12 +107,12 @@ module Buchungsstreber
           status = Validator.status!(entry, redmine)
           case
           when status.grep(/(time|activity)_different/).any?
-            puts style(_("→ Bereits gebucht")+" (#{status.join(', ')})", :red, :bold)
+            puts style(_("-> Bereits gebucht")+" (#{status.join(', ')})", :red, :bold)
           when status.include?(:existing)
-            puts style('→ Bereits gebucht', :green)
+            puts style('-> Bereits gebucht', :green)
           else
             success = redmine.add_time entry
-            puts success ? style(_("→ OK"), :green) : style(_("→ FEHLER"), :red, :bold)
+            puts success ? style(_("-> OK"), :green) : style(_("-> FEHLER"), :red, :bold)
           end
         end
 

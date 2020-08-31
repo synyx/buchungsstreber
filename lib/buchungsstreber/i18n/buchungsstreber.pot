@@ -4,110 +4,115 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
-msgid ""
-msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-03 16:42+0100\n"
-"PO-Revision-Date: 2020-02-03 12:30+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.2.4\n"
-"X-Poedit-Basepath: ../cli\n"
-"X-Poedit-SearchPath-0: app.rb\n"
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2020-08-31 15:48+0200\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:19
-msgid "Buchen"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:148
+msgid   " * Buchungsdatei oeffnen (siehe Konfig-Datei)"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:28
-msgid "Konfiguration editieren?"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:147
+msgid   " * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen."
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:49
-msgid "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:149
+msgid   " * `buchungsstreber` ausfuehren"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:57
-msgid "Buchungen in Redmine übernehmen? (y/N)"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:110
+msgid   "-> Bereits gebucht"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:67
-msgid "Buchungen anzeigen"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:115
+msgid   "-> FEHLER"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:84
-msgid "Summa summarum (%<date>s):"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:115
+msgid   "-> OK"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:97
-msgid "Buchen in Redmine"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:104
+#, ruby-format
+msgid   "Buche %<time>sh auf %<issue>s: %<text>s"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:107
-msgid "Buche %<time>sh auf %<issue>s: %<text>s}"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:19
+msgid   "Buchen"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:110
-msgid "→ OK"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:97
+msgid   "Buchen in Redmine"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:110
-msgid "→ FEHLER"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:67
+msgid   "Buchungen anzeigen"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:113
-msgid "Buchungen erfolgreich gespeichert"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:167
+msgid   "Buchungen editieren"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:118
-msgid "Jetzige Eintraege Archiviren"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:119
+msgid   "Buchungen erfolgreich gespeichert"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:130
-msgid "Konfiguration initialisieren"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:57
+msgid   "Buchungen in Redmine übernehmen? (y/N)"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:133
-msgid "Buchungsstreber bereits konfiguriert in %<file>s"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:139
+#, ruby-format
+msgid   "Buchungsstreber bereits konfiguriert in %<file>s"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:138
-msgid "Konfiguration in %<file>s erstellt."
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:124
+msgid   "Jetzige Eintraege Archiviren"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:140
-msgid "Schritte zum friedvollen Buchen:"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:159
+msgid   "Konfiguration editieren"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:141
-msgid " * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen."
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:28
+msgid   "Konfiguration editieren?"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:142
-msgid " * Buchungsdatei oeffnen (siehe Konfig-Datei)"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:144
+#, ruby-format
+msgid   "Konfiguration in %<file>s erstellt."
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:143
-msgid " * `buchungsstreber` ausfuehren"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:136
+msgid   "Konfiguration initialisieren"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:148
-msgid "Version ausgeben"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:146
+msgid   "Schritte zum friedvollen Buchen:"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:153
-msgid "Konfiguration editieren"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:84
+#, ruby-format
+msgid   "Summa summarum (%<date>s):"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:161
-msgid "Buchungen editieren"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:204
+msgid   "Ueberwache aenderungen der Buchungsdatei"
+msgstr  ""
 
-#: ../../home/jbuch/work/synyx/buchungsstreber/lib/buchungsstreber/cli/app.rb:198
-msgid "Ueberwache aenderungen der Buchungsdatei"
-msgstr ""
+#: lib/buchungsstreber/cli/app.rb:154
+msgid   "Version ausgeben"
+msgstr  ""
+
+#: lib/buchungsstreber/cli/app.rb:49
+#, ruby-format
+msgid   "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
+msgstr  ""
