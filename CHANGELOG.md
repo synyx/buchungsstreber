@@ -1,6 +1,30 @@
 Changes
 =======
 
+## v2.2.0
+
+* Skip entering times already available on Redmine server
+* Revise arrow keys in TUI
+* Add ncalcli generator
+* Bugfixes
+
+## v2.1.x
+
+* Enhance TUI with curses for entering hours
+* Aggregate time entries
+* Bugfixes
+
+## v2.0.x
+
+* Unstable development release
+* Add TUI with curses for displaying hours
+* Refactor application for extensibility
+* Add concept of generators (generate entries if none exist)
+* Add concept of resolvers (revise entries)
+* Add CLI with more commands
+* Add built-in initialization if no config exists
+* Add built-in help on first-use
+
 ## v1.5.0
 
 * Make installable as a ruby gem
