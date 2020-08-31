@@ -4,6 +4,7 @@ rescue
   require 'ffi-ncurses/ncurses'
 end
 require 'io/console'
+require 'thread'
 require 'yaml'
 require_relative '../../buchungsstreber/watcher'
 
@@ -15,8 +16,6 @@ module Buchungsstreber
         @buchungsstreber = buchungsstreber
         @date = startdate
         @options = options
-
-        @m = Mutex.new
       end
 
       def start
@@ -36,19 +35,28 @@ module Buchungsstreber
 
         @win = Curses.stdscr
         @entries = { entries: [] }
+        @queue = Queue.new
 
-        Signal.trap('SIGWINCH') { setsize }
+        Signal.trap('SIGWINCH') { @queue << ?r }
         Thread.start do
           while true
-            on_input(Curses.getch)
+            @queue << Curses.getch
           end
         end
 
         setsize
         redraw
-        Watcher.watch(@buchungsstreber.timesheet_file) do |_|
-          # Refresh (ignored on sub-window)
-          on_input(10)
+
+        Thread.start do
+          Watcher.watch(@buchungsstreber.timesheet_file) do |_|
+            # Refresh (ignored on sub-window)
+            @queue << 10
+          end
+        end
+
+        # Main UI loop
+        while (ch = @queue.pop) != ?q
+          on_input ch
         end
       ensure
         Curses.close_screen
@@ -216,11 +224,9 @@ module Buchungsstreber
       end
 
       def on_input(keycode)
-        @m.lock
-
         if @subwindow
           case keycode
-          when ?\n, ?\r, ?q, ?\e, Curses::KEY_CANCEL
+          when ?\n, ?\r, ?\e, Curses::KEY_CANCEL
             @subwindow.close
             @subwindow = nil
             redraw
@@ -231,9 +237,8 @@ module Buchungsstreber
         case keycode
         when 10
           redraw
-        when Curses::KEY_RESIZE
-          # Note: this is called incredibly often, use the WINCH trap above
-          #setsize.call
+        when ?r # Curses::KEY_RESIZE
+          setsize
         when Curses::KEY_MOUSE
           if (m = Curses.getmouse)
             @subwindow = detailpage(m.x, m.y)
@@ -248,13 +253,9 @@ module Buchungsstreber
           show_help
         when 'b'
           @subwindow = buchen(@date)
-        when 'q'
-          exit 0
         else
           #addstatus('Unknown keycode `%s`' % str.inspect)
         end
-      ensure
-        @m.unlock
       end
 
       def style(string, *styles)
