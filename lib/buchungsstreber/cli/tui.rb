@@ -152,10 +152,24 @@ module Buchungsstreber
           w.setpos(w.cury+1, 5)
           w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", w.maxx - 15)
           w.refresh
-          success = redmines.get(entry[:redmine]).add_time entry
-          color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
-          Kernel.sleep(1)
-          w.attron(color) { w.addstr(success ? "→ OK" : "→ FEHLER") }
+
+          redmine = redmines.get(entry[:redmine])
+          status = Validator.status!(entry, redmine)
+
+          case
+          when status.grep(/(time|activity)_different/).any?
+            success = false
+            color = color_pair(:red) | Curses::A_BOLD
+            w.attron(color) { w.addstr("→ DIFF #{$1}") }
+          when status.include?(:existing)
+            success = true
+            color = color_pair(:green)
+            w.attron(color) { w.addstr("→ ACK") }
+          else
+            success = redmine.add_time entry
+            color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
+            w.attron(color) { w.addstr(success ? "→ OK" : "→ FEHLER") }
+          end
           w.setpos(w.cury, 3)
           w.attron(color) { w.addstr(success ? '✓' : 'X') }
           w.refresh

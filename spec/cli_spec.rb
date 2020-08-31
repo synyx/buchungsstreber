@@ -67,6 +67,11 @@ RSpec.describe 'CLI App', type: :aruba do
         "subject" => "Blog",
       }
     }
+    current_user = {
+        'user' => {
+            'id' => 1,
+        }
+    }
     it 'does not allow a second run to init' do
       run_command('buchungsstreber init')
       expect(last_command_started).to have_output(/bereits konfiguriert/)
@@ -91,6 +96,10 @@ RSpec.describe 'CLI App', type: :aruba do
     it 'adds times to redmine' do
       validation_stub = stub_request(:get, "https://localhost/issues/8484.json").
         to_return(status: 200, body: JSON.dump(issue_8484))
+      user_stub = stub_request(:get, "https://localhost/users/current.json").
+          to_return(status: 200, body: JSON.dump(current_user))
+      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{Date.today}&to=#{Date.today}&user_id=1").
+          to_return(status: 200, body: JSON.dump({'time_entries'=>[]}))
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json").
         to_return(status: 201)
 
@@ -99,6 +108,8 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(c).to have_output(/BUCHUNGSSTREBER/)
 
       expect(validation_stub).to have_been_requested.at_least_once
+      expect(user_stub).to have_been_requested.at_least_once
+      expect(get_times_stub).to have_been_requested.at_least_once
       expect(add_time_stub).to have_been_requested.at_least_once
     end
   end
