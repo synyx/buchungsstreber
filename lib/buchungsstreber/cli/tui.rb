@@ -128,7 +128,7 @@ module Buchungsstreber
           w.setpos(w.cury, 2)
           w.addstr(line)
         end
-        w.box("|", "-")
+        w.box(0,0)
         w.refresh
         w
       rescue StandardError => e
