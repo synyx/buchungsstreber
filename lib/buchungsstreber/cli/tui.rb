@@ -57,7 +57,7 @@ module Buchungsstreber
       private
 
       def redraw
-        loading('&')
+        loading(_('&'))
         Curses.refresh
 
         e =
@@ -145,13 +145,13 @@ module Buchungsstreber
 
         w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
         w.setpos(2, 2)
-        w.attron(Curses::A_BOLD) { w.addstr("Buche\n") }
+        w.attron(Curses::A_BOLD) { w.addstr(_('Buche')) }
         w.box(0,0)
         w.refresh
 
         entries.each do |entry|
           w.setpos(w.cury+1, 5)
-          w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", w.maxx - 21)
+          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % [entry[:time], entry[:issue], entry[:text]], w.maxx - 21)
           w.refresh
 
           redmine = redmines.get(entry[:redmine])
@@ -161,23 +161,23 @@ module Buchungsstreber
           when status.grep(/(time|activity)_different/).any?
             success = false
             color = color_pair(:yellow) | Curses::A_BOLD
-            w.attron(color) { w.addstr("-> DIFF #{$1}") }
+            w.attron(color) { w.addstr(_('-> DIFF') + " #{$1}") }
           when status.include?(:existing)
             success = true
             color = color_pair(:green)
-            w.attron(color) { w.addstr("-> ACK") }
+            w.attron(color) { w.addstr(_('-> ACK')) }
           else
             success = redmine.add_time entry
             color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
-            w.attron(color) { w.addstr(success ? "-> OK" : "-> FEHLER") }
+            w.attron(color) { w.addstr(success ? _('-> OK') : _('-> FEHLER')) }
           end
           w.setpos(w.cury, 3)
-          w.attron(color) { w.addstr(success ? 'o' : 'x') }
+          w.attron(color) { w.addstr(success ? _('o') : _('x')) }
           w.refresh
         end
 
         w.setpos(w.cury+2, 2)
-        w.addstr "Buchungen abgearbeitet"
+        w.addstr _('Buchungen abgearbeitet')
 
         w.refresh
         w
@@ -199,7 +199,7 @@ module Buchungsstreber
       end
 
       def show_help
-        addstatus("h/? help | q quit | l next day | r previous day | <enter> refresh")
+        addstatus(_("h/? help | q quit | l next day | r previous day | <enter> refresh"))
       end
 
       def addstatus(msg)

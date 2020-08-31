@@ -99,7 +99,7 @@ module Buchungsstreber
         entries = options[:entries] || Buchungsstreber::Context.new(options[:file]).entries[:entries]
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
-        puts style('Buche', :bold)
+        puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
           print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % [entry[:time], entry[:issue], entry[:text]], 60)
           $stdout.flush
