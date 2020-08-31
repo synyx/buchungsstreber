@@ -31,7 +31,7 @@ module Buchungsstreber
             e[:date].strftime("%a:"),
             style("%sh" % e[:time], :bold),
             '@',
-            style(err + e[:title], status_color, 50),
+            style((err || '') + (e[:title] || ''), status_color, 50),
             style(e[:text], 30)
           ]
         end
@@ -214,7 +214,7 @@ module Buchungsstreber
         len = styles.find { |x| x.is_a?(Numeric) }
         styles = styles.select { |x| x.is_a?(Symbol) }
         string = Utils.fixed_length(string, len) if len && !options[:long]
-        string = set_color(string, *styles) unless styles.empty?
+        string = set_color(string, *styles) unless styles.empty? rescue string
         string
       end
 

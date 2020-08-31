@@ -28,6 +28,7 @@ class RedmineApi
   end
 
   def same_activity?(a, b)
+    #$stderr.puts [a,@config["activities"][a], b,@config["activities"][b]].inspect
     valid_activity?(a) and valid_activity?(b) and @config["activities"][a] == @config["activities"][b]
   end
 

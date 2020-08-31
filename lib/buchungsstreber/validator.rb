@@ -55,7 +55,7 @@ class Validator
     times = redmine.get_times(entry[:date])
     return [:missing] unless times
 
-    redmine_entries = times.select { |t| t[:issue].to_i == entry[:issue].to_i }
+    redmine_entries = times.select { |t| t[:issue].to_s == entry[:issue].to_s }
     return [:missing] if redmine_entries.empty?
 
     redmine_entries.each_with_object([]) do |redmine_entry, memo|
