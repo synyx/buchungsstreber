@@ -76,11 +76,11 @@ module Buchungsstreber
         print_table(tbl, indent: 2)
 
         puts style("Summa summarum (#{date}):", :bold)
-        tbl = entries[:daily_hours].map do |date, hours|
+        tbl = entries[:daily_hours].map do |entrydate, hours|
           planned = entries[:work_hours][:planned]
-          on_day = entries[:work_hours][date]
+          on_day = entries[:work_hours][entrydate]
           color = Utils.classify_workhours(hours, planned, on_day)
-          ["#{date.strftime("%a")}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
+          ["#{entrydate.strftime("%a")}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
         end
         print_table(tbl, indent: 2)
 

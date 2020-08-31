@@ -68,9 +68,9 @@ class BuchTimesheet
   def format(entries)
     buf = ""
     days = entries.group_by {|e| e[:date] }.to_a.sort_by { |x| x[0] }
-    days.each do |day, entries|
-      buf << "#{day}\n\n"
-      entries.each do |e|
+    days.each do |date, day|
+      buf << "#{date}\n\n"
+      day.each do |e|
         buf << "% #{e[:comment]}\n" if e[:comment]
         buf << "#{e[:redmine]}##{e[:issue]}\t#{qarter_time(e[:time] || 0.0)}\t#{e[:activity]}\t#{e[:text]}\n"
       end
