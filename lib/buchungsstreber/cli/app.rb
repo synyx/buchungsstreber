@@ -56,7 +56,7 @@ module Buchungsstreber
         end
         print_table(tbl, indent: 2)
 
-        if is_automated? || yes?(_('Buchungen in Redmine übernehmen? (y/N)'))
+        if is_automated? || yes?(_('Buchungen in Redmine uebernehmen? (y/N)'))
           invoke :buchen, [], entries: aggregated
           invoke :archivieren, [], entries: entries
         end
@@ -146,7 +146,7 @@ module Buchungsstreber
         puts _('Konfiguration in %<file>s erstellt.') % f
         puts ''
         puts _('Schritte zum friedvollen Buchen:')
-        puts _(' * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen.')
+        puts _(' * Config-Datei anpassen - mindestens die eigenen API-Keys eintragen.')
         puts _(' * Buchungsdatei oeffnen (siehe Konfig-Datei)')
         puts _(' * `buchungsstreber` ausfuehren')
       rescue StandardError => e
