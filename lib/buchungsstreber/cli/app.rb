@@ -1,11 +1,13 @@
 require 'thor'
 require 'tempfile'
 require 'i18n'
+require_relative '../i18n/config'
 
 include I18n::Gettext::Helpers
 I18n::Backend::Simple.include(I18n::Backend::Gettext)
 I18n.load_path << Dir[File.join(__dir__, '../i18n/*.po')]
-I18n.locale = :de
+I18n.default_locale = :de
+I18n.config = I18n::Env::Config.new
 
 require 'buchungsstreber'
 
