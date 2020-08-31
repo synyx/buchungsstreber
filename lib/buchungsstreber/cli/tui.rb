@@ -15,6 +15,8 @@ module Buchungsstreber
         @buchungsstreber = buchungsstreber
         @date = startdate
         @options = options
+
+        @m = Mutex.new
       end
 
       def start
@@ -38,14 +40,15 @@ module Buchungsstreber
         Signal.trap('SIGWINCH') { setsize }
         Thread.start do
           while true
-            on_input(@win.getch)
+            on_input(Curses.getch)
           end
         end
 
         setsize
         redraw
         Watcher.watch(@buchungsstreber.timesheet_file) do |_|
-          redraw
+          # Refresh (ignored on sub-window)
+          on_input(10)
         end
       ensure
         Curses.close_screen
@@ -177,7 +180,6 @@ module Buchungsstreber
         w.addstr "Buchungen abgearbeitet"
 
         w.refresh
-        w.getch
         w
       rescue StandardError => e
         addstatus(e.message)
@@ -214,6 +216,8 @@ module Buchungsstreber
       end
 
       def on_input(keycode)
+        @m.lock
+
         if @subwindow
           case keycode
           when ?\n, ?\r, ?q, ?\e, Curses::KEY_CANCEL
@@ -249,6 +253,8 @@ module Buchungsstreber
         else
           #addstatus('Unknown keycode `%s`' % str.inspect)
         end
+      ensure
+        @m.unlock
       end
 
       def style(string, *styles)
