@@ -1,6 +1,6 @@
 require 'open3'
 
-require 'buchungsstreber/cli/app'
+require_relative 'app'
 
 module Buchungsstreber
   module CLI

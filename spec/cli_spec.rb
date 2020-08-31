@@ -18,7 +18,7 @@ RSpec.describe 'CLI App', type: :aruba do
     end
 
     it 'runs init command' do
-      run_command('buchungsstreber init')
+      run_command('buchungsstreber init --debug')
       expect(last_command_started).to have_output(/erstellt/)
       expect(last_command_started).to be_successfully_executed
       expect(config_file).to be_an_existing_file
@@ -104,7 +104,7 @@ RSpec.describe 'CLI App', type: :aruba do
         to_return(status: 201)
 
       File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
-      c = run_command('buchungsstreber execute')
+      c = run_command('buchungsstreber execute --debug')
       expect(c).to have_output(/BUCHUNGSSTREBER/)
 
       expect(validation_stub).to have_been_requested.at_least_once

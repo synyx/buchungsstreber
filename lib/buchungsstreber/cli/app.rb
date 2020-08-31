@@ -5,9 +5,7 @@ require_relative '../i18n/config'
 
 include I18n::Gettext::Helpers
 I18n::Backend::Simple.include(I18n::Backend::Gettext)
-I18n.load_path << Dir[File.join(__dir__, '../i18n/*.po')]
-I18n.default_locale = :de
-I18n.config = I18n::Env::Config.new
+I18n.config.enforce_available_locales = false
 
 require 'buchungsstreber'
 
@@ -48,7 +46,7 @@ module Buchungsstreber
         return unless entries[:valid]
 
         min_date, max_date = entries[:daily_hours].keys.minmax
-        puts style(_('Zu buchende Stunden (%<min_date>s bis %<max_date>s):') % [min_date, max_date], :bold)
+        puts style(_('Zu buchende Stunden (%<min_date>s bis %<max_date>s):') % {min_date: min_date, max_date: max_date}, :bold)
         tbl = entries[:daily_hours].map do |date, hours|
 
           color = Utils.classify_workhours(hours, entries[:work_hours][date])
@@ -83,7 +81,7 @@ module Buchungsstreber
         end
         print_table(tbl, indent: 2)
 
-        puts style(_('Summa summarum (%<date>s):') % date, :bold)
+        puts style(_('Summa summarum (%<date>s):') % {date: date}, :bold)
         tbl = entries[:daily_hours].map do |entrydate, hours|
           planned = entries[:work_hours][:planned]
           on_day = entries[:work_hours][entrydate]
@@ -103,7 +101,7 @@ module Buchungsstreber
 
         puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
-          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % [entry[:time], entry[:issue], entry[:text]], 60)
+          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, 60)
           $stdout.flush
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
@@ -138,12 +136,12 @@ module Buchungsstreber
       desc 'init', _('Konfiguration initialisieren')
       def init
         if (f = Config.find_config)
-          puts _('Buchungsstreber bereits konfiguriert in %<file>s') % f
+          puts _('Buchungsstreber bereits konfiguriert in %<file>s') % {file: f}
           exit
         end
 
         f = init_config
-        puts _('Konfiguration in %<file>s erstellt.') % f
+        puts _('Konfiguration in %<file>s erstellt.') % {file: f}
         puts ''
         puts _('Schritte zum friedvollen Buchen:')
         puts _(' * Config-Datei anpassen - mindestens die eigenen API-Keys eintragen.')
