@@ -9,3 +9,6 @@ coverage
 .rspec_status
 pkg/
 tmp/
+
+# Translation
+lib/buchungsstreber/i18n/*.mo
