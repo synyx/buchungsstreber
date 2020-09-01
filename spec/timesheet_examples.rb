@@ -1,3 +1,5 @@
+require 'tempfile'
+
 require 'buchungsstreber/parser'
 
 RSpec.shared_examples 'a timesheet parser' do |extension, templates|
@@ -37,6 +39,31 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
 
     it 'raises on invalid times' do
       expect { described_class.new(templates || {}).parse("spec/examples/invalid_time#{extension}") }.to raise_exception(/invalid time/)
+    end
+  end
+
+  context 'generating' do
+    it 'can render time entries' do
+      e = [{ issue: '1234', activity: 'Dev', text: 'asdf', time: 0.5, date: Date.parse('1970-01-01') }]
+      expect(described_class.new(templates || {}).format(e)).to include('asdf')
+    end
+
+    it 'produces something the same parser can parse' do
+      parser = described_class.new(templates || {})
+      e1 = [{ issue: '1234', activity: 'Dev', text: 'asdf', time: 0.5, date: Date.parse('1970-01-01') }]
+      str = parser.format(e1)
+
+      file = Tempfile.new('foo')
+      begin
+        file.write(str)
+        file.close
+        e2 = parser.parse(file.path)
+        e1[0].each do |k,v|
+          expect(e2[0][k]).to eq(v)
+        end
+      ensure
+        file.unlink
+      end
     end
   end
 end
