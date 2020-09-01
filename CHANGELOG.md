@@ -3,6 +3,10 @@ Changes
 
 ## v2.2.1
 
+* Revise TUI keys for exiting subwindow (enter, space, backspace)
+
+## v2.2.1
+
 * Add german and english translations
 
 ## v2.2.0
