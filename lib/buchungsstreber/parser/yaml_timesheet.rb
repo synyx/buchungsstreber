@@ -49,6 +49,19 @@ class YamlTimesheet
     File.write(file_path, "#{next_monday}:\n\n\n---\n# Letzte Woche\n" + old_timesheet)
   end
 
+  def format(entries)
+    buf = ""
+    days = entries.group_by {|e| e[:date] }.to_a.sort_by { |x| x[0] }
+    days.each do |date, day|
+      buf << "#{date}:\n"
+      day.each do |e|
+        buf << "  # #{e[:comment]}\n" if e[:comment]
+        buf << "  - #{qarter_time(e[:time] || 0.0)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
+      end
+    end
+    buf
+  end
+
   private
 
   def parse_entry(entry, date)
