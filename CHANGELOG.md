@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.2.1
+
+* Add german and english translations
+
 ## v2.2.0
 
 * Skip entering times already available on Redmine server
