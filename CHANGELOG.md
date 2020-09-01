@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.2.5
+
+* Bring YAML Format in line regarding generators
+
 ## v2.2.1
 
 * Revise TUI keys for exiting subwindow (enter, space, backspace)
