@@ -1,5 +1,11 @@
 require 'thor'
 require 'tempfile'
+require 'i18n'
+require_relative '../i18n/config'
+
+include I18n::Gettext::Helpers
+I18n::Backend::Simple.include(I18n::Backend::Gettext)
+I18n.config.enforce_available_locales = false
 
 require 'buchungsstreber'
 
@@ -10,7 +16,7 @@ module Buchungsstreber
       class_option :long, :type => :boolean
       class_option :file, type: :string
 
-      desc '', 'Buchen'
+      desc '', _('Buchen')
       def execute
         title = "BUCHUNGSSTREBER v#{VERSION}"
         puts style(title, :bold)
@@ -19,7 +25,7 @@ module Buchungsstreber
 
         unless Config.find_config
           invoke :init
-          invoke :config if is_automated? || yes?('Konfiguration editieren?')
+          invoke :config if is_automated? || yes?(_('Konfiguration editieren?'))
         end
 
         entries = Buchungsstreber::Context.new(options[:file]).entries
@@ -40,15 +46,15 @@ module Buchungsstreber
         return unless entries[:valid]
 
         min_date, max_date = entries[:daily_hours].keys.minmax
-        puts style("Zu buchende Stunden (#{min_date} bis #{max_date}):", :bold)
+        puts style(_('Zu buchende Stunden (%<min_date>s bis %<max_date>s):') % {min_date: min_date, max_date: max_date}, :bold)
         tbl = entries[:daily_hours].map do |date, hours|
 
           color = Utils.classify_workhours(hours, entries[:work_hours][date])
-          ["#{date.strftime("%a")}:", style("#{hours}h", color)]
+          ["#{date.strftime('%a')}:", style("#{hours}h", color)]
         end
         print_table(tbl, indent: 2)
 
-        if is_automated? || yes?('Buchungen in Redmine übernehmen? (y/N)')
+        if is_automated? || yes?(_('Buchungen in Redmine uebernehmen? (y/N)'))
           invoke :buchen, [], entries: aggregated
           invoke :archivieren, [], entries: entries
         end
@@ -58,7 +64,7 @@ module Buchungsstreber
 
       default_task :execute
 
-      desc 'show date', 'Show time entries'
+      desc 'show date', _('Buchungen anzeigen')
       def show(date)
         entries = Buchungsstreber::Context.new(options[:file]).entries(Date.parse(date))
         aggregated = Aggregator.aggregate(entries[:entries])
@@ -75,7 +81,7 @@ module Buchungsstreber
         end
         print_table(tbl, indent: 2)
 
-        puts style("Summa summarum (#{date}):", :bold)
+        puts style(_('Summa summarum (%<date>s):') % {date: date}, :bold)
         tbl = entries[:daily_hours].map do |entrydate, hours|
           planned = entries[:work_hours][:planned]
           on_day = entries[:work_hours][entrydate]
@@ -88,34 +94,34 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'buchen [date]', 'Buchen in Redmine'
+      desc 'buchen [date]', _('Buchen in Redmine')
       def buchen(date = nil)
         entries = options[:entries] || Buchungsstreber::Context.new(options[:file]).entries[:entries]
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
-        puts style('Buche', :bold)
+        puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
-          print style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", 60)
+          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, 60)
           $stdout.flush
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
           case
           when status.grep(/(time|activity)_different/).any?
-            puts style("→ Bereits gebucht (#{status.join(', ')})", :red, :bold)
+            puts style(_("-> Bereits gebucht")+" (#{status.join(', ')})", :red, :bold)
           when status.include?(:existing)
-            puts style('→ Bereits gebucht', :green)
+            puts style('-> Bereits gebucht', :green)
           else
             success = redmine.add_time entry
-            puts success ? style("→ OK", :green) : style("→ FEHLER", :red, :bold)
+            puts success ? style(_("-> OK"), :green) : style(_("-> FEHLER"), :red, :bold)
           end
         end
 
-        puts style("Buchungen erfolgreich gespeichert", :green, :bold)
+        puts style(_('Buchungen erfolgreich gespeichert'), :green, :bold)
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
 
-      desc 'archivieren', 'Jetzige Eintraege Archiviren'
+      desc 'archivieren', _('Jetzige Eintraege Archiviren')
       def archivieren
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
         entries = options[:entries] || buchungsstreber.entries
@@ -127,30 +133,30 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'init', 'Konfiguration initialisieren'
+      desc 'init', _('Konfiguration initialisieren')
       def init
         if (f = Config.find_config)
-          puts "Buchungsstreber bereits konfiguriert in #{f}"
+          puts _('Buchungsstreber bereits konfiguriert in %<file>s') % {file: f}
           exit
         end
 
         f = init_config
-        puts "Konfiguration in #{f} erstellt."
+        puts _('Konfiguration in %<file>s erstellt.') % {file: f}
         puts ''
-        puts 'Schritte zum friedvollen Buchen:'
-        puts ' * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen.'
-        puts ' * Buchungsdatei oeffnen (siehe Konfig-Datei)'
-        puts ' * `buchungsstreber` ausfuehren'
+        puts _('Schritte zum friedvollen Buchen:')
+        puts _(' * Config-Datei anpassen - mindestens die eigenen API-Keys eintragen.')
+        puts _(' * Buchungsdatei oeffnen (siehe Konfig-Datei)')
+        puts _(' * `buchungsstreber` ausfuehren')
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
 
-      desc 'version', 'Version ausgeben'
+      desc 'version', _('Version ausgeben')
       def version
         say "v#{Buchungsstreber::VERSION}"
       end
 
-      desc 'config', 'Konfiguration editieren'
+      desc 'config', _('Konfiguration editieren')
       def config
         return $stdout.write(File.read(Config.find_config)) if is_automated?
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
@@ -158,7 +164,7 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'edit [date]', 'Buchungen editieren'
+      desc 'edit [date]', _('Buchungen editieren')
       def edit(date = nil)
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
         timesheet_file = buchungsstreber.timesheet_file
@@ -195,7 +201,7 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'watch [date]', 'Watch the time entry file'
+      desc 'watch [date]', _('Ueberwache aenderungen der Buchungsdatei')
       def watch(date = nil)
         date = Date.parse(date) if date
         buchungsstreber = Buchungsstreber::Context.new(options[:file])

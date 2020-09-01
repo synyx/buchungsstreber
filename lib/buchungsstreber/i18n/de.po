@@ -1,0 +1,154 @@
+# BUCHUNGSSTREBER
+# Copyright (C) 2020 Jonathan Buch
+# This file is distributed under the same license as the buchungsstreber package.
+# Jonathan Buch <jbuch@synyx.de>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Buchungsstreber\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-31 17:40+0200\n"
+"PO-Revision-Date: 2020-08-31 17:46+0200\n"
+"Last-Translator: Jonathan Buch <jbuch@synyx.de>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: lib/buchungsstreber/cli/app.rb:150
+msgid " * Buchungsdatei oeffnen (siehe Konfig-Datei)"
+msgstr " * Buchungsdatei öffnen (siehe Konfig-Datei)"
+
+#: lib/buchungsstreber/cli/app.rb:149
+msgid " * Config-Datei anpassen - mindestens die eigenen API-Keys eintragen."
+msgstr " * Config-Datei anpassen – mindestens die eigenen API-Keys eintragen."
+
+#: lib/buchungsstreber/cli/app.rb:151
+msgid " * `buchungsstreber` ausfuehren"
+msgstr " * `buchungsstreber` ausführen"
+
+#: lib/buchungsstreber/cli/tui.rb:60
+msgid "&"
+msgstr "🔃"
+
+#: lib/buchungsstreber/cli/tui.rb:168
+msgid "-> ACK"
+msgstr "→ Da"
+
+#: lib/buchungsstreber/cli/app.rb:112
+msgid "-> Bereits gebucht"
+msgstr "→ Bereits gebucht"
+
+#: lib/buchungsstreber/cli/tui.rb:164
+msgid "-> DIFF"
+msgstr "→ Anders"
+
+#: lib/buchungsstreber/cli/app.rb:117 lib/buchungsstreber/cli/tui.rb:172
+msgid "-> FEHLER"
+msgstr "→ FEHLER"
+
+#: lib/buchungsstreber/cli/app.rb:117 lib/buchungsstreber/cli/tui.rb:172
+msgid "-> OK"
+msgstr "→ OK"
+
+#: lib/buchungsstreber/cli/app.rb:104 lib/buchungsstreber/cli/tui.rb:148
+msgid "Buche"
+msgstr "Buche"
+
+#: lib/buchungsstreber/cli/app.rb:106 lib/buchungsstreber/cli/tui.rb:154
+#, ruby-format
+msgid "Buche %<time>sh auf %<issue>s: %<text>s"
+msgstr "Buche %<time>sh auf %<issue>s: %<text>s"
+
+#: lib/buchungsstreber/cli/app.rb:21
+msgid "Buchen"
+msgstr "Buchen"
+
+#: lib/buchungsstreber/cli/app.rb:99
+msgid "Buchen in Redmine"
+msgstr "Buchen in Redmine"
+
+#: lib/buchungsstreber/cli/tui.rb:180
+msgid "Buchungen abgearbeitet"
+msgstr "Buchungen abgearbeitet"
+
+#: lib/buchungsstreber/cli/app.rb:69
+msgid "Buchungen anzeigen"
+msgstr "Buchungen anzeigen"
+
+#: lib/buchungsstreber/cli/app.rb:169
+msgid "Buchungen editieren"
+msgstr "Buchungen editieren"
+
+#: lib/buchungsstreber/cli/app.rb:121
+msgid "Buchungen erfolgreich gespeichert"
+msgstr "Buchungen erfolgreich gespeichert"
+
+#: lib/buchungsstreber/cli/app.rb:59
+msgid "Buchungen in Redmine uebernehmen? (y/N)"
+msgstr "Buchungen in Redmine übernehmen? (j/N)"
+
+#: lib/buchungsstreber/cli/app.rb:141
+#, ruby-format
+msgid "Buchungsstreber bereits konfiguriert in %<file>s"
+msgstr "Buchungsstreber bereits konfiguriert in %<file>s"
+
+#: lib/buchungsstreber/cli/app.rb:126
+msgid "Jetzige Eintraege Archiviren"
+msgstr "Jetzige Einträge Archiviren"
+
+#: lib/buchungsstreber/cli/app.rb:161
+msgid "Konfiguration editieren"
+msgstr "Konfiguration editieren"
+
+#: lib/buchungsstreber/cli/app.rb:30
+msgid "Konfiguration editieren?"
+msgstr "Konfiguration editieren?"
+
+#: lib/buchungsstreber/cli/app.rb:146
+#, ruby-format
+msgid "Konfiguration in %<file>s erstellt."
+msgstr "Konfiguration in %<file>s erstellt."
+
+#: lib/buchungsstreber/cli/app.rb:138
+msgid "Konfiguration initialisieren"
+msgstr "Konfiguration initialisieren"
+
+#: lib/buchungsstreber/cli/app.rb:148
+msgid "Schritte zum friedvollen Buchen:"
+msgstr "Schritte zum friedvollen Buchen:"
+
+#: lib/buchungsstreber/cli/app.rb:86
+#, ruby-format
+msgid "Summa summarum (%<date>s):"
+msgstr "Summa summarum (%<date>s):"
+
+#: lib/buchungsstreber/cli/app.rb:206
+msgid "Ueberwache aenderungen der Buchungsdatei"
+msgstr "Überwache aenderungen der Buchungsdatei"
+
+#: lib/buchungsstreber/cli/app.rb:156
+msgid "Version ausgeben"
+msgstr "Version ausgeben"
+
+#: lib/buchungsstreber/cli/app.rb:51
+#, ruby-format
+msgid "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
+msgstr "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
+
+#: lib/buchungsstreber/cli/tui.rb:202
+msgid "h/? help | q quit | l next day | r previous day | <enter> refresh"
+msgstr "h/? help | q quit | → Naechster Tag | ← Voriger Tag | ⏎ Neu Laden"
+
+#: lib/buchungsstreber/cli/tui.rb:175
+msgid "o"
+msgstr "✓"
+
+#: lib/buchungsstreber/cli/tui.rb:175
+msgid "x"
+msgstr "X"

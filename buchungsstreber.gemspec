@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'thor', '~> 0'
+  spec.add_dependency 'i18n', '~> 1.8.0'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 13.0'
@@ -36,4 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'aruba', '~> 0.14.0'
   spec.add_development_dependency 'simplecov', '~> 0.17.0'
   spec.add_development_dependency 'webmock', '~> 3.0'
+  spec.add_development_dependency 'gettext'
 end

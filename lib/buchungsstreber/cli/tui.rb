@@ -4,6 +4,7 @@ rescue
   require 'ffi-ncurses/ncurses'
 end
 require 'io/console'
+require 'thread'
 require 'yaml'
 require_relative '../../buchungsstreber/watcher'
 
@@ -15,8 +16,6 @@ module Buchungsstreber
         @buchungsstreber = buchungsstreber
         @date = startdate
         @options = options
-
-        @m = Mutex.new
       end
 
       def start
@@ -36,19 +35,28 @@ module Buchungsstreber
 
         @win = Curses.stdscr
         @entries = { entries: [] }
+        @queue = Queue.new
 
-        Signal.trap('SIGWINCH') { setsize }
+        Signal.trap('SIGWINCH') { @queue << ?r }
         Thread.start do
           while true
-            on_input(Curses.getch)
+            @queue << Curses.getch
           end
         end
 
         setsize
         redraw
-        Watcher.watch(@buchungsstreber.timesheet_file) do |_|
-          # Refresh (ignored on sub-window)
-          on_input(10)
+
+        Thread.start do
+          Watcher.watch(@buchungsstreber.timesheet_file) do |_|
+            # Refresh (ignored on sub-window)
+            @queue << 10
+          end
+        end
+
+        # Main UI loop
+        while (ch = @queue.pop) != ?q
+          on_input ch
         end
       ensure
         Curses.close_screen
@@ -57,7 +65,7 @@ module Buchungsstreber
       private
 
       def redraw
-        loading('&')
+        loading(_('&'))
         Curses.refresh
 
         e =
@@ -145,13 +153,13 @@ module Buchungsstreber
 
         w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
         w.setpos(2, 2)
-        w.attron(Curses::A_BOLD) { w.addstr("Buche\n") }
+        w.attron(Curses::A_BOLD) { w.addstr(_('Buche')) }
         w.box(0,0)
         w.refresh
 
         entries.each do |entry|
           w.setpos(w.cury+1, 5)
-          w.addstr style("Buche #{entry[:time]}h auf \##{entry[:issue]}: #{entry[:text]}", w.maxx - 21)
+          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, w.maxx - 21)
           w.refresh
 
           redmine = redmines.get(entry[:redmine])
@@ -161,23 +169,23 @@ module Buchungsstreber
           when status.grep(/(time|activity)_different/).any?
             success = false
             color = color_pair(:yellow) | Curses::A_BOLD
-            w.attron(color) { w.addstr("-> DIFF #{$1}") }
+            w.attron(color) { w.addstr(_('-> DIFF') + " #{$1}") }
           when status.include?(:existing)
             success = true
             color = color_pair(:green)
-            w.attron(color) { w.addstr("-> ACK") }
+            w.attron(color) { w.addstr(_('-> ACK')) }
           else
             success = redmine.add_time entry
             color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
-            w.attron(color) { w.addstr(success ? "-> OK" : "-> FEHLER") }
+            w.attron(color) { w.addstr(success ? _('-> OK') : _('-> FEHLER')) }
           end
           w.setpos(w.cury, 3)
-          w.attron(color) { w.addstr(success ? 'o' : 'x') }
+          w.attron(color) { w.addstr(success ? _('o') : _('x')) }
           w.refresh
         end
 
         w.setpos(w.cury+2, 2)
-        w.addstr "Buchungen abgearbeitet"
+        w.addstr _('Buchungen abgearbeitet')
 
         w.refresh
         w
@@ -199,7 +207,7 @@ module Buchungsstreber
       end
 
       def show_help
-        addstatus("h/? help | q quit | l next day | r previous day | <enter> refresh")
+        addstatus(_("h/? help | q quit | l next day | r previous day | <enter> refresh"))
       end
 
       def addstatus(msg)
@@ -216,11 +224,9 @@ module Buchungsstreber
       end
 
       def on_input(keycode)
-        @m.lock
-
         if @subwindow
           case keycode
-          when ?\n, ?\r, ?q, ?\e, Curses::KEY_CANCEL
+          when ?\n, ?\r, ?\e, Curses::KEY_CANCEL
             @subwindow.close
             @subwindow = nil
             redraw
@@ -231,9 +237,8 @@ module Buchungsstreber
         case keycode
         when 10
           redraw
-        when Curses::KEY_RESIZE
-          # Note: this is called incredibly often, use the WINCH trap above
-          #setsize.call
+        when ?r # Curses::KEY_RESIZE
+          setsize
         when Curses::KEY_MOUSE
           if (m = Curses.getmouse)
             @subwindow = detailpage(m.x, m.y)
@@ -248,13 +253,9 @@ module Buchungsstreber
           show_help
         when 'b'
           @subwindow = buchen(@date)
-        when 'q'
-          exit 0
         else
           #addstatus('Unknown keycode `%s`' % str.inspect)
         end
-      ensure
-        @m.unlock
       end
 
       def style(string, *styles)
