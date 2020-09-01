@@ -226,7 +226,7 @@ module Buchungsstreber
       def on_input(keycode)
         if @subwindow
           case keycode
-          when ?\n, ?\r, ?\e, Curses::KEY_CANCEL
+          when Curses::KEY_ENTER, ' ', ?\e, Curses::KEY_CANCEL, Curses::KEY_BACKSPACE
             @subwindow.close
             @subwindow = nil
             redraw
