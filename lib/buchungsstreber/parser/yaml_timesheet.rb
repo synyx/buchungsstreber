@@ -14,7 +14,12 @@ class YamlTimesheet
   end
 
   def parse(file_path)
-    timesheet = YAML.load_file(file_path)
+    timesheet =
+      if File.size(file_path) == 0
+        {}
+      else
+        YAML.load_file(file_path)
+      end
     throw 'invalid line: file should contain map' unless timesheet.is_a?(Hash)
     result = []
 
