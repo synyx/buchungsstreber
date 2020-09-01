@@ -15,7 +15,7 @@ class YamlTimesheet
 
   def parse(file_path)
     timesheet =
-      if File.size(file_path) == 0
+      if File.size(file_path) <= 1
         {}
       else
         YAML.load_file(file_path)
