@@ -4,7 +4,6 @@ require 'i18n'
 require_relative '../i18n/config'
 
 include I18n::Gettext::Helpers
-I18n::Backend::Simple.include(I18n::Backend::Gettext)
 I18n.config.enforce_available_locales = false
 
 require 'buchungsstreber'
