@@ -23,7 +23,7 @@ class Watcher
           when 'created', 'updated'
             block.call(f)
           when 'deleted'
-            fw.stop
+            # assume it will be recreated
           end
         end
       end
@@ -71,6 +71,7 @@ class Watcher
         Thread.start(notifier) { |n| mutex.synchronize { resource.wait(mutex); n.stop } }
         notifier.run
       end
+    rescue LoadError
     end
   end
 end
