@@ -4,7 +4,6 @@ source "https://rubygems.org"
 gemspec
 
 group :tui, optional: true do
-  gem 'curses', '~>1.3', platform: :mri
-  gem 'ffi-ncurses', platform: :jruby
+  gem 'curses', '~>1.3'
   gem 'rb-inotify'
 end

@@ -1,11 +1,8 @@
-begin
-  require 'curses'
-rescue
-  require 'ffi-ncurses/ncurses'
-end
 require 'io/console'
 require 'thread'
 require 'yaml'
+require 'curses'
+
 require_relative '../../buchungsstreber/watcher'
 
 module Buchungsstreber
