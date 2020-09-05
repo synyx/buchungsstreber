@@ -3,7 +3,7 @@ image: "ruby:2.5"
 
 before_script:
   - gem install bundler --no-document
-  - bundle install --jobs $(nproc) --path vendor/bundle
+  - bundle check || bundle install --path vendor/bundle
 
 rspec:
   script:
