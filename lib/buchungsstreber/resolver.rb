@@ -30,6 +30,5 @@ class Resolver
     def self.included(klass)
       RESOLVERS << klass
     end
-
   end
 end

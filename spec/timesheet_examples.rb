@@ -31,7 +31,6 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
     end
   end
 
-
   context 'invalid' do
     it 'raises on invalid lines' do
       expect { described_class.new(templates || {}).parse("spec/examples/invalid#{extension}") }.to raise_exception(/invalid line/)
@@ -58,7 +57,7 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
         file.write(str)
         file.close
         e2 = parser.parse(file.path)
-        e1[0].each do |k,v|
+        e1[0].each do |k, v|
           expect(e2[0][k]).to eq(v)
         end
       ensure

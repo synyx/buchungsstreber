@@ -1,5 +1,4 @@
 RSpec::Matchers.define :fail_with do |message|
-
   match do |block|
     res, output = fake_stderr(&block)
     output.include?(message) && res == false
@@ -31,5 +30,4 @@ RSpec::Matchers.define :fail_with do |message|
   ensure
     $stderr = original_stderr
   end
-
 end

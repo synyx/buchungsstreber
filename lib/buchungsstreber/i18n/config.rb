@@ -26,10 +26,10 @@ require "i18n"
 module I18n
   module Env
     class Config < I18n::Config
-      VERSION = "0.0.1"
+      VERSION = "0.0.1".freeze
 
       # Order is important
-      VARS = %w[LANGUAGE LC_ALL LC_MESSAGES LANG]
+      VARS = %w[LANGUAGE LC_ALL LC_MESSAGES LANG].freeze
 
       def locale
         @locale ||= find_user_locale || super

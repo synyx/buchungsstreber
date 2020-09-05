@@ -6,7 +6,7 @@ class Generator
   end
 
   def generate(date)
-    GENERATORS.each_with_object([]) do |g,memo|
+    GENERATORS.each_with_object([]) do |g, memo|
       config = @config[g.name.split(':').last.downcase]
       generator = g.new(config)
       memo << generator.generate(date)
@@ -20,6 +20,5 @@ class Generator
     def self.included(klass)
       GENERATORS << klass
     end
-
   end
 end

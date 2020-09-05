@@ -19,7 +19,6 @@ require_relative 'buchungsstreber/redmines'
 require_relative 'buchungsstreber/config'
 
 module Buchungsstreber
-
   class Context
     attr_reader :redmines, :timesheet_parser, :timesheet_file, :config
 
@@ -30,14 +29,14 @@ module Buchungsstreber
       @timesheet_parser = TimesheetParser.new(@timesheet_file, @config[:templates])
       @redmines = Redmines.new(@config[:redmines])
 
-      @config[:generators].keys.each do |gc|
+      @config[:generators].each_key do |gc|
         require_relative "buchungsstreber/generator/#{gc}"
       end
       @generator = Generator.new(@config[:generators])
 
       require_relative "buchungsstreber/resolver/templates"
       require_relative "buchungsstreber/resolver/redmines"
-      @config[:resolvers].keys.each do |gc|
+      @config[:resolvers].each_key do |gc|
         require_relative "buchungsstreber/resolver/#{gc}"
       end
       @resolver = Resolver.new(@config)

@@ -47,7 +47,7 @@ RSpec.describe 'CLI App', type: :aruba do
 
       # Make sure the api-keys are set
       run_command_and_stop('buchungsstreber config')
-      config = YAML.load(last_command_started.stdout)
+      config = YAML.safe_load(last_command_started.stdout)
       config['redmines'].each do |r|
         r['server']['url'] = 'https://localhost'
         r['server']['apikey'] = 'anything'
@@ -88,14 +88,14 @@ RSpec.describe 'CLI App', type: :aruba do
     end
 
     it 'adds times to redmine' do
-      validation_stub = stub_request(:get, "https://localhost/issues/8484.json").
-        to_return(status: 200, body: JSON.dump(issue_8484))
+      validation_stub = stub_request(:get, "https://localhost/issues/8484.json")
+                        .to_return(status: 200, body: JSON.dump(issue_8484))
       user_stub = stub_request(:get, "https://localhost/users/current.json").
-          to_return(status: 200, body: JSON.dump(current_user))
+                  to_return(status: 200, body: JSON.dump(current_user))
       get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{Date.today}&to=#{Date.today}&user_id=1").
-          to_return(status: 200, body: JSON.dump({'time_entries'=>[]}))
+                       to_return(status: 200, body: JSON.dump({'time_entries' => []}))
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json").
-        to_return(status: 201)
+                      to_return(status: 201)
 
       File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
       run_command_and_stop('buchungsstreber execute --debug')

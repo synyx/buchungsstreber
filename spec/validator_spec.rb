@@ -119,7 +119,6 @@ RSpec.describe Validator do
   end
 end
 
-
 RSpec.describe Validator, '#status!' do
   subject { Validator }
   let(:default_entry) do

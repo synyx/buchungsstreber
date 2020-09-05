@@ -9,7 +9,7 @@ class BuchTimesheet
   end
 
   def self.parses?(file)
-    return File.extname(file) == '.B'
+    File.extname(file) == '.B'
   end
 
   def parse(file)
@@ -23,9 +23,9 @@ class BuchTimesheet
         # beginning of day
         current = $1
         if line =~ /(?<start>\d{1,2}:\d{1,2}) -> (?<pause>\d{1,2}(?:[:.]\d{1,2})?) -> (?<end>\d{1,2}:\d{1,2})/
-          s = Time.parse(current + ' ' + $~[:start])
+          s = Time.parse("#{current} #{$~[:start]}")
           p = parse_time($~[:pause])
-          e = Time.parse(current + ' ' + $~[:end])
+          e = Time.parse("#{current} #{$~[:end]}")
           work_hours = qarter_time((e - s) / 60 / 60 - p)
         else
           work_hours = nil
@@ -67,7 +67,7 @@ class BuchTimesheet
 
   def format(entries)
     buf = ""
-    days = entries.group_by {|e| e[:date] }.to_a.sort_by { |x| x[0] }
+    days = entries.group_by { |e| e[:date] }.to_a.sort_by { |x| x[0] }
     days.each do |date, day|
       buf << "#{date}\n\n"
       day.each do |e|
@@ -80,7 +80,7 @@ class BuchTimesheet
 
   def archive(file_path, archive_path, date)
     FileUtils.mkdir_p archive_path unless File.directory? archive_path
-    archive_filename = date.strftime("%Y-%m-%d") + ".B"
+    archive_filename = "#{date.strftime('%Y-%m-%d')}.B"
 
     File.open("#{archive_path}/#{archive_filename}", File::WRONLY | File::CREAT | File::EXCL) do |f|
       f.write(File.read(file_path))

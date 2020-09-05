@@ -1,7 +1,5 @@
 class Aggregator
-
   def self.aggregate(entries)
-
     aggregated_entries = []
     entries.each do |entry|
       possible_aggregations = aggregated_entries.select { |aggregated_entry| aggregatable?(aggregated_entry, entry) }
@@ -12,17 +10,14 @@ class Aggregator
       end
     end
 
-    return aggregated_entries
+    aggregated_entries
   end
-
-  private
 
   def self.aggregatable?(entry, extension)
-    return entry[:redmine] == extension[:redmine] &&
-        entry[:issue] == extension[:issue] &&
-        entry[:date] == extension[:date] &&
-        (entry[:text] == extension[:text] || !extension[:text]) &&
-        (entry[:activity] == extension[:activity] || !extension[:activity])
+    entry[:redmine] == extension[:redmine] &&
+      entry[:issue] == extension[:issue] &&
+      entry[:date] == extension[:date] &&
+      (entry[:text] == extension[:text] || !extension[:text]) &&
+      (entry[:activity] == extension[:activity] || !extension[:activity])
   end
-
 end

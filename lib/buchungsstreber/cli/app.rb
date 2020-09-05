@@ -30,8 +30,8 @@ module Buchungsstreber
         entries = Buchungsstreber::Context.new(options[:file]).entries
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
-          status_color = {true => :blue, false => :red}[e[:valid]]
-          err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
+          status_color = { true => :blue, false => :red}[e[:valid]]
+          err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
             e[:date].strftime("%a:"),
             style("%sh" % e[:time], :bold),
@@ -47,7 +47,6 @@ module Buchungsstreber
         min_date, max_date = entries[:daily_hours].keys.minmax
         puts style(_('Zu buchende Stunden (%<min_date>s bis %<max_date>s):') % {min_date: min_date, max_date: max_date}, :bold)
         tbl = entries[:daily_hours].map do |date, hours|
-
           color = Utils.classify_workhours(hours, entries[:work_hours][date])
           ["#{date.strftime('%a')}:", style("#{hours}h", color)]
         end
@@ -69,13 +68,13 @@ module Buchungsstreber
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
-          err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
+          err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
-              e[:date].strftime("%a:"),
-              style("%sh" % e[:time], :bold),
-              '@',
-              style((err || '') + (e[:title] || ''), status_color, 50),
-              style(e[:text], 30)
+            e[:date].strftime("%a:"),
+            style("%sh" % e[:time], :bold),
+            '@',
+            style((err || '') + (e[:title] || ''), status_color, 50),
+            style(e[:text], 30)
           ]
         end
         print_table(tbl, indent: 2)
@@ -85,10 +84,9 @@ module Buchungsstreber
           planned = entries[:work_hours][:planned]
           on_day = entries[:work_hours][entrydate]
           color = Utils.classify_workhours(hours, planned, on_day)
-          ["#{entrydate.strftime("%a")}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
+          ["#{entrydate.strftime('%a')}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
         end
         print_table(tbl, indent: 2)
-
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
@@ -104,10 +102,9 @@ module Buchungsstreber
           $stdout.flush
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
-          case
-          when status.grep(/(time|activity)_different/).any?
-            puts style(_("-> Bereits gebucht")+" (#{status.join(', ')})", :red, :bold)
-          when status.include?(:existing)
+          if status.grep(/(time|activity)_different/).any?
+            puts style(_("-> Bereits gebucht") + " (#{status.join(', ')})", :red, :bold)
+          elsif status.include?(:existing)
             puts style('-> Bereits gebucht', :green)
           else
             success = redmine.add_time entry
@@ -158,6 +155,7 @@ module Buchungsstreber
       desc 'config', _('Konfiguration editieren')
       def config
         return $stdout.write(File.read(Config.find_config)) if is_automated?
+
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
       rescue StandardError => e
         handle_error(e, options[:debug])
@@ -186,7 +184,7 @@ module Buchungsstreber
             prev =  File.read(timesheet_file)
             tmpfile = File.open(timesheet_file, 'w+')
             begin
-              tmpfile.write(newday + "\n\n" + prev)
+              tmpfile.write("#{newday}\n\n#{prev}")
               timesheet_file = tmpfile.path
             ensure
               tmpfile.close
@@ -195,6 +193,7 @@ module Buchungsstreber
         end
 
         return $stdout.write(File.read(timesheet_file)) if is_automated?
+
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', timesheet_file)
       rescue StandardError => e
         handle_error(e, options[:debug])
@@ -219,7 +218,11 @@ module Buchungsstreber
         len = styles.find { |x| x.is_a?(Numeric) }
         styles = styles.select { |x| x.is_a?(Symbol) }
         string = Utils.fixed_length(string, len) if len && !options[:long]
-        string = set_color(string, *styles) unless styles.empty? rescue string
+        begin
+          string = set_color(string, *styles) unless styles.empty?
+        rescue StandardError
+          string
+        end
         string
       end
 
@@ -230,11 +233,11 @@ module Buchungsstreber
 
       def pretty_error(e, debug)
         if !debug
-          e.class.name + ': ' + e.message[0..80]
+          "#{e.class.name}: #{e.message[0..80]}"
         else
           msg = ['']
-          msg << [e.class.name + ': ' + e.message]
-          msg << e.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  " + x }
+          msg << ["#{e.class.name}: #{e.message}"]
+          msg << e.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  #{x}" }
           msg << '  ...'
           msg.join("\n")
         end
@@ -247,7 +250,7 @@ module Buchungsstreber
       def init_config
         FileUtils.mkdir_p(Config.user_config_path)
 
-        template = File.expand_path('example.config.yml', __dir__ + '/../../..')
+        template = File.expand_path('example.config.yml', "#{__dir__}/../../..")
         target = File.expand_path(Config::DEFAULT_NAME, Config.user_config_path)
         timesheet_file = File.expand_path('buchungen.yml', Config.user_config_path)
         archive_path = File.expand_path('archive', Config.user_config_path)
