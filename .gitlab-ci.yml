@@ -14,7 +14,7 @@ before_script:
   - apt-get update -yq
   - apt-get -q -o dir::cache::archives="$APT_CACHE_DIR" install -y cmake
   - gem install bundler --no-document
-  - bundle check || bundle install --with=dev
+  - bundle check || bundle install
 
 stages:
   - Testing
