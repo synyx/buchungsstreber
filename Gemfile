@@ -9,8 +9,5 @@ group :tui, optional: true do
 end
 
 group :dev, optional: true do
-  gem 'pronto'
-  gem 'pronto-rubocop'
-  gem 'pronto-flay'
   gem 'nexus'
 end
