@@ -1,7 +1,4 @@
-
-
 class Watcher
-
   # Watches the given file.
   # It will block until the file is removed.
   #
@@ -9,7 +6,7 @@ class Watcher
   #
   # @yield [file] the changed file
   # @yieldparam [String] file the changed file as absolute path
-  def self.watch(file, &block)
+  def self.watch(_file)
     throw 'Watch not implemented, install filewatcher or listen gem'
   end
 
@@ -18,7 +15,7 @@ class Watcher
       require 'filewatcher'
       def watch(file, &block)
         fw = Filewatcher.new(file)
-        fw.watch do |f,event|
+        fw.watch do |f, event|
           case event
           when 'created', 'updated'
             block.call(f)
@@ -42,9 +39,9 @@ class Watcher
             mutex.synchronize { resource.signal }
           end
         end
-        listener.only /#{File.basename(file)}/
+        listener.only(/#{File.basename(file)}/)
         listener.start
-        Thread.start(listener) { |l| mutex.synchronize { resource.wait(mutex) } }.join
+        Thread.start(listener) { |_l| mutex.synchronize { resource.wait(mutex) } }.join
       end
     rescue LoadError
     end
@@ -55,7 +52,7 @@ class Watcher
         mutex = Mutex.new
         resource = ConditionVariable.new
         notifier = INotify::Notifier.new
-        notifier.watch file, :modify, :attrib do |event|
+        notifier.watch file, :modify, :attrib do |_event|
           block.call(file)
         end
         notifier.watch File.dirname(file), :delete, :create do |event|

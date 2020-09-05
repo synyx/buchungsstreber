@@ -24,14 +24,14 @@ module Buchungsstreber
 
         unless Config.find_config
           invoke :init
-          invoke :config if is_automated? || yes?(_('Konfiguration editieren?'))
+          invoke :config if automated? || yes?(_('Konfiguration editieren?'))
         end
 
         entries = Buchungsstreber::Context.new(options[:file]).entries
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
-          status_color = {true => :blue, false => :red}[e[:valid]]
-          err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
+          status_color = { true => :blue, false => :red }[e[:valid]]
+          err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
             e[:date].strftime("%a:"),
             style("%sh" % e[:time], :bold),
@@ -47,13 +47,12 @@ module Buchungsstreber
         min_date, max_date = entries[:daily_hours].keys.minmax
         puts style(_('Zu buchende Stunden (%<min_date>s bis %<max_date>s):') % {min_date: min_date, max_date: max_date}, :bold)
         tbl = entries[:daily_hours].map do |date, hours|
-
           color = Utils.classify_workhours(hours, entries[:work_hours][date])
           ["#{date.strftime('%a')}:", style("#{hours}h", color)]
         end
         print_table(tbl, indent: 2)
 
-        if is_automated? || yes?(_('Buchungen in Redmine uebernehmen? (y/N)'))
+        if automated? || yes?(_('Buchungen in Redmine uebernehmen? (y/N)'))
           invoke :buchen, [], entries: aggregated
           invoke :archivieren, [], entries: entries
         end
@@ -69,13 +68,13 @@ module Buchungsstreber
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
-          err = e[:errors].map{ |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
+          err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
-              e[:date].strftime("%a:"),
-              style("%sh" % e[:time], :bold),
-              '@',
-              style((err || '') + (e[:title] || ''), status_color, 50),
-              style(e[:text], 30)
+            e[:date].strftime("%a:"),
+            style("%sh" % e[:time], :bold),
+            '@',
+            style((err || '') + (e[:title] || ''), status_color, 50),
+            style(e[:text], 30)
           ]
         end
         print_table(tbl, indent: 2)
@@ -85,10 +84,9 @@ module Buchungsstreber
           planned = entries[:work_hours][:planned]
           on_day = entries[:work_hours][entrydate]
           color = Utils.classify_workhours(hours, planned, on_day)
-          ["#{entrydate.strftime("%a")}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
+          ["#{entrydate.strftime('%a')}:", style("#{hours}h / #{planned}h (#{on_day}h)", color)]
         end
         print_table(tbl, indent: 2)
-
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
@@ -100,14 +98,13 @@ module Buchungsstreber
 
         puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
-          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, 60)
+          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, 60)
           $stdout.flush
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
-          case
-          when status.grep(/(time|activity)_different/).any?
-            puts style(_("-> Bereits gebucht")+" (#{status.join(', ')})", :red, :bold)
-          when status.include?(:existing)
+          if status.grep(/(time|activity)_different/).any?
+            puts style(_("-> Bereits gebucht") + " (#{status.join(', ')})", :red, :bold)
+          elsif status.include?(:existing)
             puts style('-> Bereits gebucht', :green)
           else
             success = redmine.add_time entry
@@ -157,7 +154,8 @@ module Buchungsstreber
 
       desc 'config', _('Konfiguration editieren')
       def config
-        return $stdout.write(File.read(Config.find_config)) if is_automated?
+        return $stdout.write(File.read(Config.find_config)) if automated?
+
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
       rescue StandardError => e
         handle_error(e, options[:debug])
@@ -186,7 +184,7 @@ module Buchungsstreber
             prev =  File.read(timesheet_file)
             tmpfile = File.open(timesheet_file, 'w+')
             begin
-              tmpfile.write(newday + "\n\n" + prev)
+              tmpfile.write("#{newday}\n\n#{prev}")
               timesheet_file = tmpfile.path
             ensure
               tmpfile.close
@@ -194,7 +192,8 @@ module Buchungsstreber
           end
         end
 
-        return $stdout.write(File.read(timesheet_file)) if is_automated?
+        return $stdout.write(File.read(timesheet_file)) if automated?
+
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', timesheet_file)
       rescue StandardError => e
         handle_error(e, options[:debug])
@@ -219,35 +218,39 @@ module Buchungsstreber
         len = styles.find { |x| x.is_a?(Numeric) }
         styles = styles.select { |x| x.is_a?(Symbol) }
         string = Utils.fixed_length(string, len) if len && !options[:long]
-        string = set_color(string, *styles) unless styles.empty? rescue string
+        begin
+          string = set_color(string, *styles) unless styles.empty?
+        rescue StandardError
+          string
+        end
         string
       end
 
-      def handle_error(e, debug = false)
-        $stderr.puts pretty_error(e, debug)
+      def handle_error(error, debug = false)
+        $stderr.puts pretty_error(error, debug)
         exit 1
       end
 
-      def pretty_error(e, debug)
+      def pretty_error(error, debug)
         if !debug
-          e.class.name + ': ' + e.message[0..80]
+          "#{error.class.name}: #{error.message[0..80]}"
         else
           msg = ['']
-          msg << [e.class.name + ': ' + e.message]
-          msg << e.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  " + x }
+          msg << ["#{error.class.name}: #{error.message}"]
+          msg << error.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  #{x}" }
           msg << '  ...'
           msg.join("\n")
         end
       end
 
-      def is_automated?
+      def automated?
         !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO) || !$stdout.tty?
       end
 
       def init_config
         FileUtils.mkdir_p(Config.user_config_path)
 
-        template = File.expand_path('example.config.yml', __dir__ + '/../../..')
+        template = File.expand_path('example.config.yml', "#{__dir__}/../../..")
         target = File.expand_path(Config::DEFAULT_NAME, Config.user_config_path)
         timesheet_file = File.expand_path('buchungen.yml', Config.user_config_path)
         archive_path = File.expand_path('archive', Config.user_config_path)

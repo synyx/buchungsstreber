@@ -10,7 +10,7 @@ class YamlTimesheet
   end
 
   def self.parses?(file)
-    return %w(.yml .yaml).include?(File.extname(file))
+    %w[.yml .yaml].include?(File.extname(file))
   end
 
   def parse(file_path)
@@ -25,6 +25,7 @@ class YamlTimesheet
 
     timesheet.each do |date, entries|
       next if entries.nil?
+
       throw 'invalid line: entries should be an array' unless entries.is_a?(Array)
 
       entries.each do |entry|
@@ -38,11 +39,12 @@ class YamlTimesheet
     old_timesheet = ""
     File.read(file_path).each_line do |line|
       break if line.start_with? "---"
+
       old_timesheet += line
     end
 
     FileUtils.mkdir archive_path unless File.directory? archive_path
-    archive_filename = date.strftime("%Y-%m-%d") + ".yml"
+    archive_filename = "#{date.strftime('%Y-%m-%d')}.yml"
     File.write("#{archive_path}/#{archive_filename}", old_timesheet)
 
     next_monday = (Date.today + ((1 - Date.today.wday) % 7)).strftime("%Y-%m-%d")
@@ -51,7 +53,7 @@ class YamlTimesheet
 
   def format(entries)
     buf = ""
-    days = entries.group_by {|e| e[:date] }.to_a.sort_by { |x| x[0] }
+    days = entries.group_by { |e| e[:date] }.to_a.sort_by { |x| x[0] }
     days.each do |date, day|
       buf << "#{date}:\n"
       day.each do |e|
@@ -74,13 +76,11 @@ class YamlTimesheet
       text ||= template["text"]
     end
 
-    if !issue_ref && activity =~ /^([a-z]*)(\d+)$/i
-      activity, issue_ref = nil, activity
-    end
+    activity, issue_ref = nil, activity if !issue_ref && activity =~ /^([a-z]*)(\d+)$/i
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
 
-    raise "invalid line: #{entry}" unless time and issue
+    raise "invalid line: #{entry}" unless time && issue
 
     {
       time: qarter_time(parse_time(time)),

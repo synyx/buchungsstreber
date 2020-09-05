@@ -32,22 +32,18 @@ RSpec.describe TimesheetParser do
   it 'raises error on unknown filetypes' do
     expect { TimesheetParser.new('../CHANGELOG.md', {}) }.to raise_error(/file extension/)
   end
-
 end
 
 class MockParser
   include TimesheetParser::Base
 
-  def self.parses?(x)
-    x == 'mock'
+  def self.parses?(file)
+    file == 'mock'
   end
 
-  def initialize(t)
-  end
+  def initialize(template); end
 
-  def parse(f)
-  end
+  def parse(file); end
 
-  def archive(*a)
-  end
+  def archive(file_path, archive_path, date); end
 end

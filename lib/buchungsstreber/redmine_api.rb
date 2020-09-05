@@ -5,7 +5,6 @@ require "json"
 require "yaml"
 
 class RedmineApi
-
   def initialize(config)
     load_config(config)
   end
@@ -28,7 +27,7 @@ class RedmineApi
   end
 
   def same_activity?(a, b)
-    #$stderr.puts [a,@config["activities"][a], b,@config["activities"][b]].inspect
+    # $stderr.puts [a,@config["activities"][a], b,@config["activities"][b]].inspect
     valid_activity?(a) and valid_activity?(b) and @config["activities"][a] == @config["activities"][b]
   end
 
@@ -63,7 +62,7 @@ class RedmineApi
   end
 
   def post(path, dto)
-    uri = URI.parse(@config["server"]["url"] + path + ".json")
+    uri = URI.parse("#{@config['server']['url']}#{path}.json")
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
 
@@ -77,7 +76,7 @@ class RedmineApi
     result.body.force_encoding("utf-8")
 
     unless result.code == "201"
-      warn "Fehler bei POST (#{@config["name"]}): #{result.message}, Rückgabe #{result.body}"
+      warn "Fehler bei POST (#{@config['name']}): #{result.message}, Rückgabe #{result.body}"
       return false
     end
 
@@ -85,7 +84,7 @@ class RedmineApi
   end
 
   def get(path, params = nil)
-    uri = URI.parse(@config["server"]["url"] + path + ".json")
+    uri = URI.parse("#{@config['server']['url']}#{path}.json")
     uri.query = URI.encode_www_form(params) if params
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
@@ -99,21 +98,17 @@ class RedmineApi
     result.body.force_encoding("utf-8")
 
     body = JSON.parse(result.body)
-    unless result.code == "200"
-      raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}"
-    end
+    raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}" unless result.code == "200"
 
     (yield body if block_given?) || body
   rescue JSON::ParserError => e
     raise "Fehler beim Laden des Issues (\##{issue_id}): #{e}, Rückgabe #{result.body}"
   end
 
-  private
-
   def from_time_entry(entry)
-    possible_activities = @config['activities'].select { |x, y| y == entry['activity']['id'] }
+    possible_activities = @config['activities'].select { |_x, y| y == entry['activity']['id'] }
     # use shortest one for displaying
-    activity = possible_activities.to_a.sort { |x| x[0].length }[0][0]
+    activity = possible_activities.to_a.min { |x| x[0].length }[0]
     {
       id: entry['id'],
       issue: entry['issue']['id'],

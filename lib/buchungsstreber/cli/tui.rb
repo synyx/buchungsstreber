@@ -1,5 +1,4 @@
 require 'io/console'
-require 'thread'
 require 'yaml'
 require 'curses'
 
@@ -8,7 +7,6 @@ require_relative '../../buchungsstreber/watcher'
 module Buchungsstreber
   module TUI
     class App
-
       def initialize(buchungsstreber, startdate = nil, options = {})
         @buchungsstreber = buchungsstreber
         @date = startdate
@@ -34,9 +32,9 @@ module Buchungsstreber
         @entries = { entries: [] }
         @queue = Queue.new
 
-        Signal.trap('SIGWINCH') { @queue << ?r }
+        Signal.trap('SIGWINCH') { @queue << 'r' }
         Thread.start do
-          while true
+          loop do
             @queue << Curses.getch
           end
         end
@@ -52,7 +50,7 @@ module Buchungsstreber
         end
 
         # Main UI loop
-        while (ch = @queue.pop) != ?q
+        while (ch = @queue.pop) != 'q'
           on_input ch
         end
       ensure
@@ -66,16 +64,16 @@ module Buchungsstreber
         Curses.refresh
 
         e =
-            begin
-              @entries.merge! @buchungsstreber.entries(@date)
-              addstatus('')
-              Aggregator.aggregate(@entries[:entries])
-            rescue StandardError => e
-              addstatus(e.message)
-              # redraw old state
-              $stderr.puts e if @options[:debug]
-              @entries[:entries]
-            end
+          begin
+            @entries.merge! @buchungsstreber.entries(@date)
+            addstatus('')
+            Aggregator.aggregate(@entries[:entries])
+          rescue StandardError => e
+            addstatus(e.message)
+            # redraw old state
+            $stderr.puts e if @options[:debug]
+            @entries[:entries]
+          end
 
         @win.setpos(2, 0)
         if e.empty?
@@ -84,7 +82,7 @@ module Buchungsstreber
           end
         end
         dt = nil
-        e.each_with_index do |e, i|
+        e.each_with_index do |e, _i|
           if e[:date] != dt
             dt = e[:date]
             hours = @entries[:entries].select { |x| x[:date] == e[:date] }.map { |x| x[:time] }.sum
@@ -116,7 +114,7 @@ module Buchungsstreber
           @win.clrtoeol
         end
         @win.addstr("\n")
-        (@win.cury..(@win.maxy-2)).each do |i|
+        (@win.cury..(@win.maxy - 2)).each do |i|
           @win.setpos(i, 0)
           @win.clrtoeol
         end
@@ -127,16 +125,17 @@ module Buchungsstreber
         Curses.refresh
       end
 
-      def detailpage(x, y)
+      def detailpage(_x, y)
         return unless y > 1 && y < @entries[:entries].length + 2
-        w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
-        entry = @entries[:entries][y-3]
+
+        w = Curses::Window.new(@win.maxy - 4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
+        entry = @entries[:entries][y - 3]
         w.setpos(2, 2)
         YAML.dump(entry).lines do |line|
           w.setpos(w.cury, 2)
           w.addstr(line)
         end
-        w.box(0,0)
+        w.box(0, 0)
         w.refresh
         w
       rescue StandardError => e
@@ -148,26 +147,25 @@ module Buchungsstreber
         entries = @entries[:entries].select { |e| date.nil? || date == e[:date] }
         entries = Aggregator.aggregate(entries)
 
-        w = Curses::Window.new(@win.maxy-4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
+        w = Curses::Window.new(@win.maxy - 4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
         w.setpos(2, 2)
         w.attron(Curses::A_BOLD) { w.addstr(_('Buche')) }
-        w.box(0,0)
+        w.box(0, 0)
         w.refresh
 
         entries.each do |entry|
-          w.setpos(w.cury+1, 5)
-          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, w.maxx - 21)
+          w.setpos(w.cury + 1, 5)
+          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, w.maxx - 21)
           w.refresh
 
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
 
-          case
-          when status.grep(/(time|activity)_different/).any?
+          if status.grep(/(time|activity)_different/).any?
             success = false
             color = color_pair(:yellow) | Curses::A_BOLD
             w.attron(color) { w.addstr(_('-> DIFF') + " #{$1}") }
-          when status.include?(:existing)
+          elsif status.include?(:existing)
             success = true
             color = color_pair(:green)
             w.attron(color) { w.addstr(_('-> ACK')) }
@@ -181,7 +179,7 @@ module Buchungsstreber
           w.refresh
         end
 
-        w.setpos(w.cury+2, 2)
+        w.setpos(w.cury + 2, 2)
         w.addstr _('Buchungen abgearbeitet')
 
         w.refresh
@@ -190,16 +188,16 @@ module Buchungsstreber
         addstatus(e.message)
       end
 
-      def setsize(*args)
+      def setsize(*_args)
         lines, cols = IO.console.winsize
         Curses.resizeterm(lines, cols)
         @win.resize(lines, cols)
         @win.setpos(0, 0)
         @win.attron(Curses.color_pair(4) | Curses::A_BOLD) do
-          @win.addstr("    %-#{@win.maxx-4}s" % "BUCHUNGSSTREBER v#{Buchungsstreber::VERSION}")
+          @win.addstr("    %-#{@win.maxx - 4}s" % "BUCHUNGSSTREBER v#{Buchungsstreber::VERSION}")
         end
         @win.setpos(@win.maxy - 1, 0)
-        @win.addstr("% #{@win.maxx-2}s  " % ("%d / %d" % [@win.maxy, @win.maxx]))
+        @win.addstr("% #{@win.maxx - 2}s  " % ("%d / %d" % [@win.maxy, @win.maxx]))
         Curses.refresh
       end
 
@@ -223,7 +221,7 @@ module Buchungsstreber
       def on_input(keycode)
         if @subwindow
           case keycode
-          when Curses::KEY_ENTER, ' ', ?\e, Curses::KEY_CANCEL, Curses::KEY_BACKSPACE
+          when Curses::KEY_ENTER, ' ', "\e", Curses::KEY_CANCEL, Curses::KEY_BACKSPACE
             @subwindow.close
             @subwindow = nil
             redraw
@@ -234,7 +232,7 @@ module Buchungsstreber
         case keycode
         when 10
           redraw
-        when ?r # Curses::KEY_RESIZE
+        when 'r' # Curses::KEY_RESIZE
           setsize
         when Curses::KEY_MOUSE
           if (m = Curses.getmouse)
@@ -251,7 +249,7 @@ module Buchungsstreber
         when 'b'
           @subwindow = buchen(@date)
         else
-          #addstatus('Unknown keycode `%s`' % str.inspect)
+          # addstatus('Unknown keycode `%s`' % str.inspect)
         end
       end
 

@@ -28,17 +28,15 @@ class Generator::Git
                   $1 || $2
                 when /#(\d{4,5})(\W|$)/
                   $1 if $1.to_i > 6700
-                else
-                  nil
                 end
-        if issue
-          entry = {
-              date: date,
-              issue: issue.to_i,
-              text: subject.chomp,
-          }
-          entries << entry
-        end
+        next unless issue
+
+        entry = {
+            date: date,
+            issue: issue.to_i,
+            text: subject.chomp,
+        }
+        entries << entry
       end
     end
 

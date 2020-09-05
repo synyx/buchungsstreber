@@ -119,7 +119,6 @@ RSpec.describe Validator do
   end
 end
 
-
 RSpec.describe Validator, '#status!' do
   subject { Validator }
   let(:default_entry) do
@@ -138,11 +137,6 @@ RSpec.describe Validator, '#status!' do
     allow(redmine).to receive(:same_activity?).and_return(true)
     allow(redmine).to receive(:prefix).and_return('z')
     redmine
-  end
-
-  before(:each) do
-    # reset cache
-    subject.instance_eval('@cache = {}')
   end
 
   it 'recognizes existing entries' do
