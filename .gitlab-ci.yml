@@ -3,7 +3,7 @@ image: "ruby:2.6"
 
 before_script:
   - gem install bundler --no-document
-  - bundle install --jobs $(nproc) --path vendor/bundle "${FLAGS[@]}"
+  - bundle install --jobs $(nproc) --path vendor/bundle
 
 rspec:
   script:
