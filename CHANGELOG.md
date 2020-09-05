@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.2.6
+
+* Fix generation in YAML format if file contains a single newline
+
 ## v2.2.5
 
 * Bring YAML Format in line regarding generators
