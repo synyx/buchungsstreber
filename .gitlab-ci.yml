@@ -19,6 +19,7 @@ before_script:
 stages:
   - Testing
   - Linting
+  - Release
 
 rspec:
   stage: Testing
@@ -41,5 +42,25 @@ Pronto:
     # PRONTO_GITLAB_API_PRIVATE_TOKEN: set from within GitLab
   script:
     - bundle exec pronto run --exit-code --formatters gitlab_mr --commit origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+  tags:
+    - docker
+
+nexus:
+  stage: Release
+  only:
+    refs:
+      - tags
+    variables:
+      - $NEXUS_PASS
+      - $NEXUS_USER
+  variables:
+    NEXUS_URL: "https://nexus.synyx.de/content/repositories/gems"
+  script:
+    - mkdir -p ~/.gem
+    - AUTH=$(echo -n "$NEXUS_USER:$NEXUS_PASS" | base64)
+    - '/bin/echo -e ":url: $NEXUS_URL\n:authorization: Basic $AUTH\n" > ~/.gem/nexus'
+    - bundle exec rake build
+    - cat ~/.gem/nexus
+    - gem nexus pkg/buchungsstreber-*.gem
   tags:
     - docker
