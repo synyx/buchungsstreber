@@ -60,7 +60,6 @@ nexus:
     - AUTH=$(echo -n "$NEXUS_USER:$NEXUS_PASS" | base64)
     - '/bin/echo -e ":url: $NEXUS_URL\n:authorization: Basic $AUTH\n" > ~/.gem/nexus'
     - bundle exec rake build
-    - cat ~/.gem/nexus
     - gem nexus pkg/buchungsstreber-*.gem
   tags:
     - docker
