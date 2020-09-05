@@ -1,8 +1,9 @@
 ---
 AllCops:
   TargetRubyVersion: 2.5
+  NewCops: enable
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Style/TrailingCommaInHashLiteral:
@@ -26,5 +27,5 @@ Style/ConditionalAssignment:
 Style/MultipleComparison:
   Enabled: false
 
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   Enabled: false
