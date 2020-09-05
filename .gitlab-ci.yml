@@ -1,6 +1,10 @@
 ---
 image: "ruby:2.5"
 
+cache:
+  paths:
+    - vendor/bundle
+
 before_script:
   - gem install bundler --no-document
   - bundle check || bundle install --path vendor/bundle
