@@ -1,12 +1,66 @@
 ---
-image: "ruby:2.6"
+image: "ruby:2.5"
+
+cache:
+  paths:
+    - vendor/bundle
+    - vendor/apt
+
+variables:
+  BUNDLE_PATH: vendor/bundle
 
 before_script:
+  - export APT_CACHE_DIR=`pwd`/vendor/apt && mkdir -pv $APT_CACHE_DIR
+  - apt-get update -yq
+  - apt-get -q -o dir::cache::archives="$APT_CACHE_DIR" install -y cmake
   - gem install bundler --no-document
-  - bundle install --jobs $(nproc) --path vendor/bundle "${FLAGS[@]}"
+  - bundle check || bundle install --with=dev
+
+stages:
+  - Testing
+  - Linting
+  - Release
 
 rspec:
+  stage: Testing
+  only:
+    - master
+    - merge_requests
+    - tags
   script:
     - bundle exec rspec
+  tags:
+    - docker
+
+Pronto:
+  stage: Linting
+  allow_failure: true
+  only:
+    - merge_requests
+  variables:
+    PRONTO_GITLAB_API_ENDPOINT: "https://gitlab.synyx.de/api/v4"
+    # PRONTO_GITLAB_API_PRIVATE_TOKEN: set from within GitLab
+  script:
+    - bundle exec pronto run --exit-code --formatters gitlab_mr --commit origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+  tags:
+    - docker
+
+nexus:
+  stage: Release
+  only:
+    refs:
+      - tags
+    variables:
+      - $NEXUS_PASS
+      - $NEXUS_USER
+  variables:
+    NEXUS_URL: "https://nexus.synyx.de/content/repositories/gems"
+  script:
+    - mkdir -p ~/.gem
+    - AUTH=$(echo -n "$NEXUS_USER:$NEXUS_PASS" | base64)
+    - '/bin/echo -e ":url: $NEXUS_URL\n:authorization: Basic $AUTH\n" > ~/.gem/nexus'
+    - bundle exec rake build
+    - cat ~/.gem/nexus
+    - gem nexus pkg/buchungsstreber-*.gem
   tags:
     - docker

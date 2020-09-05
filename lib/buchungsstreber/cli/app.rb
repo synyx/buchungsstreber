@@ -11,8 +11,8 @@ require 'buchungsstreber'
 module Buchungsstreber
   module CLI
     class App < Thor
-      class_option :debug, :type => :boolean
-      class_option :long, :type => :boolean
+      class_option :debug, type: :boolean
+      class_option :long, type: :boolean
       class_option :file, type: :string
 
       desc '', _('Buchen')
