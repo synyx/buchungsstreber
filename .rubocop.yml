@@ -29,3 +29,21 @@ Style/MultipleComparison:
 
 Layout/FirstHashElementIndentation:
   Enabled: false
+
+Style/SpecialGlobalVars:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/StderrPuts:
+  Enabled: false
+
+Style/PerlBackrefs:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
