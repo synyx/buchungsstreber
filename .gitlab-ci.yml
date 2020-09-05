@@ -22,6 +22,10 @@ stages:
 
 rspec:
   stage: Testing
+  only:
+    - master
+    - merge_requests
+    - tags
   script:
     - bundle exec rspec
   tags:
@@ -30,9 +34,12 @@ rspec:
 Pronto:
   stage: Linting
   allow_failure: true
-  except:
-    - master
+  only:
+    - merge_requests
+  variables:
+    PRONTO_GITLAB_API_ENDPOINT: "https://gitlab.synyx.de/api/v4"
+    # PRONTO_GITLAB_API_PRIVATE_TOKEN: set from within GitLab
   script:
-    - bundle exec pronto run -f gitlab -c 9aebae105c0785b9e21dcc71a4155c419dcec9aa
+    - bundle exec pronto run --exit-code --formatters gitlab_mr --commit origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
   tags:
     - docker
