@@ -1,7 +1,7 @@
 SimpleCov.command_name "buchungsstreber"
 SimpleCov.root(__dir__)
 
-SimpleCov.start
+SimpleCov.enable_for_subprocesses false
 
 SimpleCov.configure do
   filters.clear
@@ -28,3 +28,5 @@ SimpleCov.configure do
   add_group 'Specs', 'spec'
   add_group 'Libraries', 'lib'
 end
+
+SimpleCov.start
