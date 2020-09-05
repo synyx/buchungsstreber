@@ -18,6 +18,7 @@ before_script:
 
 stages:
   - Testing
+  - Linting
   - Release
 
 rspec:
@@ -28,6 +29,16 @@ rspec:
     - tags
   script:
     - bundle exec rspec
+  tags:
+    - docker
+
+rubocop:
+  stage: Linting
+  allow_failure: true
+  only:
+    - merge_requests
+  script:
+    - git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT | grep '\.rb$' | xargs bundle exec rubocop --format emacs
   tags:
     - docker
 
