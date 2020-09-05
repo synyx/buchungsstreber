@@ -12,45 +12,41 @@ RSpec.describe 'CLI App', type: :aruba do
 
   context 'Unconfigured buchungsstreber' do
     it 'runs version command' do
-      run_command('buchungsstreber version')
+      run_command_and_stop('buchungsstreber version')
       expect(last_command_started).to have_output(/\d+\.\d+/)
-      expect(last_command_started).to be_successfully_executed
     end
 
     it 'runs init command' do
-      run_command('buchungsstreber init --debug')
+      run_command_and_stop('buchungsstreber init --debug')
       expect(last_command_started).to have_output(/erstellt/)
-      expect(last_command_started).to be_successfully_executed
       expect(config_file).to be_an_existing_file
     end
 
     it 'does nothing when running config' do
-      run_command('buchungsstreber config')
-      expect(last_command_started).to have_output(/Error/)
+      run_command_and_stop('buchungsstreber config', fail_on_error: false)
+      expect(last_command_started).to have_output(/Error|Fehler/)
       expect(last_command_started).to_not be_successfully_executed
     end
 
     it 'does nothing when running edit' do
-      run_command('buchungsstreber edit')
-      expect(last_command_started).to have_output(/Error/)
+      run_command_and_stop('buchungsstreber edit', fail_on_error: false)
+      expect(last_command_started).to have_output(/Error|Fehler/)
       expect(last_command_started).to_not be_successfully_executed
     end
 
     it 'does nothing when running execute' do
-      run_command('buchungsstreber execute --debug')
-      expect(last_command_started).to have_output(/Error/)
+      run_command_and_stop('buchungsstreber execute --debug', fail_on_error: false)
+      expect(last_command_started).to have_output(/Error|Fehler/)
       expect(last_command_started).to_not be_successfully_executed
     end
   end
 
   context 'Configured buchungsstreber' do
     before(:each) do
-      run_command('buchungsstreber init')
-      expect(last_command_started).to be_successfully_executed
+      run_command_and_stop('buchungsstreber init')
 
       # Make sure the api-keys are set
-      run_command('buchungsstreber config')
-      expect(last_command_started).to be_successfully_executed
+      run_command_and_stop('buchungsstreber config')
       config = YAML.load(last_command_started.stdout)
       config['redmines'].each do |r|
         r['server']['url'] = 'https://localhost'
@@ -73,24 +69,22 @@ RSpec.describe 'CLI App', type: :aruba do
         }
     }
     it 'does not allow a second run to init' do
-      run_command('buchungsstreber init')
+      run_command_and_stop('buchungsstreber init')
       expect(last_command_started).to have_output(/bereits konfiguriert/)
       expect(last_command_started).to_not have_output(/erstellt/)
     end
 
     it 'runs config command' do
-      run_command('buchungsstreber config')
+      run_command_and_stop('buchungsstreber config')
       expect(last_command_started).to have_output(/^timesheet_file:/)
       expect(last_command_started).to have_output(/url: htt/)
       expect(last_command_started).to have_output(/apikey: anything/)
-      expect(last_command_started).to be_successfully_executed
     end
 
     it 'runs edit command' do
       FileUtils.copy(example_file, entry_file)
-      run_command('buchungsstreber edit')
+      run_command_and_stop('buchungsstreber edit')
       expect(last_command_started).to have_output(/BeispielDaily/)
-      expect(last_command_started).to be_successfully_executed
     end
 
     it 'adds times to redmine' do
@@ -104,8 +98,8 @@ RSpec.describe 'CLI App', type: :aruba do
         to_return(status: 201)
 
       File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
-      c = run_command('buchungsstreber execute --debug')
-      expect(c).to have_output(/BUCHUNGSSTREBER/)
+      run_command_and_stop('buchungsstreber execute --debug')
+      expect(last_command_started).to have_output(/BUCHUNGSSTREBER/)
 
       expect(validation_stub).to have_been_requested.at_least_once
       expect(user_stub).to have_been_requested.at_least_once
