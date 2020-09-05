@@ -6,11 +6,27 @@ cache:
     - vendor/bundle
 
 before_script:
+  - apt-get update -yq
+  - apt install -y cmake
   - gem install bundler --no-document
-  - bundle check || bundle install --path vendor/bundle
+  - bundle check || bundle install --path vendor/bundle --with=dev
+
+stages:
+  - QA
 
 rspec:
+  stage: QA
   script:
     - bundle exec rspec
+  tags:
+    - docker
+
+Pronto:
+  stage: QA
+  allow_failure: true
+  except:
+    - master
+  script:
+    - bundle exec pronto run -f gitlab -c origin/master
   tags:
     - docker
