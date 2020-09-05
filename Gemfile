@@ -5,7 +5,7 @@ gemspec
 
 group :tui, optional: true do
   gem 'curses', '~>1.3'
-  gem 'rb-inotify'
+  gem 'rb-inotify', '~>0.10.0'
 end
 
 group :dev, optional: true do
