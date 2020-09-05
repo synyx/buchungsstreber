@@ -139,11 +139,6 @@ RSpec.describe Validator, '#status!' do
     redmine
   end
 
-  before(:each) do
-    # reset cache
-    subject.instance_eval('@cache = {}')
-  end
-
   it 'recognizes existing entries' do
     expect(redmine).to receive(:get_times).with(Date.today).and_return([default_entry])
     status = subject.status!(default_entry.dup, redmine)

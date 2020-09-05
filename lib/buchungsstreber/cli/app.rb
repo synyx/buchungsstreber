@@ -24,13 +24,13 @@ module Buchungsstreber
 
         unless Config.find_config
           invoke :init
-          invoke :config if is_automated? || yes?(_('Konfiguration editieren?'))
+          invoke :config if automated? || yes?(_('Konfiguration editieren?'))
         end
 
         entries = Buchungsstreber::Context.new(options[:file]).entries
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
-          status_color = { true => :blue, false => :red}[e[:valid]]
+          status_color = { true => :blue, false => :red }[e[:valid]]
           err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
           [
             e[:date].strftime("%a:"),
@@ -52,7 +52,7 @@ module Buchungsstreber
         end
         print_table(tbl, indent: 2)
 
-        if is_automated? || yes?(_('Buchungen in Redmine uebernehmen? (y/N)'))
+        if automated? || yes?(_('Buchungen in Redmine uebernehmen? (y/N)'))
           invoke :buchen, [], entries: aggregated
           invoke :archivieren, [], entries: entries
         end
@@ -98,7 +98,7 @@ module Buchungsstreber
 
         puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
-          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, 60)
+          print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, 60)
           $stdout.flush
           redmine = redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
@@ -154,7 +154,7 @@ module Buchungsstreber
 
       desc 'config', _('Konfiguration editieren')
       def config
-        return $stdout.write(File.read(Config.find_config)) if is_automated?
+        return $stdout.write(File.read(Config.find_config)) if automated?
 
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
       rescue StandardError => e
@@ -192,7 +192,7 @@ module Buchungsstreber
           end
         end
 
-        return $stdout.write(File.read(timesheet_file)) if is_automated?
+        return $stdout.write(File.read(timesheet_file)) if automated?
 
         Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', timesheet_file)
       rescue StandardError => e
@@ -226,24 +226,24 @@ module Buchungsstreber
         string
       end
 
-      def handle_error(e, debug = false)
-        $stderr.puts pretty_error(e, debug)
+      def handle_error(error, debug = false)
+        $stderr.puts pretty_error(error, debug)
         exit 1
       end
 
-      def pretty_error(e, debug)
+      def pretty_error(error, debug)
         if !debug
-          "#{e.class.name}: #{e.message[0..80]}"
+          "#{error.class.name}: #{error.message[0..80]}"
         else
           msg = ['']
-          msg << ["#{e.class.name}: #{e.message}"]
-          msg << e.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  #{x}" }
+          msg << ["#{error.class.name}: #{error.message}"]
+          msg << error.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  #{x}" }
           msg << '  ...'
           msg.join("\n")
         end
       end
 
-      def is_automated?
+      def automated?
         !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO) || !$stdout.tty?
       end
 

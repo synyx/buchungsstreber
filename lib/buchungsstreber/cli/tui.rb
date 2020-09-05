@@ -155,7 +155,7 @@ module Buchungsstreber
 
         entries.each do |entry|
           w.setpos(w.cury + 1, 5)
-          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % {time: entry[:time], issue: entry[:issue], text: entry[:text]}, w.maxx - 21)
+          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, w.maxx - 21)
           w.refresh
 
           redmine = redmines.get(entry[:redmine])

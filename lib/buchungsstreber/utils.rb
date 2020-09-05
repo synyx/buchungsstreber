@@ -10,8 +10,8 @@ class Utils
   end
 
   def self.classify_workhours(worked_hours, work_hours, on_day = nil)
-    if !on_day.nil? && work_hours != on_day
-      return :red if (worked_hours - on_day).abs > 0.1
+    if !on_day.nil? && work_hours != on_day && (worked_hours - on_day).abs > 0.1
+      return :red
     end
 
     time_difference = (work_hours - worked_hours).abs

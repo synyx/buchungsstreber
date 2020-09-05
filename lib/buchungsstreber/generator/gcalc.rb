@@ -14,7 +14,7 @@ class Generator::GCalc
           time: t,
           text: s[4].chomp,
       }
-    rescue ArgumentError => e
+    rescue ArgumentError
       {
         date: date,
         time: 0.0,
