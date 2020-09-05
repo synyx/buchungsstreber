@@ -1,6 +1,5 @@
-require 'date'
-require 'tempfile'
 require 'thor'
+require 'tempfile'
 require 'i18n'
 require_relative '../i18n/config'
 
@@ -65,7 +64,8 @@ module Buchungsstreber
 
       desc 'show date', _('Buchungen anzeigen')
       def show(date)
-        entries = Buchungsstreber::Context.new(options[:file]).entries(Date.parse(date))
+        date = parse_date(date)
+        entries = Buchungsstreber::Context.new(options[:file]).entries(date)
         aggregated = Aggregator.aggregate(entries[:entries])
         tbl = aggregated.map do |e|
           status_color = {true => :blue, false => :red}[e[:valid]]
@@ -94,11 +94,12 @@ module Buchungsstreber
 
       desc 'buchen [date]', _('Buchen in Redmine')
       def buchen(date = nil)
+        date = parse_date(date)
         entries = options[:entries] || Buchungsstreber::Context.new(options[:file]).entries[:entries]
         redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
 
         puts style(_('Buche'), :bold)
-        entries.select { |e| date.nil? || Date.parse(date) == e[:date] }.each do |entry|
+        entries.select { |e| date.nil? || date == e[:date] }.each do |entry|
           print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, 60)
           $stdout.flush
           redmine = redmines.get(entry[:redmine])
@@ -164,12 +165,12 @@ module Buchungsstreber
 
       desc 'edit [date]', _('Buchungen editieren')
       def edit(date = nil)
+        date = parse_date(date)
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
         timesheet_file = buchungsstreber.timesheet_file
 
         # If a date is given, generate a new entry if there isn't already one
         if date
-          date = Date.parse(date)
 
           entries = buchungsstreber.entries
 
@@ -202,18 +203,25 @@ module Buchungsstreber
 
       desc 'watch [date]', _('Ueberwache aenderungen der Buchungsdatei')
       def watch(date = nil)
-        date_ = date = Date.today.iso8601 if date == 'today'
-        date_ = Date.parse(date) if date
+        date = parse_date(date)
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
 
         require_relative 'tui'
-        tui = Buchungsstreber::TUI::App.new(buchungsstreber, date_, options)
+        tui = Buchungsstreber::TUI::App.new(buchungsstreber, date, options)
         tui.start
       rescue Interrupt, StandardError => e
         handle_error(e, options[:debug])
       end
 
       private
+
+      def parse_date(date)
+        if date == 'today'
+          Date.today
+        elsif date
+          Date.parse(date)
+        end
+      end
 
       def style(string, *styles)
         styles.compact!

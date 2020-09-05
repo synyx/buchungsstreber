@@ -83,7 +83,7 @@ RSpec.describe 'CLI App', type: :aruba do
 
     it 'runs edit command' do
       FileUtils.copy(example_file, entry_file)
-      run_command_and_stop('buchungsstreber edit')
+      run_command_and_stop('buchungsstreber edit --debug')
       expect(last_command_started).to have_output(/BeispielDaily/)
     end
 
