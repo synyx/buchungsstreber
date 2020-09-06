@@ -3,15 +3,24 @@
 # This will filter a concatenated input of rubocop and git diff to only output rubocop
 # issues for ones in the actual changes.
 
+RUBOCOP = 'git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT |
+    grep \'\\.rb$\' |
+    xargs bundle exec rubocop --format emacs'
+DIFF = 'git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT'
+
 mappings = {}
 last_file = nil
-$stdin.each do |line|
+`#{DIFF}`.each_line do |line|
   if line =~ /^\+{3} b\/(.*)$/
     mappings[$1] ||= {changes: [], issues: []}
     last_file = $1
   elsif line =~ /^@{2,}(?:.*) [-+](\d+),(\d+) @{2,}/
     mappings[last_file][:changes] << Range.new($1.to_i, $1.to_i + $2.to_i)
-  elsif line =~ /^#{Regexp.escape(ENV['PWD'])}\/([^:]+):(\d+):\d+: ([CW]): (.*)/
+  end
+end
+
+`#{RUBOCOP}`.each_line do |line|
+  if line =~ /^#{Regexp.escape(ENV['PWD'])}\/([^:]+):(\d+):\d+: ([CW]): (.*)/
     mappings[$1] ||= {changes: [], issues: []}
     mappings[$1][:issues] << { line: $2.to_i, type: $3, msg: $4 }
   end

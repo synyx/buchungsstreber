@@ -34,13 +34,7 @@ rubocop:
   only:
     - merge_requests
   script:
-    - |
-      (
-      git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT |
-      grep '\.rb$' |
-      xargs bundle exec rubocop --format emacs;
-      git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT
-      ) | ./bin/rubocop_changes
+    - ./bin/rubocop_changes
   tags:
     - docker
 
