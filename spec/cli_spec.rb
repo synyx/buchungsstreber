@@ -22,39 +22,16 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(config_file).to be_an_existing_file
     end
 
-    it 'does nothing when running config' do
-      run_command_and_stop('buchungsstreber config', fail_on_error: false)
-      expect(last_command_started).to have_output(/Error|Fehler/)
-      expect(last_command_started).to_not be_successfully_executed
-    end
-
-    it 'does nothing when running edit' do
-      run_command_and_stop('buchungsstreber edit', fail_on_error: false)
-      expect(last_command_started).to have_output(/Error|Fehler/)
-      expect(last_command_started).to_not be_successfully_executed
-    end
-
-    it 'does nothing when running execute' do
-      run_command_and_stop('buchungsstreber execute --debug', fail_on_error: false)
-      expect(last_command_started).to have_output(/Error|Fehler/)
-      expect(last_command_started).to_not be_successfully_executed
+    %w[config edit execute show].each do |cmd|
+      it "does nothing when running #{cmd}" do
+        run_command_and_stop("buchungsstreber #{cmd} --debug", fail_on_error: false)
+        expect(last_command_started).to have_output(/Error|Fehler/i)
+        expect(last_command_started).to_not be_successfully_executed
+      end
     end
   end
 
   context 'Configured buchungsstreber' do
-    before(:each) do
-      run_command_and_stop('buchungsstreber init')
-
-      # Make sure the api-keys are set
-      run_command_and_stop('buchungsstreber config')
-      config = YAML.safe_load(last_command_started.stdout)
-      config['redmines'].each do |r|
-        r['server']['url'] = 'https://localhost'
-        r['server']['apikey'] = 'anything'
-      end
-      File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
-    end
-
     entry = {
       Date.today => ['0.25   Orga    S8484   Blog']
     }
@@ -68,6 +45,21 @@ RSpec.describe 'CLI App', type: :aruba do
             'id' => 1,
         }
     }
+
+    before(:each) do
+      run_command_and_stop('buchungsstreber init')
+
+      # Make sure the api-keys are set
+      run_command_and_stop('buchungsstreber config')
+      config = YAML.safe_load(last_command_started.stdout)
+      config['redmines'].each do |r|
+        r['server']['url'] = 'https://localhost'
+        r['server']['apikey'] = 'anything'
+      end
+      File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
+      File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
+    end
+
     it 'does not allow a second run to init' do
       run_command_and_stop('buchungsstreber init')
       expect(last_command_started).to have_output(/bereits konfiguriert/)
@@ -87,6 +79,19 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/BeispielDaily/)
     end
 
+    it 'runs edit with date command' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber edit --debug #{Date.today.iso8601}")
+      expect(last_command_started).to have_output(/generated/)
+    end
+
+    it 'runs show command' do
+      stub_request(:get, "https://localhost/issues/8484.json").to_return(status: 200, body: JSON.dump(issue8484))
+
+      run_command_and_stop("buchungsstreber show --debug #{Date.today.iso8601}")
+      expect(last_command_started).to have_output(/Blog/)
+    end
+
     it 'adds times to redmine' do
       today = Date.today
       validation_stub = stub_request(:get, "https://localhost/issues/8484.json")
@@ -98,7 +103,6 @@ RSpec.describe 'CLI App', type: :aruba do
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json")
                       .to_return(status: 201)
 
-      File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
       run_command_and_stop('buchungsstreber execute --debug')
       expect(last_command_started).to have_output(/BUCHUNGSSTREBER/)
 
@@ -107,5 +111,29 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(get_times_stub).to have_been_requested.at_least_once
       expect(add_time_stub).to have_been_requested.at_least_once
     end
+  end
+end
+
+class Generator::Mock
+  include Generator::Base
+
+  def initialize(_config)
+    # ignored
+  end
+
+  def generate(date)
+    [
+      {
+          date: date,
+          time: 0.5,
+          activity: 'Dev',
+          text: 'generated',
+      },
+      {
+          date: date,
+          time: 0.5,
+          activity: 'BeispielDaily',
+      }
+    ]
   end
 end

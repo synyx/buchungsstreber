@@ -1,9 +1,8 @@
 require 'thor'
 require 'tempfile'
 require 'i18n'
-require_relative '../i18n/config'
 
-include I18n::Gettext::Helpers
+include I18n::Gettext::Helpers # rubocop:disable Style/MixinUsage
 I18n.config.enforce_available_locales = false
 
 require 'buchungsstreber'
@@ -170,9 +169,9 @@ module Buchungsstreber
         if date
           date = Date.parse(date)
 
-          entries = buchungsstreber.entries
+          entries = buchungsstreber.entries(date)
 
-          unless entries[:daily_hours].keys.include?(date)
+          if entries[:entries].empty?
             entries = buchungsstreber.generate(date)
             entries.each do |e|
               buchungsstreber.resolve(e)
@@ -209,6 +208,10 @@ module Buchungsstreber
         tui.start
       rescue Interrupt, StandardError => e
         handle_error(e, options[:debug])
+      end
+
+      def self.exit_on_failure?
+        true
       end
 
       private
