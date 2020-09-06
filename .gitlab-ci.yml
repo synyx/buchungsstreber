@@ -4,15 +4,11 @@ image: "ruby:2.5"
 cache:
   paths:
     - vendor/bundle
-    - vendor/apt
 
 variables:
   BUNDLE_PATH: vendor/bundle
 
 before_script:
-  - export APT_CACHE_DIR=`pwd`/vendor/apt && mkdir -pv $APT_CACHE_DIR
-  - apt-get update -yq
-  - apt-get -q -o dir::cache::archives="$APT_CACHE_DIR" install -y cmake
   - gem install bundler --no-document
   - bundle check || bundle install
 
