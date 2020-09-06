@@ -45,12 +45,6 @@ class RedmineApi
     end
   end
 
-  def get_time(id)
-    get("/time_entries/#{id}") do |entry|
-      from_time_entry(entry['time_entry'])
-    end
-  end
-
   def prefix
     @config['prefix'].dup
   end
