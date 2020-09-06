@@ -79,6 +79,12 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/BeispielDaily/)
     end
 
+    it 'runs edit with date command' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber edit --debug #{Date.today.iso8601}")
+      expect(last_command_started).to have_output(/BeispielDaily/)
+    end
+
     it 'runs show command' do
       stub_request(:get, "https://localhost/issues/8484.json").to_return(status: 200, body: JSON.dump(issue8484))
 

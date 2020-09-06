@@ -170,9 +170,9 @@ module Buchungsstreber
         if date
           date = Date.parse(date)
 
-          entries = buchungsstreber.entries
+          entries = buchungsstreber.entries(date)
 
-          unless entries[:daily_hours].keys.include?(date)
+          if entries[:entries].empty?
             entries = buchungsstreber.generate(date)
             entries.each do |e|
               buchungsstreber.resolve(e)
