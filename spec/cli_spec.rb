@@ -22,22 +22,12 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(config_file).to be_an_existing_file
     end
 
-    it 'does nothing when running config' do
-      run_command_and_stop('buchungsstreber config', fail_on_error: false)
-      expect(last_command_started).to have_output(/Error|Fehler/)
-      expect(last_command_started).to_not be_successfully_executed
-    end
-
-    it 'does nothing when running edit' do
-      run_command_and_stop('buchungsstreber edit', fail_on_error: false)
-      expect(last_command_started).to have_output(/Error|Fehler/)
-      expect(last_command_started).to_not be_successfully_executed
-    end
-
-    it 'does nothing when running execute' do
-      run_command_and_stop('buchungsstreber execute --debug', fail_on_error: false)
-      expect(last_command_started).to have_output(/Error|Fehler/)
-      expect(last_command_started).to_not be_successfully_executed
+    %w[config edit execute show].each do |cmd|
+      it "does nothing when running #{cmd}" do
+        run_command_and_stop("buchungsstreber #{cmd} --debug", fail_on_error: false)
+        expect(last_command_started).to have_output(/Error|Fehler/i)
+        expect(last_command_started).to_not be_successfully_executed
+      end
     end
   end
 
@@ -85,6 +75,13 @@ RSpec.describe 'CLI App', type: :aruba do
       FileUtils.copy(example_file, entry_file)
       run_command_and_stop('buchungsstreber edit')
       expect(last_command_started).to have_output(/BeispielDaily/)
+    end
+
+    it 'runs show command' do
+      stub_request(:get, "https://localhost/issues/8484.json").to_return(status: 200, body: JSON.dump(issue8484))
+
+      run_command_and_stop("buchungsstreber show --debug #{Date.today.iso8601}")
+      expect(last_command_started).to have_output(/Blog/)
     end
 
     it 'adds times to redmine' do
