@@ -211,6 +211,10 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
+      def self.exit_on_failure?
+        true
+      end
+
       private
 
       def style(string, *styles)
