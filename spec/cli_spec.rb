@@ -82,7 +82,7 @@ RSpec.describe 'CLI App', type: :aruba do
     it 'runs edit with date command' do
       FileUtils.copy(example_file, entry_file)
       run_command_and_stop("buchungsstreber edit --debug #{Date.today.iso8601}")
-      expect(last_command_started).to have_output(/BeispielDaily/)
+      expect(last_command_started).to have_output(/generated/)
     end
 
     it 'runs show command' do
@@ -111,5 +111,29 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(get_times_stub).to have_been_requested.at_least_once
       expect(add_time_stub).to have_been_requested.at_least_once
     end
+  end
+end
+
+class Generator::Mock
+  include Generator::Base
+
+  def initialize(_config)
+    # ignored
+  end
+
+  def generate(date)
+    [
+      {
+          date: date,
+          time: 0.5,
+          activity: 'Dev',
+          text: 'generated',
+      },
+      {
+          date: date,
+          time: 0.5,
+          activity: 'BeispielDaily',
+      }
+    ]
   end
 end
