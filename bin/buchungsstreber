@@ -9,6 +9,7 @@ if Gem.win_platform?
 end
 
 require 'i18n'
+require_relative '../lib/buchungsstreber/i18n/config'
 I18n::Backend::Simple.include(I18n::Backend::Gettext)
 I18n.load_path << Dir[File.join(__dir__, '../lib/buchungsstreber/i18n/*.po')]
 I18n.default_locale = :de
