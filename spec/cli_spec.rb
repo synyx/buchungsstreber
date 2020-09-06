@@ -32,19 +32,6 @@ RSpec.describe 'CLI App', type: :aruba do
   end
 
   context 'Configured buchungsstreber' do
-    before(:each) do
-      run_command_and_stop('buchungsstreber init')
-
-      # Make sure the api-keys are set
-      run_command_and_stop('buchungsstreber config')
-      config = YAML.safe_load(last_command_started.stdout)
-      config['redmines'].each do |r|
-        r['server']['url'] = 'https://localhost'
-        r['server']['apikey'] = 'anything'
-      end
-      File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
-    end
-
     entry = {
       Date.today => ['0.25   Orga    S8484   Blog']
     }
@@ -58,6 +45,21 @@ RSpec.describe 'CLI App', type: :aruba do
             'id' => 1,
         }
     }
+
+    before(:each) do
+      run_command_and_stop('buchungsstreber init')
+
+      # Make sure the api-keys are set
+      run_command_and_stop('buchungsstreber config')
+      config = YAML.safe_load(last_command_started.stdout)
+      config['redmines'].each do |r|
+        r['server']['url'] = 'https://localhost'
+        r['server']['apikey'] = 'anything'
+      end
+      File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
+      File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
+    end
+
     it 'does not allow a second run to init' do
       run_command_and_stop('buchungsstreber init')
       expect(last_command_started).to have_output(/bereits konfiguriert/)
@@ -95,7 +97,6 @@ RSpec.describe 'CLI App', type: :aruba do
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json")
                       .to_return(status: 201)
 
-      File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
       run_command_and_stop('buchungsstreber execute --debug')
       expect(last_command_started).to have_output(/BUCHUNGSSTREBER/)
 
