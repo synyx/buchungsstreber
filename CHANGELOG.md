@@ -1,6 +1,13 @@
 Changes
 =======
 
+## v2.3.0
+
+* TUI gets a `today` argument  
+  `buchungsstreber watch today`
+* Documentation enhancements
+* Performance enhancements/reduced API usage for TUI
+
 ## v2.2.6
 
 * Fix generation in YAML format if file contains a single newline
@@ -21,7 +28,7 @@ Changes
 
 * Skip entering times already available on Redmine server
 * Revise arrow keys in TUI
-* Add ncalcli generator
+* Add `ncalcli` generator
 * Bugfixes
 
 ## v2.1.x
