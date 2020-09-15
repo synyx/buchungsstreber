@@ -46,8 +46,15 @@ gem update buchungsstreber
 
 ```shell script
 vim lib/buchungsstreber/version.rb
+vim CHANGELOG.md
 git commit
 git tag v<version>
+```
+
+Eine GitlabCI Pipeline reagiert auf Tags und uebernimmt die Paketerierung und
+Upload; falls per Hand released werden muss:
+
+```shell script
 bundle exec rake build
 gem nexus pkg/buchungsstreber-<version>.gem
 ```
