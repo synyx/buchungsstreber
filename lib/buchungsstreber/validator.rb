@@ -59,14 +59,12 @@ class Validator
 
     redmine_entries.each_with_object([]) do |redmine_entry, memo|
       entry[:id] = redmine_entry[:id]
-      if (redmine_entry[:time] != entry[:time]) && (redmine_entry[:text] != entry[:text])
+      if redmine_entry[:text] != entry[:text]
         # assume different entry
       elsif redmine_entry[:time] != entry[:time]
         memo << :time_different
       elsif !redmine.same_activity?(redmine_entry[:activity], entry[:activity])
         memo << :activity_different
-      elsif redmine_entry[:text] != entry[:text]
-        memo << :text_different
       else
         memo << :existing
       end
