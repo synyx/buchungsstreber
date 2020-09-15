@@ -15,6 +15,7 @@ Vom Noob zum Buchungsstreber.
 ```
 $ gem install buchungsstreber
 ```
+
 ## Erstmalige Einrichtung
 
 ```
@@ -33,17 +34,6 @@ um API-Keys zu erstellen oder anzuzeigen.
 ```
 $ buchungsstreber config
 # $EDITOR (oder vim) oeffnet sich, zumindest die API-Keys sind einzutragen.
-```
-
-### Windows
-
-Fuer Windows werden einige Umgebungsvariablen auto-gesetzt, falls nicht
-anderweitig definiert:
-
-```shell script
-set THOR_SHELL=Color
-set RUBYOPT=-E utf-8
-set EDITOR=notepad
 ```
 
 ## Meine erste Buchung
