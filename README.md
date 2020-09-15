@@ -82,9 +82,10 @@ Entwicklung
 
 [![coverage report](https://gitlab.synyx.de/synyx/buchungsstreber/badges/master/coverage.svg)](https://gitlab.synyx.de/synyx/buchungsstreber/commits/master)
 
-Ab und zu mal tests ausfuehren.
+Ab und zu mal tests ausfuehren ist ok.
 
 ```
+bundle install
 bundle exec rspec
 
 bundle exec ./bin/buchungsstreber
