@@ -20,10 +20,10 @@ Installation
 
   [rubygems]: doc/rubygems.md
 
-or via git repository:
+Oder via git Repository:
 
 1. Repository auschecken
-2. Ruby-Gems installieren: `bundle install --path vendor/bundle`
+2. Ruby-Gems installieren: `bundle install`
 
 Konfiguration
 ------------
