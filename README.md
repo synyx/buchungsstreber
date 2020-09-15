@@ -28,13 +28,20 @@ Oder via git Repository:
 Konfiguration
 ------------
 
+1. Initialisierung durchfuehren lassen via
+   `buchungsstreber init`
+
+Oder
+
 1. Konfigurationspfad für Buchungstreber erstellen:
 `mkdir ~/.config/buchungsstreber`
 
-2. Config-Datei anhand der [Beispiel-Config](example.config.yml) erstellen –
-mindestens die eigenen Redmine-API-Keys eintragen, ggf. auch den Pfad zur
-Buchungs-Datei `timesheet_file` und den Archiv-Ordner `archive_path` anpassen:
-`vim ~/.config/buchungsstreber/config.yml`
+2. Config-Datei anhand der [Beispiel-Config](example.config.yml) erstellen.
+
+Mindestens die eigenen Redmine-API-Keys eintragen, ggf. auch den Pfad zur
+Buchungs-Datei `timesheet_file` und (je nach Arbeitsweise) den Archiv-Ordner
+`archive_path` anpassen: `buchungsstreber config` (edit
+`~/.config/buchungsstreber/config.yml`).
 
 Nutzung
 -------
