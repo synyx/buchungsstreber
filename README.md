@@ -20,21 +20,28 @@ Installation
 
   [rubygems]: doc/rubygems.md
 
-or via git repository:
+Oder via git Repository:
 
 1. Repository auschecken
-2. Ruby-Gems installieren: `bundle install --path vendor/bundle`
+2. Ruby-Gems installieren: `bundle install`
 
 Konfiguration
 ------------
 
+1. Initialisierung durchfuehren lassen via
+   `buchungsstreber init`
+
+Oder
+
 1. Konfigurationspfad für Buchungstreber erstellen:
 `mkdir ~/.config/buchungsstreber`
 
-2. Config-Datei anhand der [Beispiel-Config](example.config.yml) erstellen –
-mindestens die eigenen Redmine-API-Keys eintragen, ggf. auch den Pfad zur
-Buchungs-Datei `timesheet_file` und den Archiv-Ordner `archive_path` anpassen:
-`vim ~/.config/buchungsstreber/config.yml`
+2. Config-Datei anhand der [Beispiel-Config](example.config.yml) erstellen.
+
+Mindestens die eigenen Redmine-API-Keys eintragen, ggf. auch den Pfad zur
+Buchungs-Datei `timesheet_file` und (je nach Arbeitsweise) den Archiv-Ordner
+`archive_path` anpassen: `buchungsstreber config` (edit
+`~/.config/buchungsstreber/config.yml`).
 
 Nutzung
 -------
@@ -70,14 +77,34 @@ gestartet werden können durch: `buchungsstreber`
 Keine Sorge, der Buchungsstreber validiert erst einmal die Einträge in der
 Buchungs-Datei und bucht nicht direkt los.
 
+
+## Terminal User Interface
+
+Mit curses ist eine Oberflaeche vorhanden, welche zur Ueberpruefung von
+Buchungen sowie zum abschliessenden Buchen verwendet werden kann.
+
+```shell script
+buchungsstreber watch today
+buchungsstreber watch 2020-09-01
+```
+
+Benoetigt werden hierzu noch Rubygem Abhaengigkeiten:
+
+* `curses`
+* `listen` oder `rb-inotify` oder `filewatcher`
+
+Bedienungsanleitung erreichbar mit `h`.
+
+
 Entwicklung
 -----------
 
 [![coverage report](https://gitlab.synyx.de/synyx/buchungsstreber/badges/master/coverage.svg)](https://gitlab.synyx.de/synyx/buchungsstreber/commits/master)
 
-Ab und zu mal tests ausfuehren.
+Ab und zu mal tests ausfuehren ist ok.
 
 ```
+bundle install
 bundle exec rspec
 
 bundle exec ./bin/buchungsstreber
