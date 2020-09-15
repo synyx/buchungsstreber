@@ -77,6 +77,25 @@ gestartet werden können durch: `buchungsstreber`
 Keine Sorge, der Buchungsstreber validiert erst einmal die Einträge in der
 Buchungs-Datei und bucht nicht direkt los.
 
+
+## Terminal User Interface
+
+Mit curses ist eine Oberflaeche vorhanden, welche zur Ueberpruefung von
+Buchungen sowie zum abschliessenden Buchen verwendet werden kann.
+
+```shell script
+buchungsstreber watch today
+buchungsstreber watch 2020-09-01
+```
+
+Benoetigt werden hierzu noch Rubygem Abhaengigkeiten:
+
+* `curses`
+* `listen` oder `rb-inotify` oder `filewatcher`
+
+Bedienungsanleitung erreichbar mit `h`.
+
+
 Entwicklung
 -----------
 
