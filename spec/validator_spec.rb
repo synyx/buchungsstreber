@@ -163,7 +163,7 @@ RSpec.describe Validator, '#status!' do
     other = default_entry.merge(text: 'different')
     expect(redmine).to receive(:get_times).with(Date.today).and_return([other])
     status = subject.status!(default_entry.dup, redmine)
-    expect(status).to contain_exactly(:text_different)
+    expect(status).to be_empty
   end
 
   it 'recoginzes entry as missing if redmine found nothing' do
