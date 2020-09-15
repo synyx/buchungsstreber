@@ -10,6 +10,7 @@ Falls nicht, kann diese mit folgenden Kommandos hinzugefuegt werden:
 gem source --add https://nexus.synyx.de/content/repositories/gems/
 ```
 
+(Notiz: der `/` am Ende ist sehr wichtig.)
 In der `.gemrc` wird so eine neue source eingefuegt.
 
 ## Installation
@@ -18,8 +19,9 @@ In der `.gemrc` wird so eine neue source eingefuegt.
 gem install buchungsstreber
 ```
 
-Alle `gem` Kommandos muessen entweder mit `sudo` ausgefuehrt werden oder mit
-der option `--user-install`, um die Gems ins Homeverzeichnis zu installieren.
+Je nach Installations-Art muessen potentiell `gem` Kommandos entweder mit
+`sudo` ausgefuehrt werden oder mit der option `--user-install`, um die Gems
+ins Homeverzeichnis zu installieren.
 Fuer `--user-install` siehe die FAQ fuer [User Install][userinstall].
 
   [userinstall]: https://guides.rubygems.org/faqs/#user-install
