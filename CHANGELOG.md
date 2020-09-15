@@ -16,9 +16,17 @@ Changes
 
 * Bring YAML Format in line regarding generators
 
-## v2.2.1
+## v2.2.4
 
-* Revise TUI keys for exiting subwindow (enter, space, backspace)
+* Bugfix release regarding translations
+
+## v2.2.3
+
+* There is no release v2.2.3
+
+## v2.2.2
+
+* Revise TUI keys for exiting sub-window (enter, space, backspace)
 
 ## v2.2.1
 
