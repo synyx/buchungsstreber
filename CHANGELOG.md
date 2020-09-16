@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.3.1
+
+* Relax validation for duplicated entries
+
 ## v2.3.0
 
 * TUI gets a `today` argument  
