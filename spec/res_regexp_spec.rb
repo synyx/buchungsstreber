@@ -35,8 +35,7 @@ RSpec.describe Resolver::Regexp do
     subject { described_class.new(config) }
 
     it 'executes' do
-      subject.resolve(entry)
-      expect(entry).to include(result)
+      expect(subject.resolve(entry)).to include(result)
     end
   end
 end

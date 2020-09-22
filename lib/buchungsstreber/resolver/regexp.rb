@@ -17,5 +17,6 @@ class Resolver::Regexp
       entry[:text] = c['entry']['text'] || entry[:text]
       entry[:time] ||= c['entry']['time']
     end
+    entry
   end
 end
