@@ -32,6 +32,7 @@ module Buchungsstreber
         require_relative "buchungsstreber/generator/#{gc}"
       end
       @generator = Generator.new(@config[:generators])
+      @generator.load!
 
       require_relative "buchungsstreber/resolver/templates"
       require_relative "buchungsstreber/resolver/redmines"
