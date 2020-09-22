@@ -4,7 +4,7 @@ class Generator::NCalCLI
   def initialize(config)
     @config = config
     if @config.empty?
-      @ignore = ''
+      @ignore = /(?!)/
     else
       @ignore = Regexp.compile(@config['ignore'])
     end
