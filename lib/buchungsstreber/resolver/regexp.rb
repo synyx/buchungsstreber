@@ -14,7 +14,7 @@ class Resolver::Regexp
       entry[:issue] ||= c['entry']['issue']
       entry[:redmine] ||= c['entry']['redmine']
       entry[:activity] ||= c['entry']['activity']
-      entry[:text] ||= c['entry']['text']
+      entry[:text] = c['entry']['text'] || entry[:text]
       entry[:time] ||= c['entry']['time']
     end
   end
