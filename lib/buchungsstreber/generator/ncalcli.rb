@@ -3,6 +3,11 @@ class Generator::NCalCLI
 
   def initialize(config)
     @config = config
+    if @config.empty?
+      @ignore = /(?!)/
+    else
+      @ignore = Regexp.compile(@config['ignore'])
+    end
   end
 
   def generate(date)
@@ -11,13 +16,15 @@ class Generator::NCalCLI
       t = s[2].to_f
       summary = s[3].chomp
       summary =~ /#(\d{3,})/
-      issue = $1
-      {
-          date: date,
-          time: t,
-          text: summary,
-          issue: issue,
-      }
+      unless @ignore.match(summary)
+        issue = $1
+        {
+            date: date,
+            time: t,
+            text: summary,
+            issue: issue,
+        }
+      end
     rescue StandardError => e
       {
         date: date,
