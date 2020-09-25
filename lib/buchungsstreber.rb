@@ -44,6 +44,9 @@ module Buchungsstreber
         require_relative "buchungsstreber/resolver/#{gc}"
       end
       @resolver = Resolver.new(@config)
+      @config[:resolvers].each_key do |gc|
+        @resolver.load!(gc)
+      end
     end
 
     def entries(date = nil)

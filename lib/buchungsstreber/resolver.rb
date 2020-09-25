@@ -3,7 +3,7 @@ class Resolver
 
   def initialize(config)
     @config = config
-    @resolvers = {}
+    @resolvers = []
   end
 
   def resolve(entry)
@@ -19,16 +19,26 @@ class Resolver
 
   private
 
+  def load!(name)
+    resolver = Base.resolver(name)
+    @resolver << resolver if resolver
+  end
+
   def resolver(klass)
     config = @config[:resolvers][klass.name.split(':').last.downcase]
     config ||= @config[klass.name.split(':').last.downcase.to_sym] # toplevel config
-    @resolvers[klass] ||= klass.new(config)
+    klass.new(config)
   end
 
   module Base
     # Any time a class uses the base parser module, it gets added to the list of parsers
     def self.included(klass)
-      RESOLVERS << klass
+      @resolvers ||= []
+      @resolvers << klass
+    end
+
+    def self.resolver(name)
+      @resolvers.find { |g| g.name.split('::').last.downcase == name }
     end
   end
 end
