@@ -56,6 +56,8 @@ RSpec.describe 'CLI App', type: :aruba do
         r['server']['url'] = 'https://localhost'
         r['server']['apikey'] = 'anything'
       end
+      config['generators'] = {}
+      config['generators']['mock'] = {}
       File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
       File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
     end

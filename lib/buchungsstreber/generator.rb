@@ -16,16 +16,20 @@ class Generator
     end
   end
 
-  def load!
-    @generators = Thread.current[:GENERATORS]
-    @generators ||= []
+  def load!(generator_name)
+    generator = Base.generator(generator_name)
+    @generators << generator if generator
   end
 
   module Base
     # Any time a class uses the base module, it gets added to the list
     def self.included(klass)
-      Thread.current[:GENERATORS] ||= []
-      Thread.current[:GENERATORS] << klass
+      @generators ||= []
+      @generators << klass
+    end
+
+    def self.generator(name)
+      @generators.find { |g| g.name.split('::').last.downcase == name }
     end
   end
 end

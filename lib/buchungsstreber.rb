@@ -30,9 +30,13 @@ module Buchungsstreber
 
       @config[:generators].each_key do |gc|
         require_relative "buchungsstreber/generator/#{gc}"
+      rescue LoadError
+        $stderr.puts "Ignoring unknown generator #{gc}"
       end
       @generator = Generator.new(@config[:generators])
-      @generator.load!
+      @config[:generators].each_key do |gc|
+        @generator.load!(gc)
+      end
 
       require_relative "buchungsstreber/resolver/templates"
       require_relative "buchungsstreber/resolver/redmines"
