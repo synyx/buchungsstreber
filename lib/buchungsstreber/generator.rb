@@ -1,12 +1,13 @@
 class Generator
-  GENERATORS = []
+  attr_reader :generators
 
   def initialize(config)
     @config = config
+    @generators = []
   end
 
   def generate(date)
-    GENERATORS.each_with_object([]) do |g, memo|
+    generators.each_with_object([]) do |g, memo|
       config = @config[g.name.split(':').last.downcase]
       generator = g.new(config)
       memo << generator.generate(date)
@@ -15,10 +16,20 @@ class Generator
     end
   end
 
+  def load!(generator_name)
+    generator = Base.generator(generator_name)
+    @generators << generator if generator
+  end
+
   module Base
     # Any time a class uses the base module, it gets added to the list
     def self.included(klass)
-      GENERATORS << klass
+      @generators ||= []
+      @generators << klass
+    end
+
+    def self.generator(name)
+      @generators.find { |g| g.name.split('::').last.downcase == name }
     end
   end
 end
