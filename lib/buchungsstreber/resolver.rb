@@ -17,12 +17,12 @@ class Resolver
     entry
   end
 
-  private
-
   def load!(name)
     resolver = Base.resolver(name)
-    @resolver << resolver if resolver
+    @resolvers << resolver if resolver
   end
+
+  private
 
   def resolver(klass)
     config = @config[:resolvers][klass.name.split(':').last.downcase]
