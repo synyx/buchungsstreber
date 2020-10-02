@@ -1,5 +1,4 @@
 class Resolver
-  RESOLVERS = []
 
   def initialize(config)
     @config = config
@@ -7,11 +6,11 @@ class Resolver
   end
 
   def resolve(entry)
-    RESOLVERS.each do |r|
+    @resolvers.each do |r|
       resolver(r).resolve(entry)
     end
     # TODO: it would be better to keep track of changes to stop resolving
-    RESOLVERS.each do |r|
+    @resolvers.each do |r|
       resolver(r).resolve(entry)
     end
     entry

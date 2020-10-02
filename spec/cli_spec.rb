@@ -58,6 +58,8 @@ RSpec.describe 'CLI App', type: :aruba do
       end
       config['generators'] = {}
       config['generators']['mock'] = {}
+      config['resolvers'] = {}
+      config['resolvers']['mock'] = {}
       File.open(config_file, 'w+') { |io| YAML.dump(config, io) }
       File.open(entry_file, 'w+') { |io| YAML.dump(entry, io) }
     end
@@ -85,6 +87,7 @@ RSpec.describe 'CLI App', type: :aruba do
       FileUtils.copy(example_file, entry_file)
       run_command_and_stop("buchungsstreber edit --debug #{Date.today.iso8601}")
       expect(last_command_started).to have_output(/generated/)
+      expect(last_command_started).to have_output(/resolved/)
     end
 
     it 'runs show command' do
@@ -137,5 +140,20 @@ class Generator::Mock
           activity: 'BeispielDaily',
       }
     ]
+  end
+end
+
+class Resolver::Mock
+  include Resolver::Base
+
+
+  def initialize(config)
+    @config = config
+  end
+
+  def resolve(entry)
+    entry[:text] ||= ''
+    entry[:text] += ' resolved'
+    entry
   end
 end

@@ -42,6 +42,8 @@ module Buchungsstreber
       require_relative "buchungsstreber/resolver/redmines"
       @config[:resolvers].each_key do |gc|
         require_relative "buchungsstreber/resolver/#{gc}"
+      rescue LoadError
+        $stderr.puts "Ignoring unknown resolver #{gc}"
       end
       @resolver = Resolver.new(@config)
       @config[:resolvers].each_key do |gc|
