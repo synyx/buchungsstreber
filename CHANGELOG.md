@@ -1,6 +1,11 @@
 Changes
 =======
 
+## v2.4.0
+
+* ncalcli generator can now filter shown entries
+* behavioral change:  regexp resolver will now override non-empty fields in entries
+
 ## v2.3.1
 
 * Relax validation for duplicated entries
