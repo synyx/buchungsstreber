@@ -1,4 +1,4 @@
-name: Ruby
+name: CI
 
 on:
   push:
@@ -7,17 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-
+  build:
+    name: "Build & Test"
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.5
+
+
     - name: Install dependencies
       run: bundle install
+
     - name: Run tests
       run: bundle exec rspec
