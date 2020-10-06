@@ -101,8 +101,6 @@ Bedienungsanleitung erreichbar mit `h`.
 Entwicklung
 -----------
 
-[![coverage report](https://gitlab.synyx.de/synyx/buchungsstreber/badges/master/coverage.svg)](https://gitlab.synyx.de/synyx/buchungsstreber/commits/master)
-
 Ab und zu mal tests ausfuehren ist ok.
 
 ```
