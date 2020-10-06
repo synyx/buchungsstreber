@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: "Build & Test"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: [2.5, 2.6, 2.7, head]
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+
+    - name: Recreate Ruby Bundler cache
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile*') }}
+        restore-keys: |
+          ${{ runner.os }}-bundler-
+
+    - name: Install dependencies
+      run: bundle install --path ./vendor/bundle
+
+    - name: Run tests
+      run: bundle exec rspec
