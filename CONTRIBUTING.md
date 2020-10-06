@@ -7,8 +7,8 @@ and you want to add to its value.
 
 ### Documentation
 
-The documentation is always in need of help.  Whether you are fixing typos or
-wordings or create new documents on how to use the `buchuchungsstreber`,
+The documentation is always in need of help. Whether you are fixing typos or
+wordings or create new documents on how to use the `buchungsstreber`,
 everything is welcome.
 
 ### Code
@@ -22,7 +22,7 @@ There are `rubocop` rules regarding style, but those are not hard and fast.
 
 If you're already using the software, it is helpful if you report problems
 via the GitHub issue tracker.
-Before submitting bug reports, have a look at the existing ones.  There
+Before submitting bug reports, have a look at the existing ones. There
 might be one you can comment on.
 
 For reporting, try to:
@@ -37,7 +37,7 @@ For reporting, try to:
 
 ### Git commits
 
-Try to write somewhat clean changes.  To cite [Tom Lord][tla]:
+Try to write somewhat clean changes. To cite [Tom Lord][tla]:
 
 > #### Using commit Well -- The Idea of a Clean Changeset
 >
