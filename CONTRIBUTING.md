@@ -1,6 +1,38 @@
-# Contributing to the Buchungsstreber
+# How to contribute
 
-## Development
+Thanks for reading this, we're glad if this piece of software is useful to you
+and you want to add to its value.
+
+## How can I contribute?
+
+### Documentation
+
+The documentation is always in need of help.  Whether you are fixing typos or
+wordings or create new documents on how to use the `buchuchungsstreber`,
+everything is welcome.
+
+### Code
+
+When you are creating or changing code, it is nice if you also create a test
+with `rspec` so the behaviour is documented.
+
+There are `rubocop` rules regarding style, but those are not hard and fast.
+
+### Bugs
+
+If you're already using the software, it is helpful if you report problems
+via the GitHub issue tracker.
+Before submitting bug reports, have a look at the existing ones.  There
+might be one you can comment on.
+
+For reporting, try to:
+
+* add a short descriptive title
+* add a way to reproduce the behaviour
+* add screenshots if applicable
+* add the output of the app with `--debug` enabled
+
+## Styleguides
 
 ### Git commits
 
