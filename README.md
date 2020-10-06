@@ -1,6 +1,8 @@
 Buchungsstreber (⌐⊙_⊙)
 ======================
 
+![CI](https://github.com/synyx/buchungsstreber/workflows/CI/badge.svg)
+
 Der Buchungsstreber hilft beim konsistenten und zeitnahen Buchen in [Redmine][redmine], indem er
 in einer Textdatei gepflegte Buchungen automatisch in ein oder mehrere Redmine-Systeme überträgt.
 
