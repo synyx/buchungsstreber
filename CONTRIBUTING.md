@@ -29,6 +29,7 @@ For reporting, try to:
 
 * add a short descriptive title
 * add a way to reproduce the behaviour
+  * best with versions of OS, Ruby and `buchungsstreber`
 * add screenshots if applicable
 * add the output of the app with `--debug` enabled
 
