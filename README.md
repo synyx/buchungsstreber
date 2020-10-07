@@ -1,10 +1,19 @@
 Buchungsstreber (⌐⊙_⊙)
 ======================
 
+![CI](https://github.com/synyx/buchungsstreber/workflows/CI/badge.svg)
+
 Der Buchungsstreber hilft beim konsistenten und zeitnahen Buchen in [Redmine][redmine], indem er
 in einer Textdatei gepflegte Buchungen automatisch in ein oder mehrere Redmine-Systeme überträgt.
 
   [redmine]: https://www.redmine.org
+  
+* [Voraussetzungen](#voraussetzungen)
+* [Installation](#installation)
+* [Konfiguration](#konfiguration)
+* [Nutzung](#nutzung)
+* [Terminal User Interface](#terminal-user-interface)
+* [Entwicklung](#entwicklung)
   
 Voraussetzungen
 ---------------
@@ -99,13 +108,4 @@ Bedienungsanleitung erreichbar mit `h`.
 Entwicklung
 -----------
 
-[![coverage report](https://gitlab.synyx.de/synyx/buchungsstreber/badges/master/coverage.svg)](https://gitlab.synyx.de/synyx/buchungsstreber/commits/master)
-
-Ab und zu mal tests ausfuehren ist ok.
-
-```
-bundle install
-bundle exec rspec
-
-bundle exec ./bin/buchungsstreber
-```
+* [Development Guide](./doc/development.md)
