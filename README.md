@@ -101,11 +101,4 @@ Bedienungsanleitung erreichbar mit `h`.
 Entwicklung
 -----------
 
-Ab und zu mal tests ausfuehren ist ok.
-
-```
-bundle install
-bundle exec rspec
-
-bundle exec ./bin/buchungsstreber
-```
+* [Development Guide](./doc/development.md)
