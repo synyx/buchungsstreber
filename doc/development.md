@@ -2,6 +2,7 @@
 
 * [Environment](#environment)
 * [Running tests](#running-tests)
+* [Debugging](#debugging)
 
 ## Environment
 
