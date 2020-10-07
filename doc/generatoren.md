@@ -8,7 +8,7 @@ Daten in der Timesheet-Datei. Diese Einträge können manuell oder per
 
 ## Importiere Nextcloud- / Owncloud-Termine per ncalcli
 
-ncalcli: [Installation und Dokumentation](https://gitlab.synyx.de/jbuch/ncalcli)
+ncalcli: [Installation und Dokumentation](https://github.com/BuJo/ncalcli)
 
 ### Konfiguration des Buchungsstrebers
 
