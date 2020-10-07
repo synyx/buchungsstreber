@@ -8,6 +8,13 @@ in einer Textdatei gepflegte Buchungen automatisch in ein oder mehrere Redmine-S
 
   [redmine]: https://www.redmine.org
   
+* [Voraussetzungen](#voraussetzungen)
+* [Installation](#installation)
+* [Konfiguration](#konfiguration)
+* [Nutzung](#nutzung)
+* [Terminal User Interface](#terminal-user-interface)
+* [Entwicklung](#entwicklung)
+  
 Voraussetzungen
 ---------------
 
