@@ -202,7 +202,7 @@ module Buchungsstreber
       end
 
       def show_help
-        addstatus(_("h/? help | q quit | l next day | r previous day | <enter> refresh"))
+        addstatus(_("h/? help | q quit | l next day | t today | r previous day | <enter> refresh"))
       end
 
       def addstatus(msg)
@@ -240,6 +240,9 @@ module Buchungsstreber
           end
         when Curses::KEY_DOWN, Curses::KEY_LEFT
           @date -= 1
+          redraw
+        when 't'
+          @date = Date.today
           redraw
         when Curses::KEY_UP, Curses::KEY_RIGHT
           @date += 1
