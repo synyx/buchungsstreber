@@ -5,142 +5,146 @@
 #
 #, fuzzy
 msgid   ""
-msgstr  "Project-Id-Version: PACKAGE VERSION\n"
-        "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2020-08-31 17:40+0200\n"
+msgstr  "Project-Id-Version: BUCHUNGSSTREBER 2.4.0\n"
+        "Report-Msgid-Bugs-To: jbuch@synyx.de\n"
+        "POT-Creation-Date: 2020-10-19 16:34+0200\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
         "MIME-Version: 1.0\n"
         "Content-Type: text/plain; charset=UTF-8\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/buchungsstreber/cli/app.rb:150
+#: lib/buchungsstreber/cli/app.rb:145
 msgid   " * Buchungsdatei oeffnen (siehe Konfig-Datei)"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:149
+#: lib/buchungsstreber/cli/app.rb:144
 msgid   " * Config-Datei anpassen - mindestens die eigenen API-Keys eintragen."
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:151
+#: lib/buchungsstreber/cli/app.rb:146
 msgid   " * `buchungsstreber` ausfuehren"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:60
+#: lib/buchungsstreber/cli/tui.rb:63
 msgid   "&"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:168
+#: lib/buchungsstreber/cli/tui.rb:171
 msgid   "-> ACK"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:112
+#: lib/buchungsstreber/cli/app.rb:107
 msgid   "-> Bereits gebucht"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:164
+#: lib/buchungsstreber/cli/tui.rb:167
 msgid   "-> DIFF"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:117 lib/buchungsstreber/cli/tui.rb:172
+#: lib/buchungsstreber/cli/app.rb:112 lib/buchungsstreber/cli/tui.rb:175
 msgid   "-> FEHLER"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:117 lib/buchungsstreber/cli/tui.rb:172
+#: lib/buchungsstreber/cli/app.rb:112 lib/buchungsstreber/cli/tui.rb:175
 msgid   "-> OK"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:104 lib/buchungsstreber/cli/tui.rb:148
+#: lib/buchungsstreber/cli/app.rb:100 lib/buchungsstreber/cli/tui.rb:152
 msgid   "Buche"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:106 lib/buchungsstreber/cli/tui.rb:154
+#: lib/buchungsstreber/cli/app.rb:102 lib/buchungsstreber/cli/tui.rb:158
 #, ruby-format
 msgid   "Buche %<time>sh auf %<issue>s: %<text>s"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:21
+#: lib/buchungsstreber/cli/app.rb:17
 msgid   "Buchen"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:99
+#: lib/buchungsstreber/cli/app.rb:94
 msgid   "Buchen in Redmine"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:180
+#: lib/buchungsstreber/cli/tui.rb:183
 msgid   "Buchungen abgearbeitet"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:69
+#: lib/buchungsstreber/cli/app.rb:64
 msgid   "Buchungen anzeigen"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:169
+#: lib/buchungsstreber/cli/app.rb:165
 msgid   "Buchungen editieren"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:121
+#: lib/buchungsstreber/cli/app.rb:116
 msgid   "Buchungen erfolgreich gespeichert"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:59
+#: lib/buchungsstreber/cli/app.rb:54
 msgid   "Buchungen in Redmine uebernehmen? (y/N)"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:141
+#: lib/buchungsstreber/cli/app.rb:136
 #, ruby-format
 msgid   "Buchungsstreber bereits konfiguriert in %<file>s"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:126
+#: lib/buchungsstreber/cli/app.rb:121
 msgid   "Jetzige Eintraege Archiviren"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:161
+#: lib/buchungsstreber/cli/app.rb:156
 msgid   "Konfiguration editieren"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:30
+#: lib/buchungsstreber/cli/app.rb:26
 msgid   "Konfiguration editieren?"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:146
+#: lib/buchungsstreber/cli/app.rb:141
 #, ruby-format
 msgid   "Konfiguration in %<file>s erstellt."
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:138
+#: lib/buchungsstreber/cli/app.rb:133
 msgid   "Konfiguration initialisieren"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:148
+#: lib/buchungsstreber/cli/app.rb:143
 msgid   "Schritte zum friedvollen Buchen:"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:86
+#: lib/buchungsstreber/cli/app.rb:82
 #, ruby-format
 msgid   "Summa summarum (%<date>s):"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:206
+#: lib/buchungsstreber/cli/app.rb:203
 msgid   "Ueberwache aenderungen der Buchungsdatei"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:156
+#: lib/buchungsstreber/cli/app.rb:151
 msgid   "Version ausgeben"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/app.rb:51
+#: lib/buchungsstreber/cli/app.rb:47
 #, ruby-format
 msgid   "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:202
+#: lib/buchungsstreber/cli/tui.rb:205
 msgid   "h/? help | q quit | l next day | r previous day | <enter> refresh"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:175
+#: lib/buchungsstreber/cli/tui.rb:178
 msgid   "o"
 msgstr  ""
 
-#: lib/buchungsstreber/cli/tui.rb:175
+#: lib/buchungsstreber/cli/tui.rb:178
 msgid   "x"
 msgstr  ""
