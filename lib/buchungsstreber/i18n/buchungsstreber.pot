@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BUCHUNGSSTREBER 2.4.0\n"
 "Report-Msgid-Bugs-To: jbuch@synyx.de\n"
-"POT-Creation-Date: 2020-10-21 13:30+0200\n"
-"PO-Revision-Date: 2020-10-21 13:30+0200\n"
+"POT-Creation-Date: 2020-10-21 15:56+0200\n"
+"PO-Revision-Date: 2020-10-21 15:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -135,7 +135,7 @@ msgid "Zu buchende Stunden (%<min_date>s bis %<max_date>s):"
 msgstr ""
 
 #: ../cli/tui.rb:205
-msgid "h/? help | q quit | l next day | r previous day | <enter> refresh"
+msgid "h/? help | q quit | l next day | t today | r previous day | <enter> refresh"
 msgstr ""
 
 #: ../cli/tui.rb:178
