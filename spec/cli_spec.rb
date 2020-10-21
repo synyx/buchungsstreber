@@ -85,6 +85,15 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/resolved/)
     end
 
+    it 'runs add command' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber add Notiz")
+
+      text = File.read(entry_file)
+      expect(text).to match(/Notiz/)
+      expect(last_command_started).to have_output(/Notiz/)
+    end
+
     it 'runs show command' do
       stub_request(:get, "https://localhost/issues/8484.json").to_return(status: 200, body: JSON.dump(issue8484))
 

@@ -212,6 +212,26 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
+      desc 'add comment', _('Buchung ueber Kommandozeile hinzufuegen')
+      def add(comment, date = nil)
+        if comment
+          buchungsstreber = Buchungsstreber::Context.new(options[:file])
+          timesheet_file = buchungsstreber.timesheet_file
+
+          new_comment = comment
+          prev =  File.read(timesheet_file)
+          tmpfile = File.open(timesheet_file, 'w+')
+          begin
+            tmpfile.write("#{new_comment}\n#{prev}")
+          ensure
+            tmpfile.close
+            say comment
+          end
+        end
+      rescue StandardError => e
+        handle_error(e, options[:debug])
+      end
+
       def self.exit_on_failure?
         true
       end
