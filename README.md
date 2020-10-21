@@ -3,10 +3,13 @@ Buchungsstreber (⌐⊙_⊙)
 
 ![CI](https://github.com/synyx/buchungsstreber/workflows/CI/badge.svg)
 
+Lost? -> [English README][english].
+
 Der Buchungsstreber hilft beim konsistenten und zeitnahen Buchen in [Redmine][redmine], indem er
 in einer Textdatei gepflegte Buchungen automatisch in ein oder mehrere Redmine-Systeme überträgt.
 
   [redmine]: https://www.redmine.org
+  [english]: README_en.md
 
 * [Schnacken](#schnacken)
 * [Voraussetzungen](#voraussetzungen)
