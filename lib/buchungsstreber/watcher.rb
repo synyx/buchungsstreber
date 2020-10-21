@@ -27,6 +27,7 @@ class Watcher
         end
       end
     rescue LoadError
+      # defer error handling to the default method
     end
 
     begin
@@ -46,6 +47,7 @@ class Watcher
         Thread.start(listener) { |_l| mutex.synchronize { resource.wait(mutex) } }.join
       end
     rescue LoadError
+      # defer error handling to the default method
     end
 
     begin
@@ -73,6 +75,7 @@ class Watcher
         notifier.run
       end
     rescue LoadError
+      # defer error handling to the default method
     end
   end
 end
