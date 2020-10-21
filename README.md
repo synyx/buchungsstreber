@@ -7,14 +7,26 @@ Der Buchungsstreber hilft beim konsistenten und zeitnahen Buchen in [Redmine][re
 in einer Textdatei gepflegte Buchungen automatisch in ein oder mehrere Redmine-Systeme überträgt.
 
   [redmine]: https://www.redmine.org
-  
+
+* [Schnacken](#schnacken)
 * [Voraussetzungen](#voraussetzungen)
 * [Installation](#installation)
 * [Konfiguration](#konfiguration)
 * [Nutzung](#nutzung)
 * [Terminal User Interface](#terminal-user-interface)
 * [Entwicklung](#entwicklung)
-  
+
+Schnacken
+---------
+
+Fragen?  Hilfe notwendig?  Einfach nur mal Schnacken?
+
+* Matrix: [#buchungsstreber:synyx.de](https://matrix.to/#/!BxFxbjMxhzwOlFxvMm:synyx.de/)
+* E-Mail: [buchungsstreber@synyx.de](mailto:buchungsstreber@synyx.de)
+* [Contribution Guidelines][contributing]
+
+  [contributing]: CONTRIBUTING.md
+
 Voraussetzungen
 ---------------
 
