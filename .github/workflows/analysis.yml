@@ -42,7 +42,7 @@ jobs:
         with:
           args: >
             -Dsonar.organization=synyx
-            -Dsonar.projectKey=synyx_buchungsstreber
+            -Dsonar.projectKey=com.github.synyx:buchungsstreber
             -Dsonar.ruby.coverage.reportPaths=coverage/
             -Dsonar.sources=bin/,lib/
             -Dsonar.tests=spec/
