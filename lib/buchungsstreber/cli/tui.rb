@@ -203,6 +203,7 @@ module Buchungsstreber
 
       def show_help
         addstatus(_("h/? help | q quit | l next day | t today | r previous day | <enter> refresh"))
+        Curses.refresh
       end
 
       def addstatus(msg)
