@@ -94,14 +94,14 @@ module Buchungsstreber
       desc 'buchen [date]', _('Buchen in Redmine')
       def buchen(date = nil)
         date = parse_date(date)
-        entries = options[:entries] || Buchungsstreber::Context.new(options[:file]).entries[:entries]
-        redmines = Redmines.new(Config.load[:redmines]) # FIXME: should be embedded somewhere
+        context = Buchungsstreber::Context.new(options[:file])
+        entries = options[:entries] || context.entries[:entries]
 
         puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || date == e[:date] }.each do |entry|
           print style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, 60)
           $stdout.flush
-          redmine = redmines.get(entry[:redmine])
+          redmine = context.redmines.get(entry[:redmine])
           status = Validator.status!(entry, redmine)
           if status.grep(/(time|activity)_different/).any?
             puts style(_("-> Bereits gebucht") + " (#{status.join(', ')})", :red, :bold)
