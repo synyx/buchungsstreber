@@ -209,6 +209,7 @@ module Buchungsstreber
         @win.setpos(@win.maxy - 1, 0)
         @win.addstr(msg)
         @win.clrtoeol
+        Curses.refresh
       end
 
       def loading(l)
@@ -248,7 +249,13 @@ module Buchungsstreber
           @date += 1
           redraw
         when '?', 'h', Curses::KEY_F1, Curses::KEY_HELP
-          show_help
+          if @help_shown
+            @help_shown = false
+            addstatus('')
+          else
+            @help_shown = true
+            show_help
+          end
         when 'b'
           @subwindow = buchen(@date)
         else
