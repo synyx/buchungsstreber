@@ -226,6 +226,8 @@ module Buchungsstreber
             @subwindow.close
             @subwindow = nil
             redraw
+          else
+            # ignore other keycodes
           end
           return
         end

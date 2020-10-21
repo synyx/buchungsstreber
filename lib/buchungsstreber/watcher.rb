@@ -21,6 +21,8 @@ class Watcher
             block.call(f)
           when 'deleted'
             # assume it will be recreated
+          else
+            # ignore any other events
           end
         end
       end
@@ -62,6 +64,8 @@ class Watcher
               block.call(file)
             when :delete
               mutex.synchronize { resource.signal }
+            else
+              # ignore any other events
             end
           end
         end
