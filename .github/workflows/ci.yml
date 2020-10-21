@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: "Build & Test"
+    name: "SonarCloud Analysis"
     runs-on: ubuntu-latest
 
     strategy:
@@ -18,9 +18,6 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v2
-      with:
-        # This is needed, so SonarCloud can analyze correctly the times when regressions were introduced
-        fetch-depth: 0
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -40,17 +37,3 @@ jobs:
 
     - name: Run tests
       run: bundle exec rspec
-
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      with:
-        args: >
-          -Dsonar.organization=synyx
-          -Dsonar.projectKey=synyx_buchungsstreber
-          -Dsonar.ruby.coverage.reportPaths=coverage/.resultset.json
-          -Dsonar.sources=bin/,lib/
-          -Dsonar.tests=spec/
-          -Dsonar.verbose=true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
