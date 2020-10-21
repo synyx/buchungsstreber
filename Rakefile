@@ -8,20 +8,15 @@ task :xgettext do
   require 'buchungsstreber/version'
 
   args = [
-    '--language=Ruby',
-    '--indent',
-    '--add-location',
-    '--foreign-user',
     '--copyright-holder=Jonathan Buch <jbuch@synyx.de>',
     "--package-version=#{Buchungsstreber::VERSION}",
     '--package-name=BUCHUNGSSTREBER',
     '--msgid-bugs-address=jbuch@synyx.de',
-    '--join-existing',
-    '--sort-output',
+    '--sort-by-msgid',
     '--output=./lib/buchungsstreber/i18n/buchungsstreber.pot',
     Dir.glob('lib/buchungsstreber/cli/*.rb'),
   ].flatten
-  system('xgettext', *args)
+  system('rxgettext', *args)
 end
 
 RSpec::Core::RakeTask.new(:spec)
