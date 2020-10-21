@@ -2,6 +2,10 @@ Buchungsstreber (⌐⊙_⊙)
 ======================
 
 ![CI](https://github.com/synyx/buchungsstreber/workflows/CI/badge.svg)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=coverage)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=security_rating)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=alert_status)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
 
 Lost? -> [English README][english].
 
