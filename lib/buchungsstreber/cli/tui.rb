@@ -101,6 +101,7 @@ module Buchungsstreber
 
           @win.setpos(@win.cury, 7)
           @win.attron(Curses::A_BOLD) { @win.addstr("%sh" % e[:time]) }
+          #$stderr.puts [e].inspect
 
           @win.setpos(@win.cury, 14)
           @win.addstr(e[:redmine] || '@')
@@ -129,7 +130,7 @@ module Buchungsstreber
         return unless y > 1 && y < @entries[:entries].length + 2
 
         w = Curses::Window.new(@win.maxy - 4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
-        entry = @entries[:entries][y - 3]
+        entry = Aggregator.aggregate(@entries[:entries])[y - 3]
         w.setpos(2, 2)
         YAML.dump(entry).lines do |line|
           w.setpos(w.cury, 2)
