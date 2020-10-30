@@ -96,12 +96,13 @@ module Buchungsstreber
           status_color = {true => 3, false => 1}[e[:valid]]
           err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
 
+          @win.clrtoeol
+
           @win.setpos(@win.cury, 2)
           @win.addstr(e[:date].strftime("%a:"))
 
           @win.setpos(@win.cury, 7)
           @win.attron(Curses::A_BOLD) { @win.addstr("%sh" % e[:time]) }
-          #$stderr.puts [e].inspect
 
           @win.setpos(@win.cury, 14)
           @win.addstr(e[:redmine] || '@')
@@ -111,8 +112,6 @@ module Buchungsstreber
 
           @win.setpos(@win.cury, 70)
           @win.addstr(style(e[:text], @win.maxx - 70))
-
-          @win.clrtoeol
         end
         @win.addstr("\n")
         (@win.cury..(@win.maxy - 2)).each do |i|
