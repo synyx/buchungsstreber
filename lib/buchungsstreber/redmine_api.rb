@@ -89,14 +89,15 @@ class RedmineApi
     }
     request = Net::HTTP::Get.new(uri, header)
     result = https.request(request)
-    result.body.force_encoding("utf-8")
+    raise 'Unexpected result code' unless result.code == "200"
 
+    result.body.force_encoding("utf-8")
     body = JSON.parse(result.body)
-    raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}" unless result.code == "200"
 
     (yield body if block_given?) || body
-  rescue JSON::ParserError => e
-    raise "Fehler beim Laden des Issues (\##{issue_id}): #{e}, Rückgabe #{result.body}"
+  rescue StandardError => e
+    h = { url: path, error: e, content: result&.body }
+    raise "Fehler beim Laden von %<url>s: %<error>s, Rückgabe: %<content>s" % h
   end
 
   def from_time_entry(entry)
