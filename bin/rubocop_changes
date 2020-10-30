@@ -5,11 +5,11 @@
 
 target_branch = ENV['CI_MERGE_REQUEST_TARGET_BRANCH_NAME'] || ENV['GITHUB_BASE_REF'] || 'main'
 
-RUBOCOP = <<EOS.freeze
+RUBOCOP = <<RUBOCOP.freeze
     git diff --name-only origin/#{target_branch} --diff-filter AMT |
     grep '\\.rb$' |
     xargs bundle exec rubocop --format emacs
-EOS
+RUBOCOP
 DIFF = "git diff origin/#{target_branch} --diff-filter AMT".freeze
 
 mappings = {}
