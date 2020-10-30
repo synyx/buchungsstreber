@@ -2,10 +2,7 @@ Buchungsstreber (⌐⊙_⊙)
 ======================
 
 ![CI](https://github.com/synyx/buchungsstreber/workflows/CI/badge.svg)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=coverage)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=security_rating)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
 
 The Buchungsstreber (translated roughly as 'time entry nerd') helps you adding time entries to
 [Redmine][redmine].  It enables writing a simple text file and will take care of adding those
