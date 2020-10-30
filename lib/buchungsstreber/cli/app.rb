@@ -6,6 +6,7 @@ include I18n::Gettext::Helpers # rubocop:disable Style/MixinUsage
 I18n.config.enforce_available_locales = false
 
 require 'buchungsstreber'
+require 'buchungsstreber/parser/yaml_timesheet'
 
 module Buchungsstreber
   module CLI
@@ -212,20 +213,29 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'add comment', _('Buchung ueber Kommandozeile hinzufuegen')
-      def add(comment, date = nil)
-        if comment
+      desc 'add entry', _('Buchung ueber Kommandozeile hinzufuegen')
+      def add(*entry)
+        if entry
           buchungsstreber = Buchungsstreber::Context.new(options[:file])
           timesheet_file = buchungsstreber.timesheet_file
 
-          new_comment = comment
+          parser = buchungsstreber.timesheet_parser
+
+          entry = entry.join(' ')
+          begin
+            entry = parser.parse_entry(entry, nil)
+            entry = parser.format([entry])
+          rescue
+            entry = "# #{entry}"
+          end
           prev =  File.read(timesheet_file)
           tmpfile = File.open(timesheet_file, 'w+')
           begin
-            tmpfile.write("#{new_comment}\n#{prev}")
+            tmpfile.write("#{entry}\n#{prev}")
           ensure
             tmpfile.close
-            say comment
+            YamlTimesheet.parses?(tmpfile)
+            say entry
           end
         end
       rescue StandardError => e

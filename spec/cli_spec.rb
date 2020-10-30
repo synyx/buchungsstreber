@@ -87,11 +87,23 @@ RSpec.describe 'CLI App', type: :aruba do
 
     it 'runs add command' do
       FileUtils.copy(example_file, entry_file)
-      run_command_and_stop("buchungsstreber add Notiz")
+      run_command_and_stop("buchungsstreber add --debug Notiz fuer morgen")
 
       text = File.read(entry_file)
-      expect(text).to match(/Notiz/)
-      expect(last_command_started).to have_output(/Notiz/)
+      expect(text).to match(/^# Notiz/)
+      expect(text).to match(/morgen/)
+      expect(last_command_started).to have_output(/^# Notiz/)
+      expect(last_command_started).to have_output(/morgen/)
+    end
+
+    it 'runs add command with time entry' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber add --debug 0.25 Adm S1234 Einhorn hueten")
+
+      text = File.read(entry_file)
+      #expect(text).to match(/^2020-10-10:/)
+      expect(text).to match(/^  -\s+0\.25\s+Adm\s+S1234\s+Einhorn hueten/)
+      expect(last_command_started).to have_output(/^  -\s+0\.25\s+Adm\s+S1234\s+Einhorn hueten/)
     end
 
     it 'runs show command' do
