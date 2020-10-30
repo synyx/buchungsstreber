@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # for bin/rubocop_changes
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
