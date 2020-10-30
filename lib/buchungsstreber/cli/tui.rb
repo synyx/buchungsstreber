@@ -11,6 +11,7 @@ module Buchungsstreber
         @buchungsstreber = buchungsstreber
         @date = startdate
         @options = options
+        @colors = {}
       end
 
       def start
@@ -23,10 +24,28 @@ module Buchungsstreber
         Curses.stdscr.keypad(true)
 
         Curses.init_pair(1, Curses::COLOR_RED, 0) # invalid
+        @colors[:red] = Curses.color_pair(1)
         Curses.init_pair(2, Curses::COLOR_GREEN, 0) # ok
+        @colors[:green] = Curses.color_pair(2)
         Curses.init_pair(3, Curses::COLOR_BLUE, 0) # valid
+        @colors[:blue] = Curses.color_pair(3)
         Curses.init_pair(4, Curses::COLOR_BLACK, Curses::COLOR_GREEN) # header
+        @colors[:header] = Curses.color_pair(4)
         Curses.init_pair(5, Curses::COLOR_YELLOW, 0) # warning
+        @colors[:yellow] = Curses.color_pair(5)
+
+        if Curses.can_change_color?
+          @buchungsstreber.redmines.each_with_index do |redmine, i|
+            if redmine.config['color']
+              # hex colors to a range from 0 to 1000
+              r, g, b = redmine.config['color'].gsub('#', '').scan(/../).map { |c| (c.hex / 0.255).to_i }
+              Curses.init_color(9 + i, r, g, b)
+              Curses.init_pair(10 + i, 9 + i, 0)
+              @colors[redmine.prefix] = Curses.color_pair(10 + i)
+              @colors[nil] = Curses.color_pair(10 + i) if redmine.default?
+            end
+          end
+        end
 
         @win = Curses.stdscr
         @entries = { entries: [] }
@@ -93,7 +112,7 @@ module Buchungsstreber
             end
           end
 
-          status_color = {true => 3, false => 1}[e[:valid]]
+          status_color = {true => :blue, false => :red}[e[:valid]]
           err = e[:errors].map { |x| "<#{x.gsub(/:.*/m, '')}> " }.join('')
 
           @win.setpos(@win.cury, 2)
@@ -104,10 +123,11 @@ module Buchungsstreber
           #$stderr.puts [e].inspect
 
           @win.setpos(@win.cury, 14)
-          @win.addstr(e[:redmine] || '@')
+          $stderr.puts [e[:redmine], @colors[e[:redmine]]].inspect
+          @win.attron(color_pair(e[:redmine])) { @win.addstr(e[:redmine] || '@') }
 
           @win.setpos(@win.cury, 16)
-          @win.attron(Curses.color_pair(status_color)) { @win.addstr(style((err || '') + (e[:title] || ''), 50)) }
+          @win.attron(color_pair(status_color)) { @win.addstr(style((err || '') + (e[:title] || ''), 50)) }
 
           @win.setpos(@win.cury, 70)
           @win.addstr(style(e[:text], @win.maxx - 70))
@@ -194,7 +214,7 @@ module Buchungsstreber
         Curses.resizeterm(lines, cols)
         @win.resize(lines, cols)
         @win.setpos(0, 0)
-        @win.attron(Curses.color_pair(4) | Curses::A_BOLD) do
+        @win.attron(color_pair(:header) | Curses::A_BOLD) do
           @win.addstr("    %-#{@win.maxx - 4}s" % "BUCHUNGSSTREBER v#{Buchungsstreber::VERSION}")
         end
         @win.setpos(@win.maxy - 1, 0)
@@ -215,7 +235,7 @@ module Buchungsstreber
 
       def loading(l)
         @win.setpos(0, 0)
-        @win.attron(Curses.color_pair(4) | Curses::A_BOLD) do
+        @win.attron(color_pair(:header) | Curses::A_BOLD) do
           @win.addstr(l)
         end
       end
@@ -274,14 +294,7 @@ module Buchungsstreber
       end
 
       def color_pair(color)
-        c = case color
-            when :red then 1
-            when :green then 2
-            when :yellow then 5
-            else
-              0
-            end
-        Curses.color_pair(c)
+        @colors[color] || Curses.color_pair(0)
       end
     end
   end

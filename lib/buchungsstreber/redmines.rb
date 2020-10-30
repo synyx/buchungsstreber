@@ -1,4 +1,6 @@
 class Redmines
+  include Enumerable
+
   def initialize(redmines)
     @redmines = {}
     redmines.each do |config|
@@ -20,5 +22,11 @@ class Redmines
 
   def default?(prefix)
     get(prefix) == @default
+  end
+
+  def each(&block)
+    @redmines.each do |prefix, redmine|
+      block.call(redmine)
+    end
   end
 end

@@ -5,8 +5,10 @@ require "json"
 require "yaml"
 
 class RedmineApi
+  attr_reader :config
+
   def initialize(config)
-    load_config(config)
+    @config = load_config(config)
   end
 
   def add_time(entry)
@@ -47,6 +49,10 @@ class RedmineApi
 
   def prefix
     @config['prefix'].dup
+  end
+
+  def default?
+    !!@config['default']
   end
 
   private
@@ -125,7 +131,6 @@ class RedmineApi
     end
     config = config.dup
     config["activities"] = activities
-
-    @config = config
+    config
   end
 end
