@@ -24,6 +24,15 @@ RSpec.describe RedmineApi do
       expect(get_times_stub).to have_been_requested.at_least_once
     end
 
+    it 'raises an error on bad json' do
+      get_times_stub = stub_request(:get, "https://project.synyx.de/issues/1234.json")
+                           .to_return(status: 200, body: '<html></html>')
+
+      expect { @redmine_api.get_issue('1234') }.to raise_error
+
+      expect(get_times_stub).to have_been_requested.at_least_once
+    end
+
     it 'raises an error on anything other than 200' do
       get_times_stub = stub_request(:get, "https://project.synyx.de/issues/1234.json")
                            .to_return(status: 500, body: '<html></html>')
