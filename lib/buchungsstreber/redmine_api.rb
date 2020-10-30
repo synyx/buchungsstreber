@@ -97,7 +97,7 @@ class RedmineApi
     (yield body if block_given?) || body
   rescue StandardError => e
     h = { url: path, error: e, content: result&.body }
-    raise "Fehler beim Laden von %<url>: %<error>s, Rückgabe: %<content>s" % h
+    raise "Fehler beim Laden von %<url>s: %<error>s, Rückgabe: %<content>s" % h
   end
 
   def from_time_entry(entry)
