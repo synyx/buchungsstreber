@@ -95,8 +95,9 @@ class RedmineApi
     raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}" unless result.code == "200"
 
     (yield body if block_given?) || body
-  rescue JSON::ParserError => e
-    raise "Fehler beim Laden des Issues (\##{issue_id}): #{e}, Rückgabe #{result.body}"
+  rescue StandardError => e
+    h = { url: path, error: e, content: result&.body }
+    raise "Fehler beim Laden von %<url>: %<error>s, Rückgabe: %<content>s" % h
   end
 
   def from_time_entry(entry)
