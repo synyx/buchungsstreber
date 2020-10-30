@@ -19,6 +19,10 @@ class TimesheetParser
     @parser.format(entries)
   end
 
+  def parse_entry(entry, date)
+    @parser.parse_entry(entry, date)
+  end
+
   private
 
   def choose_parser(file)
