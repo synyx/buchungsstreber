@@ -21,10 +21,13 @@ class Watcher
             block.call(f)
           when 'deleted'
             # assume it will be recreated
+          else
+            # ignore any other events
           end
         end
       end
     rescue LoadError
+      # defer error handling to the default method
     end
 
     begin
@@ -44,6 +47,7 @@ class Watcher
         Thread.start(listener) { |_l| mutex.synchronize { resource.wait(mutex) } }.join
       end
     rescue LoadError
+      # defer error handling to the default method
     end
 
     begin
@@ -62,6 +66,8 @@ class Watcher
               block.call(file)
             when :delete
               mutex.synchronize { resource.signal }
+            else
+              # ignore any other events
             end
           end
         end
@@ -69,6 +75,7 @@ class Watcher
         notifier.run
       end
     rescue LoadError
+      # defer error handling to the default method
     end
   end
 end
