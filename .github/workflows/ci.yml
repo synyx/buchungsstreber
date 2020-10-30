@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # for bin/rubocop_changes
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -37,3 +39,7 @@ jobs:
 
     - name: Run tests
       run: bundle exec rspec
+
+    - name: Run rubocop
+      run: ./bin/rubocop_changes
+      continue-on-error: true
