@@ -89,10 +89,10 @@ class RedmineApi
     }
     request = Net::HTTP::Get.new(uri, header)
     result = https.request(request)
-    result.body.force_encoding("utf-8")
+    raise 'Unexpected result code' unless result.code == "200"
 
+    result.body.force_encoding("utf-8")
     body = JSON.parse(result.body)
-    raise "Fehler beim Laden (#{path}): #{result.message}, Rückgabe #{result.body}" unless result.code == "200"
 
     (yield body if block_given?) || body
   rescue StandardError => e
