@@ -1,0 +1,46 @@
+---
+name: "Buchungsstreber: Release Pipeline"
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  publish:
+    name: Publish artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.5
+
+      - name: Recreate Ruby Bundler cache
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile*') }}
+          restore-keys: |
+            ${{ runner.os }}-bundler-
+
+      - name: Install dependencies
+        run: bundle install --path ./vendor/bundle
+
+      - name: Run tests
+        run: bundle exec rspec
+
+      - name: Publish artifacts to Nexus
+        run: |
+          mkdir -p ~/.gem
+          AUTH=$(echo -n "$NEXUS_USER:$NEXUS_PASS" | base64)
+          /bin/echo -e ":url: $NEXUS_URL\n:authorization: Basic $AUTH\n" > ~/.gem/nexus
+          bundle exec rake build
+          bundle exec gem nexus pkg/buchungsstreber-*.gem
+        env:
+          NEXUS_PASS: ${{ secrets.NEXUS_PASS }}
+          NEXUS_URL: ${{ secrets.NEXUS_URL }}
+          NEXUS_USER: ${{ secrets.NEXUS_USER }}
