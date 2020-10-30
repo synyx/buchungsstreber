@@ -2,10 +2,10 @@ Buchungsstreber (⌐⊙_⊙)
 ======================
 
 ![CI](https://github.com/synyx/buchungsstreber/workflows/CI/badge.svg)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=coverage)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=security_rating)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=synyx_buchungsstreber&metric=alert_status)](https://sonarcloud.io/dashboard?id=synyx_buchungsstreber)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=coverage)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=security_rating)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.synyx%3Abuchungsstreber&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.synyx%3Abuchungsstreber)
 
 Lost? -> [English README][english].
 
