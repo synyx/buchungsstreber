@@ -1,0 +1,51 @@
+name: Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze:
+    name: "SonarCloud"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          # This is needed, so SonarCloud can analyze correctly the times when regressions were introduced
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+      - name: Recreate Ruby Bundler cache
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-analysis-bundler-${{ hashFiles('**/Gemfile*') }}
+          restore-keys: |
+            ${{ runner.os }}-analysis-bundler-
+
+      - name: Install dependencies
+        run: bundle install --path ./vendor/bundle
+
+      - name: Run tests
+        run: bundle exec rspec
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.organization=synyx
+            -Dsonar.projectKey=com.github.synyx:buchungsstreber
+            -Dsonar.ruby.coverage.reportPaths=coverage/.resultset.json
+            -Dsonar.sources=bin/,lib/
+            -Dsonar.tests=spec/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
