@@ -3,10 +3,14 @@
 # This will filter a concatenated input of rubocop and git diff to only output rubocop
 # issues for ones in the actual changes.
 
-RUBOCOP = 'git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT |
-    grep \'\\.rb$\' |
-    xargs bundle exec rubocop --format emacs'.freeze
-DIFF = 'git diff origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME --diff-filter AMT'.freeze
+target_branch = ENV['CI_MERGE_REQUEST_TARGET_BRANCH_NAME'] || ENV['GITHUB_BASE_REF'] || 'main'
+
+RUBOCOP = <<EOS.freeze
+    git diff --name-only origin/#{target_branch} --diff-filter AMT |
+    grep '\\.rb$' |
+    xargs bundle exec rubocop --format emacs
+EOS
+DIFF = "git diff origin/#{target_branch} --diff-filter AMT".freeze
 
 mappings = {}
 last_file = nil
