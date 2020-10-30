@@ -37,3 +37,7 @@ jobs:
 
     - name: Run tests
       run: bundle exec rspec
+
+    - name: Run rubocop
+      run: ./bin/rubocop_changes
+      continue-on-error: true
