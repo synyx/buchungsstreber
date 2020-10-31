@@ -1,6 +1,14 @@
 Changes
 =======
 
+## v2.5.0
+
+* Add color configuration for redmines
+* Make minimum time per entry configurable
+* Minor and major bugfixes while moving from GitLab to GitHub as platform
+* Add an english README file
+* Add general documentation for a more open development and contribution guidelines
+
 ## v2.4.0
 
 * ncalcli generator can now filter shown entries
