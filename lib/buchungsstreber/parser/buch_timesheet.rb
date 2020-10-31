@@ -5,7 +5,8 @@ require 'date'
 class BuchTimesheet
   include TimesheetParser::Base
 
-  def initialize(templates)
+  def initialize(templates, minimum_time)
+    @minimum_time = minimum_time
   end
 
   def self.parses?(file)
@@ -26,7 +27,7 @@ class BuchTimesheet
           s = Time.parse("#{current} #{$~[:start]}")
           p = parse_time($~[:pause])
           e = Time.parse("#{current} #{$~[:end]}")
-          work_hours = qarter_time((e - s) / 60 / 60 - p)
+          work_hours = minimum_time((e - s) / 60 / 60 - p, @minimum_time)
         else
           work_hours = nil
         end
@@ -35,7 +36,7 @@ class BuchTimesheet
         next
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]+\s+)?(?<text>.+)/i
         result << {
-            time: qarter_time(parse_time($~[:time])),
+            time: minimum_time(parse_time($~[:time]), @minimum_time),
             activity: ($~[:activity] ? $~[:activity].strip : nil),
             issue: $~[:issue],
             text: $~[:text],
@@ -45,7 +46,7 @@ class BuchTimesheet
         }
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)/
         result << {
-          time: qarter_time(parse_time($~[:time])),
+          time: minimum_time(parse_time($~[:time]), @minimum_time),
           issue: $~[:issue],
           date: parse_date(current),
           redmine: $~[:redmine],
@@ -72,7 +73,7 @@ class BuchTimesheet
       buf << "#{date}\n\n"
       day.each do |e|
         buf << "% #{e[:comment]}\n" if e[:comment]
-        buf << "#{e[:redmine]}##{e[:issue]}\t#{qarter_time(e[:time] || 0.0)}\t#{e[:activity]}\t#{e[:text]}\n"
+        buf << "#{e[:redmine]}##{e[:issue]}\t#{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:text]}\n"
       end
     end
     buf

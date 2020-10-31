@@ -6,6 +6,7 @@ class Config
     archive_path: 'archive',
     templates: {},
     hours: 8,
+    minimum_time: 0.25,
     generators: {},
     resolvers: {},
   }.freeze

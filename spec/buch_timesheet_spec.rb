@@ -9,7 +9,7 @@ RSpec.describe BuchTimesheet, '#common' do
 end
 
 RSpec.describe BuchTimesheet, '#parse' do
-  subject { BuchTimesheet.new({}).parse('spec/examples/aggregatable.B') }
+  subject { BuchTimesheet.new({}, 0.25).parse('spec/examples/aggregatable.B') }
 
   it 'parses aggragatable entries' do
     entries = subject.select { |e| e[:issue] == '123' }
@@ -24,7 +24,7 @@ RSpec.describe BuchTimesheet, '#archive' do
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
   let(:example_file) { File.expand_path('examples/test.B', __dir__) }
 
-  subject { BuchTimesheet.new({}) }
+  subject { BuchTimesheet.new({}, 0.25) }
 
   it 'has implemented archiving' do
     FileUtils.mkdir_p(File.dirname(timesheet_path))
