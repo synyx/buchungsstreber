@@ -177,7 +177,6 @@ module Buchungsstreber
             entries = buchungsstreber.generate(date)
             entries.each do |e|
               buchungsstreber.resolve(e)
-              e[:redmine] = nil if buchungsstreber.redmines.default?(e[:redmine])
             end
 
             parser = buchungsstreber.timesheet_parser
