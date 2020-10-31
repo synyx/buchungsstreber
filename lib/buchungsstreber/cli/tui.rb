@@ -120,10 +120,8 @@ module Buchungsstreber
 
           @win.setpos(@win.cury, 7)
           @win.attron(Curses::A_BOLD) { @win.addstr("%sh" % e[:time]) }
-          #$stderr.puts [e].inspect
 
           @win.setpos(@win.cury, 14)
-          $stderr.puts [e[:redmine], @colors[e[:redmine]]].inspect
           @win.attron(color_pair(e[:redmine])) { @win.addstr(e[:redmine] || '@') }
 
           @win.setpos(@win.cury, 16)
