@@ -1,8 +1,6 @@
 SimpleCov.command_name "buchungsstreber"
 SimpleCov.root(__dir__)
 
-SimpleCov.enable_for_subprocesses false
-
 SimpleCov.configure do
   filters.clear
   load_profile 'bundler_filter'
