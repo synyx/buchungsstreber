@@ -213,21 +213,19 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'add entry', _('Buchung ueber Kommandozeile hinzufuegen')
+      desc 'add [date] entry', _('Buchung ueber Kommandozeile hinzufuegen')
+      method_option :date, :default => 'today'
       def add(*entry)
         if entry
+          date = parse_date(options[:date])
+          entry = entry.join(' ')
           buchungsstreber = Buchungsstreber::Context.new(options[:file])
           timesheet_file = buchungsstreber.timesheet_file
 
           parser = buchungsstreber.timesheet_parser
 
-          entry = entry.join(' ')
-          begin
-            entry = parser.parse_entry(entry, nil)
-            entry = parser.format([entry])
-          rescue
-            entry = "# #{entry}"
-          end
+          entry = parser.parse_entry(entry, date) rescue { comment: entry }
+          entry = parser.format([entry])
           prev =  File.read(timesheet_file)
           tmpfile = File.open(timesheet_file, 'w+')
           begin
