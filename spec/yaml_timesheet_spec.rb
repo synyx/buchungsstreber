@@ -18,7 +18,7 @@ RSpec.describe YamlTimesheet do
 end
 
 RSpec.describe YamlTimesheet, '#parse' do
-  subject { YamlTimesheet.new({}).parse('spec/examples/aggregatable.yml') }
+  subject { YamlTimesheet.new({}, 0.25).parse('spec/examples/aggregatable.yml') }
 
   it 'parses aggragatable entries' do
     entries = subject.select { |e| e[:issue] == '123' }
@@ -40,7 +40,7 @@ RSpec.describe YamlTimesheet, '#archive', type: :aruba do
       'text' => 'Daily',
     }
   }.freeze
-  subject { YamlTimesheet.new(templates) }
+  subject { YamlTimesheet.new(templates, 0.25) }
 
   it 'archives correctly' do
     FileUtils.mkdir_p(File.dirname(timesheet_path))

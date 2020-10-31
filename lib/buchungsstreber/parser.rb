@@ -2,9 +2,10 @@
 class TimesheetParser
   PARSERS = []
 
-  def initialize(file, templates)
+  def initialize(file, templates, minimum_time)
     @file = file
-    @parser = choose_parser(file).new(templates)
+    @minimum_time = minimum_time
+    @parser = choose_parser(file).new(templates, minimum_time)
   end
 
   def parse
@@ -48,10 +49,10 @@ class TimesheetParser
       end
     end
 
-    def qarter_time(time)
-      quarter_hours = ((time * 60 * 60) / 900).ceil
+    def minimum_time(time, minimum_time_value)
+      minimum_time = ((time * 60 * 60) / 900).ceil
 
-      quarter_hours * 0.25
+      minimum_time * minimum_time_value
     end
 
     private

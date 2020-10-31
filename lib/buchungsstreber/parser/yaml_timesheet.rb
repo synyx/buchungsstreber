@@ -5,8 +5,9 @@ require "time"
 class YamlTimesheet
   include TimesheetParser::Base
 
-  def initialize(templates)
+  def initialize(templates, minimum_time)
     @templates = templates
+    @minimum_time = minimum_time
   end
 
   def self.parses?(file)
@@ -58,7 +59,7 @@ class YamlTimesheet
       buf << "#{date}:\n"
       day.each do |e|
         buf << "  # #{e[:comment]}\n" if e[:comment]
-        buf << "  - #{qarter_time(e[:time] || 0.0)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
+        buf << "  - #{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
       end
     end
     buf
@@ -83,7 +84,7 @@ class YamlTimesheet
     raise "invalid line: #{entry}" unless time && issue
 
     {
-      time: qarter_time(parse_time(time)),
+      time: minimum_time(parse_time(time), @minimum_time),
       activity: activity,
       issue: issue,
       text: text,
