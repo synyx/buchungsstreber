@@ -19,6 +19,6 @@ class Generator::Redmine
           redmine: rm[:redmine],
         }
       end
-    end
+    end.flatten.compact.uniq
   end
 end
