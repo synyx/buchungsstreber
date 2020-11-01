@@ -19,7 +19,9 @@ RSpec.describe 'CLI App', type: :aruba do
     it 'runs init command' do
       run_command_and_stop('buchungsstreber init --debug')
       expect(last_command_started).to have_output(/erstellt/)
-      expect(config_file).to be_an_existing_file
+      # replicates path here, as matcher calls expand_path and will
+      # thus run afoul of aruba not wanting to expand absolute paths.
+      expect('~/.config/buchungsstreber/config.yml').to be_an_existing_file
     end
 
     %w[config edit execute show].each do |cmd|
