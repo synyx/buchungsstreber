@@ -275,8 +275,13 @@ module Buchungsstreber
       def on_input(keycode)
         if @subwindow
           case keycode
-          when Ncurses::KEY_ENTER, ' ', "\e", Ncurses::KEY_CANCEL, Ncurses::KEY_BACKSPACE
-            @subwindow.close
+          when ' '.ord, "\e".ord, Ncurses::KEY_CANCEL, Ncurses::KEY_BACKSPACE
+            @subwindow.del
+            @subwindow = nil
+            redraw
+          when 'n'.ord, "\n".ord, Ncurses::KEY_ENTER
+            @date += 1
+            @subwindow.del
             @subwindow = nil
             redraw
           else
