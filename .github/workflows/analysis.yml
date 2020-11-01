@@ -41,7 +41,7 @@ jobs:
         run: ./bin/rubocop_changes
         continue-on-error: true
 
-      - name: Run rubocop
+      - name: Prepare simplecov report
         run: ./bin/simplecov_18_17 coverage/.resultset.json > coverage/.resultset17.json
 
       - name: SonarCloud Scan
