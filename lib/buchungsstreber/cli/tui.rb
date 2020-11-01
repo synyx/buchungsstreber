@@ -210,6 +210,36 @@ module Buchungsstreber
         addstatus(e.message)
       end
 
+      def generate
+        loading(_('&'))
+
+        entries = @buchungsstreber.entries(@date)
+        timesheet_file = @buchungsstreber.timesheet_file
+
+        if entries[:entries].empty?
+          entries = @buchungsstreber.generate(@date)
+          entries.each do |e|
+            @buchungsstreber.resolve(e)
+            e[:redmine] = nil if @buchungsstreber.redmines.default?(e[:redmine])
+          end
+
+          parser = @buchungsstreber.timesheet_parser
+          newday = parser.format(entries)
+          FileUtils.cp(timesheet_file, "#{timesheet_file}~")
+          prev =  File.read(timesheet_file)
+          tmpfile = File.open(timesheet_file, 'w+')
+          begin
+            tmpfile.write("#{newday}\n\n#{prev}")
+          ensure
+            tmpfile.close
+          end
+        end
+      rescue StandardError => e
+        addstatus(e.message)
+      ensure
+        loading('  ')
+      end
+
       def setsize(*_args)
         lines, cols = IO.console.winsize
         Ncurses.resizeterm(lines, cols)
@@ -268,6 +298,9 @@ module Buchungsstreber
           redraw
         when 't'.ord
           @date = Date.today
+          redraw
+        when 'g'.ord
+          generate
           redraw
         when Ncurses::KEY_UP, Ncurses::KEY_RIGHT
           @date += 1
