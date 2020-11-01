@@ -53,6 +53,7 @@ jobs:
             -Dsonar.ruby.coverage.reportPaths=/github/workspace/coverage/.resultset17.json
             -Dsonar.sources=/github/workspace/bin/,/github/workspace/lib/
             -Dsonar.tests=/github/workspace/spec/
+            -Dsonar.coverage.exclusions=**/tui.rb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
