@@ -4,6 +4,7 @@ require "yaml"
 require "date"
 require "fileutils"
 
+require_relative 'buchungsstreber/logger'
 require_relative 'buchungsstreber/version'
 require_relative 'buchungsstreber/validator'
 require_relative 'buchungsstreber/parser'
