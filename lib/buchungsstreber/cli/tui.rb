@@ -269,6 +269,7 @@ module Buchungsstreber
         @win.attron(color_pair(:header) | Ncurses::A_BOLD) do
           @win.addstr(l)
         end
+        Ncurses.refresh
       end
 
       def on_input(keycode)
