@@ -47,7 +47,7 @@ module Buchungsstreber
           end
         end
 
-        @win = Window.new(Ncurses.stdscr)
+        @win = Window.new
         @entries = { entries: [] }
         @queue = Queue.new
 
@@ -150,7 +150,7 @@ module Buchungsstreber
       def detailpage(_x, y)
         return unless y > 1 && y < @entries[:entries].length + 2
 
-        w = Window.new(Ncurses::Window.new(@win.getmaxy - 4, (@win.getmaxx * 0.80).ceil, 2, (@win.getmaxx * 0.10).ceil))
+        w = Window.new(@win.getmaxy - 4, (@win.getmaxx * 0.80).ceil, 2, (@win.getmaxx * 0.10).ceil)
         entry = Aggregator.aggregate(@entries[:entries])[y - 3]
         w.move(2, 2)
         YAML.dump(entry).lines do |line|
@@ -169,7 +169,7 @@ module Buchungsstreber
         entries = @entries[:entries].select { |e| date.nil? || date == e[:date] }
         entries = Aggregator.aggregate(entries)
 
-        w = Window.new(Ncurses::Window.new(@win.getmaxy - 4, (@win.getmaxx * 0.80).ceil, 2, (@win.getmaxx * 0.10).ceil))
+        w = Window.new(@win.getmaxy - 4, (@win.getmaxx * 0.80).ceil, 2, (@win.getmaxx * 0.10).ceil)
         w.move(2, 2)
         w.attron(Ncurses::A_BOLD) { w.addstr(_('Buche')) }
         w.box(0, 0)
@@ -300,8 +300,13 @@ module Buchungsstreber
     end
 
     class Window
-      def initialize(win)
-        @win = win
+      def initialize(win = Ncurses.stdscr, *args)
+        if args.empty?
+          @win = win
+        else
+          nlines, ncols, begin_y, begin_x = win, *args
+          @win = Ncurses::WINDOW.new(nlines, ncols, begin_y, begin_x)
+        end
       end
 
       def attron(*args, &block)
