@@ -28,7 +28,7 @@ RSpec.describe Buchungsstreber::RedmineApi do
       get_times_stub = stub_request(:get, "https://project.synyx.de/issues/1234.json")
                            .to_return(status: 200, body: '<html></html>')
 
-      expect { subject.get_issue('1234') }.to raise_error
+      expect { subject.get_issue('1234') }.to raise_error(/unexpected token/i)
 
       expect(get_times_stub).to have_been_requested.at_least_once
     end
@@ -37,7 +37,7 @@ RSpec.describe Buchungsstreber::RedmineApi do
       get_times_stub = stub_request(:get, "https://project.synyx.de/issues/1234.json")
                            .to_return(status: 500, body: '<html></html>')
 
-      expect { subject.get_issue('1234') }.to raise_error
+      expect { subject.get_issue('1234') }.to raise_error(/Unexpected result code/i)
 
       expect(get_times_stub).to have_been_requested.at_least_once
     end
