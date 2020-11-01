@@ -339,7 +339,10 @@ module Buchungsstreber
           @win = win
         else
           nlines, ncols, begin_y, begin_x = win, *args
-          @win = Ncurses::WINDOW.new(nlines, ncols, begin_y, begin_x)
+          @win = Ncurses.subwin(Ncurses.stdscr, nlines, ncols, begin_y, begin_x)
+          @win.bkgd(Ncurses.COLOR_PAIR(0))
+          @win.clear
+          @win.box(0, 0)
         end
       end
 
