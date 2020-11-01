@@ -3,7 +3,7 @@ require 'logger'
 module Buchungsstreber
   module Logging
     def self.logger(progname)
-      unless @logfile
+      unless defined? @logfile
         @logfile = File.open('err.out', File::WRONLY | File::APPEND | File::CREAT)
         @logfile.sync = true
         @logger = {}
