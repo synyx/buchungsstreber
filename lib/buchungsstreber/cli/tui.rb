@@ -1,12 +1,13 @@
 require 'io/console'
 require 'yaml'
-require 'curses'
+require 'ncurses'
 
 require_relative '../../buchungsstreber/watcher'
 
 module Buchungsstreber
   module TUI
     class App
+
       def initialize(buchungsstreber, startdate = nil, options = {})
         @buchungsstreber = buchungsstreber
         @date = startdate
@@ -15,46 +16,45 @@ module Buchungsstreber
       end
 
       def start
-        Curses.init_screen
-        Curses.start_color
-        Curses.curs_set(0)
-        Curses.noecho
-        Curses.mousemask(Curses::BUTTON1_CLICKED)
-        Curses.crmode
-        Curses.stdscr.keypad(true)
+        Ncurses.initscr
+        Ncurses.start_color
+        Ncurses.curs_set(0)
+        Ncurses.noecho
+        Ncurses.cbreak
+        Ncurses.stdscr.keypad(true)
 
-        Curses.init_pair(1, Curses::COLOR_RED, 0) # invalid
-        @colors[:red] = Curses.color_pair(1)
-        Curses.init_pair(2, Curses::COLOR_GREEN, 0) # ok
-        @colors[:green] = Curses.color_pair(2)
-        Curses.init_pair(3, Curses::COLOR_BLUE, 0) # valid
-        @colors[:blue] = Curses.color_pair(3)
-        Curses.init_pair(4, Curses::COLOR_BLACK, Curses::COLOR_GREEN) # header
-        @colors[:header] = Curses.color_pair(4)
-        Curses.init_pair(5, Curses::COLOR_YELLOW, 0) # warning
-        @colors[:yellow] = Curses.color_pair(5)
+        Ncurses.init_pair(1, Ncurses::COLOR_RED, 0) # invalid
+        @colors[:red] = Ncurses.COLOR_PAIR(1)
+        Ncurses.init_pair(2, Ncurses::COLOR_GREEN, 0) # ok
+        @colors[:green] = Ncurses.COLOR_PAIR(2)
+        Ncurses.init_pair(3, Ncurses::COLOR_BLUE, 0) # valid
+        @colors[:blue] = Ncurses.COLOR_PAIR(3)
+        Ncurses.init_pair(4, Ncurses::COLOR_BLACK, Ncurses::COLOR_GREEN) # header
+        @colors[:header] = Ncurses.COLOR_PAIR(4)
+        Ncurses.init_pair(5, Ncurses::COLOR_YELLOW, 0) # warning
+        @colors[:yellow] = Ncurses.COLOR_PAIR(5)
 
-        if Curses.can_change_color?
+        if Ncurses.COLORS > 8
           @buchungsstreber.redmines.each_with_index do |redmine, i|
             if redmine.config['color']
               # hex colors to a range from 0 to 1000
               r, g, b = redmine.config['color'].gsub('#', '').scan(/../).map { |c| (c.hex / 0.255).to_i }
-              Curses.init_color(9 + i, r, g, b)
-              Curses.init_pair(10 + i, 9 + i, 0)
-              @colors[redmine.prefix] = Curses.color_pair(10 + i)
-              @colors[nil] = Curses.color_pair(10 + i) if redmine.default?
+              Ncurses.init_color(9 + i, r, g, b)
+              Ncurses.init_pair(10 + i, 9 + i, 0)
+              @colors[redmine.prefix] = Ncurses.COLOR_PAIR(10 + i)
+              @colors[nil] = Ncurses.COLOR_PAIR(10 + i) if redmine.default?
             end
           end
         end
 
-        @win = Curses.stdscr
+        @win = Window.new(Ncurses.stdscr)
         @entries = { entries: [] }
         @queue = Queue.new
 
         Signal.trap('SIGWINCH') { @queue << 'r' }
         Thread.start do
           loop do
-            @queue << Curses.getch
+            @queue << Ncurses.getch
           end
         end
 
@@ -69,18 +69,21 @@ module Buchungsstreber
         end
 
         # Main UI loop
-        while (ch = @queue.pop) != 'q'
+        while (ch = @queue.pop) != 'q'.ord
           on_input ch
         end
       ensure
-        Curses.close_screen
+        Ncurses.echo
+        Ncurses.nocbreak
+        Ncurses.nl
+        Ncurses.endwin
       end
 
       private
 
       def redraw
         loading(_('&'))
-        Curses.refresh
+        Ncurses.refresh
 
         e =
           begin
@@ -94,9 +97,9 @@ module Buchungsstreber
             @entries[:entries]
           end
 
-        @win.setpos(2, 0)
+        @win.move(2, 0)
         if e.empty?
-          @win.attron(Curses::A_BOLD) do
+          @win.attron(Ncurses::A_BOLD) do
             @win.addstr("%s %sh / %sh\n" % [@date.strftime, 0.0, @entries[:work_hours][@date]])
           end
         end
@@ -107,7 +110,7 @@ module Buchungsstreber
             hours = @entries[:entries].select { |x| x[:date] == e[:date] }.map { |x| x[:time] }.sum
             color = color_pair(Utils.classify_workhours(hours, @entries[:work_hours][:planned], @entries[:work_hours][dt]))
 
-            @win.attron(color | Curses::A_BOLD) do
+            @win.attron(color | Ncurses::A_BOLD) do
               @win.addstr("%s %sh / %sh\n" % [e[:date].strftime, hours, @entries[:work_hours][dt]])
             end
           end
@@ -117,41 +120,41 @@ module Buchungsstreber
 
           @win.clrtoeol
 
-          @win.setpos(@win.cury, 2)
+          @win.move(@win.getcury, 2)
           @win.addstr(e[:date].strftime("%a:"))
 
-          @win.setpos(@win.cury, 7)
-          @win.attron(Curses::A_BOLD) { @win.addstr("%sh" % e[:time]) }
+          @win.move(@win.getcury, 7)
+          @win.attron(Ncurses::A_BOLD) { @win.addstr("%sh" % e[:time]) }
 
-          @win.setpos(@win.cury, 14)
+          @win.move(@win.getcury, 14)
           @win.attron(color_pair(e[:redmine])) { @win.addstr(e[:redmine] || '@') }
 
-          @win.setpos(@win.cury, 16)
+          @win.move(@win.getcury, 16)
           @win.attron(color_pair(status_color)) { @win.addstr(style((err || '') + (e[:title] || ''), 50)) }
 
-          @win.setpos(@win.cury, 70)
-          @win.addstr(style(e[:text], @win.maxx - 70))
+          @win.move(@win.getcury, 70)
+          @win.addstr(style(e[:text], @win.getmaxx - 70))
         end
         @win.addstr("\n")
-        (@win.cury..(@win.maxy - 2)).each do |i|
-          @win.setpos(i, 0)
+        (@win.getcury..(@win.getmaxy - 2)).each do |i|
+          @win.move(i, 0)
           @win.clrtoeol
         end
       rescue StandardError => e
         addstatus(e.message)
       ensure
         loading('  ')
-        Curses.refresh
+        Ncurses.refresh
       end
 
       def detailpage(_x, y)
         return unless y > 1 && y < @entries[:entries].length + 2
 
-        w = Curses::Window.new(@win.maxy - 4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
+        w = Window.new(Ncurses::Window.new(@win.getmaxy - 4, (@win.getmaxx * 0.80).ceil, 2, (@win.getmaxx * 0.10).ceil))
         entry = Aggregator.aggregate(@entries[:entries])[y - 3]
-        w.setpos(2, 2)
+        w.move(2, 2)
         YAML.dump(entry).lines do |line|
-          w.setpos(w.cury, 2)
+          w.move(w.getcury, 2)
           w.addstr(line)
         end
         w.box(0, 0)
@@ -166,15 +169,15 @@ module Buchungsstreber
         entries = @entries[:entries].select { |e| date.nil? || date == e[:date] }
         entries = Aggregator.aggregate(entries)
 
-        w = Curses::Window.new(@win.maxy - 4, (@win.maxx * 0.80).ceil, 2, (@win.maxx * 0.10).ceil)
-        w.setpos(2, 2)
-        w.attron(Curses::A_BOLD) { w.addstr(_('Buche')) }
+        w = Window.new(Ncurses::Window.new(@win.getmaxy - 4, (@win.getmaxx * 0.80).ceil, 2, (@win.getmaxx * 0.10).ceil))
+        w.move(2, 2)
+        w.attron(Ncurses::A_BOLD) { w.addstr(_('Buche')) }
         w.box(0, 0)
         w.refresh
 
         entries.each do |entry|
-          w.setpos(w.cury + 1, 5)
-          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, w.maxx - 21)
+          w.move(w.getcury + 1, 5)
+          w.addstr style(_('Buche %<time>sh auf %<issue>s: %<text>s') % entry, w.getmaxx - 21)
           w.refresh
 
           redmine = redmines.get(entry[:redmine])
@@ -182,7 +185,7 @@ module Buchungsstreber
 
           if status.grep(/(time|activity)_different/).any?
             success = false
-            color = color_pair(:yellow) | Curses::A_BOLD
+            color = color_pair(:yellow) | Ncurses::A_BOLD
             w.attron(color) { w.addstr(_('-> DIFF') + " #{$1}") }
           elsif status.include?(:existing)
             success = true
@@ -190,15 +193,15 @@ module Buchungsstreber
             w.attron(color) { w.addstr(_('-> ACK')) }
           else
             success = redmine.add_time entry
-            color = success ? color_pair(:green) : (color_pair(:red) | Curses::A_BOLD)
+            color = success ? color_pair(:green) : (color_pair(:red) | Ncurses::A_BOLD)
             w.attron(color) { w.addstr(success ? _('-> OK') : _('-> FEHLER')) }
           end
-          w.setpos(w.cury, 3)
+          w.move(w.getcury, 3)
           w.attron(color) { w.addstr(success ? _('o') : _('x')) }
           w.refresh
         end
 
-        w.setpos(w.cury + 2, 2)
+        w.move(w.getcury + 2, 2)
         w.addstr _('Buchungen abgearbeitet')
 
         w.refresh
@@ -209,15 +212,15 @@ module Buchungsstreber
 
       def setsize(*_args)
         lines, cols = IO.console.winsize
-        Curses.resizeterm(lines, cols)
+        Ncurses.resizeterm(lines, cols)
         @win.resize(lines, cols)
-        @win.setpos(0, 0)
-        @win.attron(color_pair(:header) | Curses::A_BOLD) do
-          @win.addstr("    %-#{@win.maxx - 4}s" % "BUCHUNGSSTREBER v#{Buchungsstreber::VERSION}")
+        @win.move(0, 0)
+        @win.attron(color_pair(:header) | Ncurses::A_BOLD) do
+          @win.addstr("    %-#{@win.getmaxx - 4}s" % "BUCHUNGSSTREBER v#{Buchungsstreber::VERSION}")
         end
-        @win.setpos(@win.maxy - 1, 0)
-        @win.addstr("% #{@win.maxx - 2}s  " % ("%d / %d" % [@win.maxy, @win.maxx]))
-        Curses.refresh
+        @win.move(@win.getmaxy - 1, 0)
+        @win.addstr("% #{@win.getmaxx - 2}s  " % ("%d / %d" % [@win.getmaxy, @win.getmaxx]))
+        Ncurses.refresh
       end
 
       def show_help
@@ -225,15 +228,15 @@ module Buchungsstreber
       end
 
       def addstatus(msg)
-        @win.setpos(@win.maxy - 1, 0)
+        @win.move(@win.getmaxy - 1, 0)
         @win.addstr(msg)
         @win.clrtoeol
-        Curses.refresh
+        Ncurses.refresh
       end
 
       def loading(l)
-        @win.setpos(0, 0)
-        @win.attron(color_pair(:header) | Curses::A_BOLD) do
+        @win.move(0, 0)
+        @win.attron(color_pair(:header) | Ncurses::A_BOLD) do
           @win.addstr(l)
         end
       end
@@ -241,7 +244,7 @@ module Buchungsstreber
       def on_input(keycode)
         if @subwindow
           case keycode
-          when Curses::KEY_ENTER, ' ', "\e", Curses::KEY_CANCEL, Curses::KEY_BACKSPACE
+          when Ncurses::KEY_ENTER, ' ', "\e", Ncurses::KEY_CANCEL, Ncurses::KEY_BACKSPACE
             @subwindow.close
             @subwindow = nil
             redraw
@@ -252,24 +255,24 @@ module Buchungsstreber
         end
 
         case keycode
-        when 10
+        when "\n".ord
           redraw
-        when 'r' # Curses::KEY_RESIZE
+        when 'r'.ord # Ncurses::KEY_RESIZE
           setsize
-        when Curses::KEY_MOUSE
-          if (m = Curses.getmouse)
+        when Ncurses::KEY_MOUSE
+          if (m = Ncurses.getmouse)
             @subwindow = detailpage(m.x, m.y)
           end
-        when Curses::KEY_DOWN, Curses::KEY_LEFT
+        when Ncurses::KEY_DOWN, Ncurses::KEY_LEFT
           @date -= 1
           redraw
-        when 't'
+        when 't'.ord
           @date = Date.today
           redraw
-        when Curses::KEY_UP, Curses::KEY_RIGHT
+        when Ncurses::KEY_UP, Ncurses::KEY_RIGHT
           @date += 1
           redraw
-        when '?', 'h', Curses::KEY_F1, Curses::KEY_HELP
+        when '?'.ord, 'h'.ord, Ncurses::KEY_F1, Ncurses::KEY_HELP
           if @help_shown
             @help_shown = false
             addstatus('')
@@ -277,7 +280,7 @@ module Buchungsstreber
             @help_shown = true
             show_help
           end
-        when 'b'
+        when 'b'.ord
           @subwindow = buchen(@date)
         else
           # addstatus('Unknown keycode `%s`' % str.inspect)
@@ -292,7 +295,23 @@ module Buchungsstreber
       end
 
       def color_pair(color)
-        @colors[color] || Curses.color_pair(0)
+        @colors[color] || Ncurses.COLOR_PAIR(0)
+      end
+    end
+
+    class Window
+      def initialize(win)
+        @win = win
+      end
+
+      def attron(*args, &block)
+        @win.attron(*args)
+        block.call
+        @win.attroff(*args)
+      end
+
+      def method_missing(symbol, *args, &block)
+        @win.send(symbol, *args, &block)
       end
     end
   end
