@@ -1,6 +1,6 @@
 require 'io/console'
 require 'yaml'
-require 'ncurses'
+require 'ncursesw'
 
 require_relative '../../buchungsstreber/watcher'
 

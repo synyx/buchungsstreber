@@ -4,6 +4,6 @@ source "https://rubygems.org"
 gemspec
 
 group :tui, optional: true do
-  gem 'ncurses-ruby'
+  gem 'ncursesw'
   gem 'rb-inotify', '~>0.10.0'
 end
