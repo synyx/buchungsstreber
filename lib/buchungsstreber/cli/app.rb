@@ -181,6 +181,7 @@ module Buchungsstreber
 
             parser = buchungsstreber.timesheet_parser
             newday = parser.format(entries)
+            FileUtils.cp(timesheet_file, "#{timesheet_file}~")
             prev =  File.read(timesheet_file)
             tmpfile = File.open(timesheet_file, 'w+')
             begin
