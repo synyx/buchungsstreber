@@ -1,7 +1,9 @@
 SimpleCov.command_name "buchungsstreber"
 SimpleCov.root(__dir__)
 
-SimpleCov.enable_for_subprocesses false
+if SimpleCov.respond_to? :enable_for_subprocesses
+  SimpleCov.enable_for_subprocesses false
+end
 
 SimpleCov.configure do
   filters.clear
