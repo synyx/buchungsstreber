@@ -65,8 +65,6 @@ class YamlTimesheet
     buf
   end
 
-  private
-
   def parse_entry(entry, date)
     time, activity, issue_ref, text = entry.split(/\s+/, 4)
 

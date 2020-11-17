@@ -6,6 +6,7 @@ include I18n::Gettext::Helpers # rubocop:disable Style/MixinUsage
 I18n.config.enforce_available_locales = false
 
 require 'buchungsstreber'
+require 'buchungsstreber/parser/yaml_timesheet'
 
 module Buchungsstreber
   module CLI
@@ -208,6 +209,33 @@ module Buchungsstreber
         tui = Buchungsstreber::TUI::App.new(buchungsstreber, date, options)
         tui.start
       rescue Interrupt, StandardError => e
+        handle_error(e, options[:debug])
+      end
+
+      desc 'add [date] entry', _('Buchung ueber Kommandozeile hinzufuegen')
+      method_option :date, :default => 'today'
+      def add(*entry)
+        if entry
+          date = parse_date(options[:date])
+          entry = entry.join(' ')
+          buchungsstreber = Buchungsstreber::Context.new(options[:file])
+          timesheet_file = buchungsstreber.timesheet_file
+
+          parser = buchungsstreber.timesheet_parser
+
+          entry = parser.parse_entry(entry, date) rescue { comment: entry }
+          entry = parser.format([entry])
+          prev =  File.read(timesheet_file)
+          tmpfile = File.open(timesheet_file, 'w+')
+          begin
+            tmpfile.write("#{entry}\n#{prev}")
+          ensure
+            tmpfile.close
+            YamlTimesheet.parses?(tmpfile)
+            say entry
+          end
+        end
+      rescue StandardError => e
         handle_error(e, options[:debug])
       end
 

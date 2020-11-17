@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BUCHUNGSSTREBER 2.4.0\n"
 "Report-Msgid-Bugs-To: jbuch@synyx.de\n"
-"POT-Creation-Date: 2020-10-21 15:56+0200\n"
-"PO-Revision-Date: 2020-10-21 15:56+0200\n"
+"POT-Creation-Date: 2020-10-21 19:05+0200\n"
+"PO-Revision-Date: 2020-10-21 19:05+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -68,6 +68,10 @@ msgstr ""
 
 #: ../cli/app.rb:94
 msgid "Buchen in Redmine"
+msgstr ""
+
+#: ../cli/app.rb:215
+msgid "Buchung ueber Kommandozeile hinzufuegen"
 msgstr ""
 
 #: ../cli/tui.rb:183
