@@ -6,14 +6,14 @@ class Generator::Mail
   end
 
   def generate(date)
-    re = /< To:[^<]*<([^>]*)>\s*< Subject: ([^\r\n]*)\s*/m
-    `cmi #{date}`.to_enum(:scan, re).map do
+    re = /Subject: ([^\r\n]*)\s*/m
+    `cmi #{date} 2>/dev/null`.to_enum(:scan, re).map do
       match = Regexp.last_match
-      subj = match[2].gsub(/(re|fwd|wg|aw|fw):\s*/i, '')
+      subj = match[1].gsub(/(re|fwd|wg|aw|fw):\s*/i, '').gsub(/[\r\n]+/m, ' ')
       {
         date: date,
-        comment: "Mail to #{match[1]}: #{subj}".chomp,
+        comment: "Mail: #{subj}".chomp,
       }
-    end
+    end.compact.uniq
   end
 end
