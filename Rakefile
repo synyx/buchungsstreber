@@ -1,5 +1,9 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
+require "rake/clean"
+CLOBBER.include "pkg"
+
+require "bundler/gem_helper"
+Bundler::GemHelper.install_tasks name: 'buchungsstreber'
+Bundler::GemHelper.install_tasks name: 'buchungsstreber-tui'
 
 desc 'Regenerate Translation Template'
 task :xgettext do
@@ -19,6 +23,7 @@ task :xgettext do
   system('rxgettext', *args)
 end
 
+require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
