@@ -6,7 +6,7 @@ class Generator::XChat
   end
 
   def generate(date)
-    `cmx #{date}`.lines.map do |line|
+    `cmx #{date} 2>/dev/null`.lines.map do |line|
       next unless line =~ /(?:issues\/|#)(\d{3,5})/
 
       {
