@@ -1,6 +1,16 @@
 Changes
 =======
 
+## v.2.6.0
+
+Note that this release contains backwards-compatibility breaking changes.
+
+* Remove deprecated `gcalcli` generator
+* TUI behavioural change: Using the enter key after committing the times will
+  now switch to the next day, escape will stay on current day
+* The curses library used for the TUI was replaced due to instability
+* A separate `buchungsstreber-tui` gem will be published for easier TUI usage
+
 ## v2.5.0
 
 * Add color configuration for redmines
