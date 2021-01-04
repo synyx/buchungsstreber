@@ -33,7 +33,7 @@ RSpec.describe 'CLI App', type: :aruba do
 
   context 'Configured buchungsstreber' do
     entry = {
-      Date.today => ['0.25   Orga    S8484   Blog']
+      Date.today => ['0.25   Orga    S8484   Blog', '0.25   Orga    S8484   Blog'],
     }
     issue8484 = {
       "issue" => {
@@ -114,7 +114,27 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(validation_stub).to have_been_requested.at_least_once
       expect(user_stub).to have_been_requested.at_least_once
       expect(get_times_stub).to have_been_requested.at_least_once
-      expect(add_time_stub).to have_been_requested.at_least_once
+      expect(add_time_stub).to have_been_requested.once
+    end
+
+    it 'adds times aggregated to redmine' do
+      today = Date.today
+      validation_stub = stub_request(:get, "https://localhost/issues/8484.json")
+                          .to_return(status: 200, body: JSON.dump(issue8484))
+      user_stub = stub_request(:get, "https://localhost/users/current.json")
+                    .to_return(status: 200, body: JSON.dump(current_user))
+      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{today}&to=#{today}&user_id=1")
+                         .to_return(status: 200, body: JSON.dump({ 'time_entries' => [] }))
+      add_time_stub = stub_request(:post, "https://localhost/time_entries.json")
+                        .to_return(status: 201)
+
+      run_command_and_stop('buchungsstreber buchen --debug')
+      expect(last_command_started).to have_output(/Buche/)
+
+      expect(validation_stub).to have_been_requested.at_least_once
+      expect(user_stub).to have_been_requested.at_least_once
+      expect(get_times_stub).to have_been_requested.at_least_once
+      expect(add_time_stub).to have_been_requested.once
     end
   end
 end

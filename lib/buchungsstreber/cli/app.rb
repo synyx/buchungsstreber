@@ -95,7 +95,7 @@ module Buchungsstreber
       def buchen(date = nil)
         date = parse_date(date)
         context = Buchungsstreber::Context.new(options[:file])
-        entries = options[:entries] || context.entries[:entries]
+        entries = options[:entries] || Aggregator.aggregate(context.entries[:entries])
 
         puts style(_('Buche'), :bold)
         entries.select { |e| date.nil? || date == e[:date] }.each do |entry|
