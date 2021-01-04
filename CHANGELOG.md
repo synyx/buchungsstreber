@@ -1,7 +1,11 @@
 Changes
 =======
 
-## v.2.6.0
+## v2.6.1
+
+* Bugfix regarding entries not getting aggregated in `buchen` action
+
+## v2.6.0
 
 Note that this release contains backwards-compatibility breaking changes.
 
