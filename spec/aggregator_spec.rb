@@ -68,4 +68,18 @@ RSpec.describe Aggregator, '#aggregate' do
       expect(aggregated_entries.length).to eq(2)
     end
   end
+
+  context 'clock aggregation' do
+    it 'does aggregate' do
+      t = lambda do |start, done|
+        diff_in_s = (Time.parse(done) - Time.parse(start)).to_f
+        diff_in_s.to_f / 60 / 60
+      end
+      a = normal_entry.merge(time: t.call('9:30', '11:15'))
+      b = normal_entry.merge(time: t.call('13:15', '15:00'))
+      p [a[:time],b[:time]]
+      aggregated_entries = Aggregator.aggregate([a, b])
+      expect(aggregated_entries.length).to eq(1)
+    end
+  end
 end
