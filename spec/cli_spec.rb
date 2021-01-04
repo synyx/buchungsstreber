@@ -33,7 +33,7 @@ RSpec.describe 'CLI App', type: :aruba do
 
   context 'Configured buchungsstreber' do
     entry = {
-      Date.today => ['0.25   Orga    S8484   Blog']
+      Date.today => ['0.25   Orga    S8484   Blog', '0.25   Orga    S8484   Blog'],
     }
     issue8484 = {
       "issue" => {
@@ -114,7 +114,7 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(validation_stub).to have_been_requested.at_least_once
       expect(user_stub).to have_been_requested.at_least_once
       expect(get_times_stub).to have_been_requested.at_least_once
-      expect(add_time_stub).to have_been_requested.at_least_once
+      expect(add_time_stub).to have_been_requested.once
     end
   end
 end
