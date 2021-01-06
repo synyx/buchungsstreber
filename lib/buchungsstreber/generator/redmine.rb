@@ -1,5 +1,5 @@
-class Generator::Redmine
-  include Generator::Base
+class Buchungsstreber::Generator::Redmine
+  include Buchungsstreber::Generator::Base
 
   RE = /\s*(?<project>.*) - (?<tracker>.*) #(?<issue>\d+)(?: \((?<state>[^:]+)\))?: (?<title>.*)/.freeze
 

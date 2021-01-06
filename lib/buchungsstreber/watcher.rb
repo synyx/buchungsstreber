@@ -1,4 +1,4 @@
-class Watcher
+class Buchungsstreber::Watcher
   # Watches the given file.
   # It will block until the file is removed.
   #

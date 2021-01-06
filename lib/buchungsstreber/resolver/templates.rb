@@ -1,5 +1,5 @@
-class Resolver::Templates
-  include Resolver::Base
+class Buchungsstreber::Resolver::Templates
+  include Buchungsstreber::Resolver::Base
 
   def initialize(config)
     @templates = config

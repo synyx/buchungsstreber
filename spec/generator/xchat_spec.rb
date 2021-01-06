@@ -1,6 +1,6 @@
 require 'buchungsstreber/generator/xchat'
 
-RSpec.describe Generator::XChat do
+RSpec.describe Buchungsstreber::Generator::XChat do
   let(:config) { {} }
   let(:command_output) do
     <<EOS

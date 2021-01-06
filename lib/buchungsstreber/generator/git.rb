@@ -1,5 +1,5 @@
-class Generator::Git
-  include Generator::Base
+class Buchungsstreber::Generator::Git
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config

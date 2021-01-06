@@ -1,4 +1,4 @@
-class Resolver
+class Buchungsstreber::Resolver
 
   def initialize(config)
     @config = config

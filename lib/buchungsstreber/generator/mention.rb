@@ -1,5 +1,5 @@
-class Generator::Mention
-  include Generator::Base
+class Buchungsstreber::Generator::Mention
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config

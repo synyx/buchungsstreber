@@ -1,6 +1,6 @@
 require 'buchungsstreber/generator/redmine'
 
-RSpec.describe Generator::Redmine do
+RSpec.describe Buchungsstreber::Generator::Redmine do
   let(:config) { [
       {
         url: 'https://project.example.com',

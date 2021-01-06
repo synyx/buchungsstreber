@@ -1,5 +1,5 @@
-class Generator::NCalCLI
-  include Generator::Base
+class Buchungsstreber::Generator::NCalCLI
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config

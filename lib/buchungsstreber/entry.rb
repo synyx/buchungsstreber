@@ -1,6 +1,6 @@
 require_relative 'validator'
 
-class Entry
+class Buchungsstreber::Entry
   attr_accessor :time, :activity, :issue, :text, :date, :redmine, :work_hours, :comment
 
   def initialize(

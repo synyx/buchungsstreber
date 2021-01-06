@@ -1,5 +1,5 @@
-class Generator::XChat
-  include Generator::Base
+class Buchungsstreber::Generator::XChat
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config

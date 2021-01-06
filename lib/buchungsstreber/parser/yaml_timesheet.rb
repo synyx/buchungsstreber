@@ -4,8 +4,8 @@ require "time"
 
 require_relative '../entry'
 
-class YamlTimesheet
-  include TimesheetParser::Base
+class Buchungsstreber::YamlTimesheet
+  include Buchungsstreber::TimesheetParser::Base
 
   def initialize(templates, minimum_time)
     @templates = templates
@@ -85,7 +85,7 @@ class YamlTimesheet
 
     raise "invalid line: #{entry}" unless time && issue
 
-    Entry.new(
+    Buchungsstreber::Entry.new(
       time: minimum_time(parse_time(time), @minimum_time),
       activity: activity,
       issue: issue,

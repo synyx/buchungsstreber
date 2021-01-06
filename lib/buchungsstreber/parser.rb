@@ -1,5 +1,5 @@
 # TimesheetParser selects the correct parser depending on the extension.
-class TimesheetParser
+class Buchungsstreber::TimesheetParser
   PARSERS = []
 
   def initialize(file, templates, minimum_time)

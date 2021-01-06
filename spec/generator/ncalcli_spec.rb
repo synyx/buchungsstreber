@@ -1,6 +1,6 @@
 require 'buchungsstreber/generator/ncalcli'
 
-RSpec.describe Generator::NCalCLI do
+RSpec.describe Buchungsstreber::Generator::NCalCLI do
   let(:config) { { "ignore" => "Mittagspause" } }
   let(:command_output) do
     <<EOS

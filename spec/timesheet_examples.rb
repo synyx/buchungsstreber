@@ -25,7 +25,7 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
     end
 
     it 'makes for a valid timesheet' do
-      v = subject.map { |x| Validator.validate(x, redmine) }
+      v = subject.map { |x| Buchungsstreber::Validator.validate(x, redmine) }
 
       expect(v).to_not include(false)
     end

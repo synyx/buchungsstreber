@@ -1,6 +1,6 @@
 require 'yaml'
 
-class Config
+class Buchungsstreber::Config
   DEFAULT_CONFIG = {
     timesheet_file: 'buchungen.yml',
     archive_path: 'archive',

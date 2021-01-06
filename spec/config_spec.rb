@@ -1,8 +1,8 @@
 require 'buchungsstreber/config'
 
-RSpec.describe Config do
+RSpec.describe Buchungsstreber::Config do
   context 'when default configuration is loaded' do
-    config = Config.load('example.config.yml')
+    config = described_class.load('example.config.yml')
 
     it 'should not be empty' do
       expect(config).to_not be_empty
@@ -21,7 +21,7 @@ RSpec.describe Config do
     end
 
     it 'throws exception if file not found' do
-      expect { Config.load('__non_existant__.yml') }.to raise_error(/file not found/)
+      expect { described_class.load('__non_existant__.yml') }.to raise_error(/file not found/)
     end
   end
 end

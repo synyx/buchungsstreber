@@ -6,7 +6,7 @@ require 'buchungsstreber/validator'
 
 require_relative 'timesheet_examples'
 
-RSpec.describe YamlTimesheet do
+RSpec.describe Buchungsstreber::YamlTimesheet do
   templates = {
       'BeispielDaily' => {
           'activity' => 'Daily',
@@ -17,8 +17,8 @@ RSpec.describe YamlTimesheet do
   it_should_behave_like 'a timesheet parser', '.yml', templates
 end
 
-RSpec.describe YamlTimesheet, '#parse' do
-  subject { YamlTimesheet.new({}, 0.25).parse('spec/examples/aggregatable.yml') }
+RSpec.describe Buchungsstreber::YamlTimesheet, '#parse' do
+  subject { described_class.new({}, 0.25).parse('spec/examples/aggregatable.yml') }
 
   it 'parses aggragatable entries' do
     entries = subject.select { |e| e[:issue] == '123' }
@@ -28,7 +28,7 @@ RSpec.describe YamlTimesheet, '#parse' do
   end
 end
 
-RSpec.describe YamlTimesheet, '#archive', type: :aruba do
+RSpec.describe Buchungsstreber::YamlTimesheet, '#archive', type: :aruba do
   let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
   let(:example_file) { File.expand_path('../example.buchungen.yml', __dir__) }
@@ -40,7 +40,7 @@ RSpec.describe YamlTimesheet, '#archive', type: :aruba do
       'text' => 'Daily',
     }
   }.freeze
-  subject { YamlTimesheet.new(templates, 0.25) }
+  subject { described_class.new(templates, 0.25) }
 
   it 'archives correctly' do
     FileUtils.mkdir_p(File.dirname(timesheet_path))

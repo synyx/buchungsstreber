@@ -1,5 +1,5 @@
-class Generator::Mail
-  include Generator::Base
+class Buchungsstreber::Generator::Mail
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config

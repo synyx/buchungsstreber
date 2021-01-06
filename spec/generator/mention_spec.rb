@@ -1,6 +1,6 @@
 require 'buchungsstreber/generator/mention'
 
-RSpec.describe Generator::Mention do
+RSpec.describe Buchungsstreber::Generator::Mention do
   let(:config) { {} }
   let(:command_output) do
     <<EOS
