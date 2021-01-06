@@ -2,6 +2,8 @@ require "yaml"
 require "date"
 require "time"
 
+require_relative '../entry'
+
 class YamlTimesheet
   include TimesheetParser::Base
 
@@ -83,13 +85,13 @@ class YamlTimesheet
 
     raise "invalid line: #{entry}" unless time && issue
 
-    {
+    Entry.new(
       time: minimum_time(parse_time(time), @minimum_time),
       activity: activity,
       issue: issue,
       text: text,
       date: date,
       redmine: redmine
-    }
+    )
   end
 end
