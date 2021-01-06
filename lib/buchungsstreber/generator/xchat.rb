@@ -9,11 +9,11 @@ class Buchungsstreber::Generator::XChat
     `cmx #{date} 2>/dev/null`.lines.map do |line|
       next unless line =~ /(?:issues\/|#)(\d{3,5})/
 
-      {
+      Buchungsstreber::Entry.new(
         date: date,
         issue: $1.to_i,
         comment: line.chomp,
-      }
+      )
     end.compact
   end
 end

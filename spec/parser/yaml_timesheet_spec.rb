@@ -31,7 +31,7 @@ end
 RSpec.describe Buchungsstreber::YamlTimesheet, '#archive', type: :aruba do
   let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
-  let(:example_file) { File.expand_path('../example.buchungen.yml', __dir__) }
+  let(:example_file) { File.expand_path('../../example.buchungen.yml', __dir__) }
 
   templates = {
     'BeispielDaily' => {

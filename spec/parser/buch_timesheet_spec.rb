@@ -22,7 +22,7 @@ end
 RSpec.describe Buchungsstreber::BuchTimesheet, '#archive' do
   let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
-  let(:example_file) { File.expand_path('examples/test.B', __dir__) }
+  let(:example_file) { File.expand_path('../examples/test.B', __dir__) }
 
   subject { described_class.new({}, 0.25) }
 

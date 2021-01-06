@@ -10,13 +10,13 @@ class Buchungsstreber::Generator::Mention
       next unless line =~ /^\d+/
 
       s = line.split(/\t/)
-      {
-          date: date,
-          issue: s[0],
-          time: s[1].to_f,
-          comment: "Mention from #{s[2]} in project #{s[4]}".chomp,
-          text: s[3].chomp,
-      }
+      Buchungsstreber::Entry.new(
+        date: date,
+        issue: s[0],
+        time: s[1].to_f,
+        comment: "Mention from #{s[2]} in project #{s[4]}".chomp,
+        text: s[3].chomp,
+      )
     end
   end
 end

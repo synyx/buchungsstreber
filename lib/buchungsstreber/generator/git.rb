@@ -33,11 +33,11 @@ class Buchungsstreber::Generator::Git
                 end
         next unless issue
 
-        entry = {
-            date: date,
-            issue: issue.to_i,
-            text: subject.chomp,
-        }
+        entry = Buchungsstreber::Entry.new(
+          date: date,
+          issue: issue.to_i,
+          text: subject.chomp,
+        )
         entries << entry
       end
     end
