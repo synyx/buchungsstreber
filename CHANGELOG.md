@@ -1,6 +1,11 @@
 Changes
 =======
 
+## v2.6.2
+
+* Remove usage of `/users/current` API endpoint to avoid issues with
+  certain Redmine installations
+
 ## v2.6.1
 
 * Bugfix regarding entries not getting aggregated in `buchen` action
