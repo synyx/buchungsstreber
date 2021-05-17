@@ -40,11 +40,6 @@ RSpec.describe 'CLI App', type: :aruba do
         "subject" => "Blog",
       }
     }
-    current_user = {
-        'user' => {
-            'id' => 1,
-        }
-    }
 
     before(:each) do
       run_command_and_stop('buchungsstreber init')
@@ -101,9 +96,7 @@ RSpec.describe 'CLI App', type: :aruba do
       today = Date.today
       validation_stub = stub_request(:get, "https://localhost/issues/8484.json")
                         .to_return(status: 200, body: JSON.dump(issue8484))
-      user_stub = stub_request(:get, "https://localhost/users/current.json")
-                  .to_return(status: 200, body: JSON.dump(current_user))
-      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{today}&to=#{today}&user_id=1")
+      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{today}&to=#{today}&user_id=me")
                        .to_return(status: 200, body: JSON.dump({ 'time_entries' => [] }))
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json")
                       .to_return(status: 201)
@@ -112,7 +105,6 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/BUCHUNGSSTREBER/)
 
       expect(validation_stub).to have_been_requested.at_least_once
-      expect(user_stub).to have_been_requested.at_least_once
       expect(get_times_stub).to have_been_requested.at_least_once
       expect(add_time_stub).to have_been_requested.once
     end
@@ -121,9 +113,7 @@ RSpec.describe 'CLI App', type: :aruba do
       today = Date.today
       validation_stub = stub_request(:get, "https://localhost/issues/8484.json")
                           .to_return(status: 200, body: JSON.dump(issue8484))
-      user_stub = stub_request(:get, "https://localhost/users/current.json")
-                    .to_return(status: 200, body: JSON.dump(current_user))
-      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{today}&to=#{today}&user_id=1")
+      get_times_stub = stub_request(:get, "https://localhost/time_entries.json?from=#{today}&to=#{today}&user_id=me")
                          .to_return(status: 200, body: JSON.dump({ 'time_entries' => [] }))
       add_time_stub = stub_request(:post, "https://localhost/time_entries.json")
                         .to_return(status: 201)
@@ -132,7 +122,6 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/Buche/)
 
       expect(validation_stub).to have_been_requested.at_least_once
-      expect(user_stub).to have_been_requested.at_least_once
       expect(get_times_stub).to have_been_requested.at_least_once
       expect(add_time_stub).to have_been_requested.once
     end
