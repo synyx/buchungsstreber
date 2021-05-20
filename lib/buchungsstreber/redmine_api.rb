@@ -62,7 +62,7 @@ class Buchungsstreber::RedmineApi
   def post(path, dto)
     log.debug("posting #{path}")
 
-  uri = URI.parse("#{@config['server']['url']}#{path}.json")
+    uri = URI.parse("#{@config['server']['url']}#{path}.json")
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
 
