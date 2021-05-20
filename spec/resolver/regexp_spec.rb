@@ -1,6 +1,6 @@
 require 'buchungsstreber/resolver/regexp'
 
-RSpec.describe Resolver::Regexp do
+RSpec.describe Buchungsstreber::Resolver::Regexp do
   let(:config) do
     [ { 're' => 'bei Tiffany',
         'entry' => {

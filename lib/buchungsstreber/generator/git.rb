@@ -1,5 +1,5 @@
-class Generator::Git
-  include Generator::Base
+class Buchungsstreber::Generator::Git
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config
@@ -33,11 +33,11 @@ class Generator::Git
                 end
         next unless issue
 
-        entry = {
-            date: date,
-            issue: issue.to_i,
-            text: subject.chomp,
-        }
+        entry = Buchungsstreber::Entry.new(
+          date: date,
+          issue: issue.to_i,
+          text: subject.chomp,
+        )
         entries << entry
       end
     end

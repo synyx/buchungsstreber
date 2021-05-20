@@ -1,4 +1,4 @@
-class Generator
+class Buchungsstreber::Generator
   attr_reader :generators
 
   def initialize(config)

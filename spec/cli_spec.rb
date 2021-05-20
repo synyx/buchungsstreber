@@ -128,8 +128,8 @@ RSpec.describe 'CLI App', type: :aruba do
   end
 end
 
-class Generator::Mock
-  include Generator::Base
+class Buchungsstreber::Generator::Mock
+  include Buchungsstreber::Generator::Base
 
   def initialize(_config)
     # ignored
@@ -152,8 +152,8 @@ class Generator::Mock
   end
 end
 
-class Resolver::Mock
-  include Resolver::Base
+class Buchungsstreber::Resolver::Mock
+  include Buchungsstreber::Resolver::Base
 
 
   def initialize(config)

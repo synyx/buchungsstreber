@@ -1,6 +1,6 @@
 require 'buchungsstreber/generator/mail'
 
-RSpec.describe Generator::Mail do
+RSpec.describe Buchungsstreber::Generator::Mail do
   let(:config) { {} }
   let(:command_output) do
     <<EOS

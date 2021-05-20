@@ -1,4 +1,4 @@
-class Utils
+class Buchungsstreber::Utils
   def self.fixed_length(str, length)
     str ||= ''
     if str.length > length

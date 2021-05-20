@@ -1,4 +1,4 @@
-class Validator
+class Buchungsstreber::Validator
   def self.validate(entry, redmine)
     date = entry[:date]
     unless date

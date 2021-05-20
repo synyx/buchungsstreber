@@ -4,12 +4,12 @@ require 'buchungsstreber/validator'
 
 require_relative 'timesheet_examples'
 
-RSpec.describe BuchTimesheet, '#common' do
+RSpec.describe Buchungsstreber::BuchTimesheet, '#common' do
   it_should_behave_like 'a timesheet parser', '.B'
 end
 
-RSpec.describe BuchTimesheet, '#parse' do
-  subject { BuchTimesheet.new({}, 0.25).parse('spec/examples/aggregatable.B') }
+RSpec.describe Buchungsstreber::BuchTimesheet, '#parse' do
+  subject { described_class.new({}, 0.25).parse('spec/examples/aggregatable.B') }
 
   it 'parses aggragatable entries' do
     entries = subject.select { |e| e[:issue] == '123' }
@@ -19,12 +19,12 @@ RSpec.describe BuchTimesheet, '#parse' do
   end
 end
 
-RSpec.describe BuchTimesheet, '#archive' do
+RSpec.describe Buchungsstreber::BuchTimesheet, '#archive' do
   let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
-  let(:example_file) { File.expand_path('examples/test.B', __dir__) }
+  let(:example_file) { File.expand_path('../examples/test.B', __dir__) }
 
-  subject { BuchTimesheet.new({}, 0.25) }
+  subject { described_class.new({}, 0.25) }
 
   it 'has implemented archiving' do
     FileUtils.mkdir_p(File.dirname(timesheet_path))

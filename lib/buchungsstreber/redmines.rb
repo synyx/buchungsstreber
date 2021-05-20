@@ -1,10 +1,10 @@
-class Redmines
+class Buchungsstreber::Redmines
   include Enumerable
 
   def initialize(redmines)
     @redmines = {}
     redmines.each do |config|
-      redmine = RedmineApi.new(config)
+      redmine = Buchungsstreber::RedmineApi.new(config)
       @redmines[config["prefix"]] = redmine
       @default = redmine if config["default"]
     end

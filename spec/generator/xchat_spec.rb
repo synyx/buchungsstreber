@@ -1,6 +1,6 @@
 require 'buchungsstreber/generator/xchat'
 
-RSpec.describe Generator::XChat do
+RSpec.describe Buchungsstreber::Generator::XChat do
   let(:config) { {} }
   let(:command_output) do
     <<EOS
@@ -15,12 +15,12 @@ EOS
       date: 'today',
       issue: 22222,
     },{
-        comment: '13:37:20 [#channel] <buch> check #22224',
-        date: 'today',
-        issue: 22224,
+      comment: '13:37:20 [#channel] <buch> check #22224',
+      date: 'today',
+      issue: 22224,
     }]
   end
-
+  Hash
   context 'generation' do
     subject { described_class.new(config) }
     before { allow(subject).to receive(:`).and_return(command_output) }
@@ -35,7 +35,7 @@ EOS
     before { allow(subject).to receive(:`).and_return("asdf\nasdf\n") }
 
     it 'executes' do
-      expect(subject.generate('today').compact).to eql([])
+      expect(subject.generate('today').compact).to be_empty
     end
   end
 end

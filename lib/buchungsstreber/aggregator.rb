@@ -1,4 +1,4 @@
-class Aggregator
+class Buchungsstreber::Aggregator
   def self.aggregate(entries)
     aggregated_entries = []
     entries.each do |entry|

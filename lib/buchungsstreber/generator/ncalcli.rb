@@ -1,5 +1,5 @@
-class Generator::NCalCLI
-  include Generator::Base
+class Buchungsstreber::Generator::NCalCLI
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config
@@ -18,20 +18,20 @@ class Generator::NCalCLI
       summary =~ /#(\d{3,})/
       unless @ignore.match(summary)
         issue = $1
-        {
-            date: date,
-            time: t,
-            text: summary,
-            issue: issue,
-        }
+        Buchungsstreber::Entry.new(
+          date: date,
+          time: t,
+          text: summary,
+          issue: issue,
+        )
       end
     rescue StandardError => e
-      {
+      Buchungsstreber::Entry.new(
         date: date,
         time: 0.0,
         text: line.chomp,
         error: e.message
-      }
+      )
     end
   end
 end

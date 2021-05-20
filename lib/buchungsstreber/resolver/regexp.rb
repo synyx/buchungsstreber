@@ -1,5 +1,5 @@
-class Resolver::Regexp
-  include Resolver::Base
+class Buchungsstreber::Resolver::Regexp
+  include Buchungsstreber::Resolver::Base
 
   def initialize(config)
     @config = config

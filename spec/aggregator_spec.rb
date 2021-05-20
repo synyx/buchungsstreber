@@ -2,7 +2,7 @@ require 'date'
 
 require 'buchungsstreber/aggregator'
 
-RSpec.describe Aggregator, '#aggregate' do
+RSpec.describe Buchungsstreber::Aggregator, '#aggregate' do
   normal_entry = {
       time: 1.0,
       activity: 'activity',
@@ -31,7 +31,7 @@ RSpec.describe Aggregator, '#aggregate' do
   context 'with aggregatable entries' do
     it 'aggregates #1234' do
       entries = [normal_entry, aggregatable_entry]
-      aggregated_entries = Aggregator.aggregate(entries)
+      aggregated_entries = described_class.aggregate(entries)
       expect(aggregated_entries).to_not be_empty
       expect(aggregated_entries.length).to eq(1)
       expect(aggregated_entries[0][:time]).to eq(2.0)
@@ -39,7 +39,7 @@ RSpec.describe Aggregator, '#aggregate' do
 
     it 'aggregates #1234 when another entry separates the aggregatables' do
       entries = [normal_entry, other_entry, aggregatable_entry]
-      aggregated_entries = Aggregator.aggregate(entries)
+      aggregated_entries = described_class.aggregate(entries)
       expect(aggregated_entries).to_not be_empty
       expect(aggregated_entries.length).to eq(2)
       expect(aggregated_entries[0][:time]).to eq(2.0)
@@ -49,22 +49,22 @@ RSpec.describe Aggregator, '#aggregate' do
   context 'aggregation conditions' do
     it 'does not aggregate with different redmine' do
       other = aggregatable_entry.merge(redmine: '_').freeze
-      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      aggregated_entries = described_class.aggregate([normal_entry, other])
       expect(aggregated_entries.length).to eq(2)
     end
     it 'does not aggregate with different issue' do
       other = aggregatable_entry.merge(issue: 5432).freeze
-      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      aggregated_entries = described_class.aggregate([normal_entry, other])
       expect(aggregated_entries.length).to eq(2)
     end
     it 'does not aggregate with different date' do
       other = aggregatable_entry.merge(date: Date.today - 1).freeze
-      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      aggregated_entries = described_class.aggregate([normal_entry, other])
       expect(aggregated_entries.length).to eq(2)
     end
     it 'does not aggregate with different activity' do
       other = aggregatable_entry.merge(activity: 'different').freeze
-      aggregated_entries = Aggregator.aggregate([normal_entry, other])
+      aggregated_entries = described_class.aggregate([normal_entry, other])
       expect(aggregated_entries.length).to eq(2)
     end
   end
@@ -78,7 +78,7 @@ RSpec.describe Aggregator, '#aggregate' do
       a = normal_entry.merge(time: t.call('9:30', '11:15'))
       b = normal_entry.merge(time: t.call('13:15', '15:00'))
       p [a[:time],b[:time]]
-      aggregated_entries = Aggregator.aggregate([a, b])
+      aggregated_entries = described_class.aggregate([a, b])
       expect(aggregated_entries.length).to eq(1)
     end
   end

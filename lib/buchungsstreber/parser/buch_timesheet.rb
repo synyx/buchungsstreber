@@ -1,9 +1,11 @@
 require 'date'
 
-# BuchTimesheep parses the layout used by jo.
+require_relative '../entry'
+
+# BuchTimesheet parses the layout used by jo.
 #
-class BuchTimesheet
-  include TimesheetParser::Base
+class Buchungsstreber::BuchTimesheet
+  include Buchungsstreber::TimesheetParser::Base
 
   def initialize(templates, minimum_time)
     @minimum_time = minimum_time
@@ -35,23 +37,23 @@ class BuchTimesheet
         # ignore comment lines
         next
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]+\s+)?(?<text>.+)/i
-        result << {
-            time: minimum_time(parse_time($~[:time]), @minimum_time),
-            activity: ($~[:activity] ? $~[:activity].strip : nil),
-            issue: $~[:issue],
-            text: $~[:text],
-            date: parse_date(current),
-            redmine: $~[:redmine],
-            work_hours: work_hours,
-        }
+        result << Buchungsstreber::Entry.new(
+          time: minimum_time(parse_time($~[:time]), @minimum_time),
+          activity: ($~[:activity] ? $~[:activity].strip : nil),
+          issue: $~[:issue],
+          text: $~[:text],
+          date: parse_date(current),
+          redmine: $~[:redmine],
+          work_hours: work_hours,
+        )
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)/
-        result << {
+        result << Buchungsstreber::Entry.new(
           time: minimum_time(parse_time($~[:time]), @minimum_time),
           issue: $~[:issue],
           date: parse_date(current),
           redmine: $~[:redmine],
           work_hours: work_hours,
-        }
+        )
       when /^$/
         # ignore empty lines
         next

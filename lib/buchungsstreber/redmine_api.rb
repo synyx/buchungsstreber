@@ -4,7 +4,7 @@ require "net/https"
 require "json"
 require "yaml"
 
-class RedmineApi
+class Buchungsstreber::RedmineApi
   attr_reader :config
 
   def initialize(config)

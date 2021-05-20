@@ -1,7 +1,7 @@
 require_relative '../validator'
 
-class Resolver::Redmines
-  include Resolver::Base
+class Buchungsstreber::Resolver::Redmines
+  include Buchungsstreber::Resolver::Base
 
   def initialize(config)
     @redmines = Redmines.new(config)

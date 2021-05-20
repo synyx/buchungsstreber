@@ -1,5 +1,5 @@
-class Generator::XChat
-  include Generator::Base
+class Buchungsstreber::Generator::XChat
+  include Buchungsstreber::Generator::Base
 
   def initialize(config)
     @config = config
@@ -9,11 +9,11 @@ class Generator::XChat
     `cmx #{date} 2>/dev/null`.lines.map do |line|
       next unless line =~ /(?:issues\/|#)(\d{3,5})/
 
-      {
+      Buchungsstreber::Entry.new(
         date: date,
         issue: $1.to_i,
         comment: line.chomp,
-      }
+      )
     end.compact
   end
 end
