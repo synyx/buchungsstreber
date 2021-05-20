@@ -5,6 +5,8 @@ require "json"
 require "yaml"
 
 class RedmineApi
+  include Buchungsstreber::Logging
+
   attr_reader :config
 
   def initialize(config)
@@ -58,6 +60,8 @@ class RedmineApi
   private
 
   def post(path, dto)
+    log.debug("posting #{path}")
+
     uri = URI.parse("#{@config['server']['url']}#{path}.json")
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
@@ -80,6 +84,8 @@ class RedmineApi
   end
 
   def get(path, params = nil)
+    log.debug("getting #{path}")
+
     uri = URI.parse("#{@config['server']['url']}#{path}.json")
     uri.query = URI.encode_www_form(params) if params
     https = Net::HTTP.new(uri.host, uri.port)
