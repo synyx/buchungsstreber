@@ -9,6 +9,7 @@ class Buchungsstreber::Config
     minimum_time: 0.25,
     generators: {},
     resolvers: {},
+    redmines: [],
   }.freeze
 
   DEFAULT_NAME = 'config.yml'.freeze
@@ -44,6 +45,13 @@ class Buchungsstreber::Config
     config.each_with_object(DEFAULT_CONFIG.dup) do |e, memo|
       key, value = e[0].to_sym, e[1]
       memo[key] = value
+    end
+
+    # add per-redmine config from default values
+    config[:redmines].each do |r|
+      config[:default].each do |key,value|
+        r[key] = value if r.key?(key)
+      end
     end
   end
 end

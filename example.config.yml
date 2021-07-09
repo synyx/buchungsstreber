@@ -1,5 +1,7 @@
 timesheet_file: ./buchungen.yml
 archive_path: ./archive
+defaults:
+  minimum_time: 0.5
 redmines:
   -
     name: Synyx
