@@ -90,7 +90,7 @@ msgstr "Buchungen erfolgreich gespeichert"
 
 #: ../cli/app.rb:54
 msgid "Buchungen in Redmine uebernehmen? (y/N)"
-msgstr "Buchungen in Redmine übernehmen? (y/N)"
+msgstr "Buchungen in Redmine übernehmen? (j/N)"
 
 #: ../cli/app.rb:136
 msgid "Buchungsstreber bereits konfiguriert in %<file>s"
