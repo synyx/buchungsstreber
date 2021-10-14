@@ -18,7 +18,8 @@ class Buchungsstreber::Generator
 
   def load!(generator_name)
     generator = Base.generator(generator_name)
-    @generators << generator if generator
+    raise "Generator #{generator_name} not found" unless generator
+    @generators << generator
   end
 
   module Base
