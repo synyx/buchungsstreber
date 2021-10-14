@@ -10,7 +10,8 @@ class Buchungsstreber::Generator
     generators.each_with_object([]) do |g, memo|
       config = @config[g.name.split(':').last.downcase]
       generator = g.new(config)
-      memo << generator.generate(date)
+      entries = generator.generate(date) rescue []
+      memo << entries
     end.flatten.compact.uniq do |e|
       [e[:issue], e[:date], e[:comment], e[:text], e[:time], e[:activity], e[:redmine]].map(&:to_s).map(&:downcase).join
     end
