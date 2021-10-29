@@ -28,13 +28,21 @@ Es sind Stunden-Angaben (`1.25`, `1:15`) verwendbar.
 
 ### Zeitgranularitaet
 
-Zeiten werden auf eine Viertelstunde aufgerundet.
+Zeiten werden aufgerundet. Die mindestens zu buchende Zeit kann über die
+Konfiguration `minimum_time` konfiguriert werden. Ist beispielsweise eine
+Viertelstunde konfiguriert
+
+```
+minimum_time: 0.25
+``` 
+
+wird
 
 ```
 #1234   1:10  Orga  Meeting
 ```
 
-Wird gebucht als:
+gebucht als
 
 ```
 #1234   1.25  Orga  Meeting
