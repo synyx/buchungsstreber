@@ -51,15 +51,22 @@ Es sind Stunden-Angaben (`1.25`) sowie Zeitraeume (`Uhrzeit-Uhrzeit`) verwendbar
 
 ## Zeitgranularitaet
 
-Zeiten werden auf eine Viertelstunde aufgerundet.
+Zeiten werden aufgerundet. Die mindestens zu buchende Zeit kann über die
+Konfiguration `minimum_time` konfiguriert werden. Ist beispielsweise eine
+Viertelstunde konfiguriert
 
+```
+minimum_time: 0.25
+``` 
+
+wird
 
 ```yaml
 2019-01-01:
 - 7:00-7:25   Daily  S99999  Daily
 ```
 
-Wird gebucht als:
+gebucht als
 
 ```yaml
 2019-01-01:
