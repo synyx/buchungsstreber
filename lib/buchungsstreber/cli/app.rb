@@ -157,7 +157,7 @@ module Buchungsstreber
       def config
         return $stdout.write(File.read(Config.find_config)) if automated?
 
-        Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
+        Kernel.exec(ENV['VISUAL'] || ENV['EDITOR'] || '/usr/bin/vim', Config.find_config)
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
@@ -195,7 +195,7 @@ module Buchungsstreber
 
         return $stdout.write(File.read(timesheet_file)) if automated?
 
-        Kernel.exec(ENV['EDITOR'] || '/usr/bin/vim', timesheet_file)
+        Kernel.exec(ENV['VISUAL'] || ENV['EDITOR'] || '/usr/bin/vim', timesheet_file)
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
