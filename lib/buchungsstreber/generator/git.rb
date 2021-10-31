@@ -20,7 +20,7 @@ class Buchungsstreber::Generator::Git
       gitlog = `git --git-dir "#{dir}" log --committer=#{user} --after="#{d1}" --before="#{d2}" --pretty=oneline --all`
       gitlog.lines.each do |line|
         hash, subject = line.split(/ /, 2)
-        commit = `git --git-dir "#{dir} cat-file -p #{hash}`
+        commit = `git --git-dir "#{dir}" cat-file -p #{hash}`
         issue = case commit
                 when /(?:fix|ref|close|see).*#(\d{3,})/
                   $1
