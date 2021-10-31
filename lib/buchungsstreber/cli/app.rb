@@ -202,7 +202,7 @@ module Buchungsstreber
 
       desc 'watch [date]', _('Ueberwache aenderungen der Buchungsdatei')
       def watch(date = nil)
-        date = parse_date(date)
+        date = parse_date(date) || Date.today
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
 
         require_relative 'tui'
