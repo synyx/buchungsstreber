@@ -121,4 +121,5 @@ You can reach a help interface by pressing `h`.
 Development
 -----------
 
+* [CONTRIBUTING](./CONTRIBUTING.md)
 * [Development Guide](./doc/development.md)
