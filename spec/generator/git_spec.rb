@@ -21,12 +21,12 @@ EOS
     ]
   end
   let(:result) do
-    Buchungsstreber::Entry.new({
+    Buchungsstreber::Entry.new(
       date: 'today',
       issue: 44299,
       text: '(thing-2.1.x) reformat db changelog',
       time: 0,
-    })
+    )
   end
 
   context 'generation' do
