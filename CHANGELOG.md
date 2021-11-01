@@ -1,6 +1,13 @@
 Changes
 =======
 
+## v2.7.0
+
+* Fix confusing internationalized confirmation of saving entries in german
+* Prefer VISUAL environment variable for opening editor
+* Documentation enhancements
+* Various generator fixes
+
 ## v2.6.2
 
 * Remove usage of `/users/current` API endpoint to avoid issues with
