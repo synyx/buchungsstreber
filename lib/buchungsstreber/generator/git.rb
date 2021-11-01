@@ -2,7 +2,7 @@ class Buchungsstreber::Generator::Git
   include Buchungsstreber::Generator::Base
 
   def initialize(config)
-    @config = config
+    @dirs = config[:dirs].map {|d| File.expand_path(d) }
   end
 
   def generate(date)
@@ -13,7 +13,7 @@ class Buchungsstreber::Generator::Git
 
     user = ENV['USER']
 
-    git_dirs = @config[:dirs].each_with_object([]) do |basedir, memo|
+    git_dirs = @dirs.each_with_object([]) do |basedir, memo|
       memo << `find "#{basedir}" -maxdepth 5 -name .git -a -type d -print0`.split("\0")
     end.flatten.sort.uniq
     git_dirs.each do |dir|
