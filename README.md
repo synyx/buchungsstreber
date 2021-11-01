@@ -127,4 +127,5 @@ Bedienungsanleitung erreichbar mit `h`.
 Entwicklung
 -----------
 
+* [CONTRIBUTING](./CONTRIBUTING.md)
 * [Development Guide](./doc/development.md)
