@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.name          = 'buchungsstreber'
   spec.version       = Buchungsstreber::VERSION
   spec.licenses      = ['MIT']
-  spec.authors       = ['fhfet', 'jbuch', 'heib']
-  spec.email         = ['heft@synyx.de', 'jonathan.buch@gmail.com', 'heib@synyx.de']
+  spec.authors       = ['fhfet', 'jbuch', 'grammlich', 'heib']
+  spec.email         = ['heft@synyx.de', 'jonathan.buch@gmail.com', 'grammlich@synyx.de', 'heib@synyx.de']
 
   spec.summary       = %q{Enables timely timekeeping.}
   spec.description   = "Streber."
