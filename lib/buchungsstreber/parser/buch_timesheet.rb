@@ -8,6 +8,7 @@ class Buchungsstreber::BuchTimesheet
   include Buchungsstreber::TimesheetParser::Base
 
   def initialize(templates, minimum_time)
+    @templates = templates
     @minimum_time = minimum_time
   end
 
@@ -36,6 +37,19 @@ class Buchungsstreber::BuchTimesheet
       when /^%/
         # ignore comment lines
         next
+      when /^#\s+(?<time>[0-9]+(?:[.:][0-9]*)?)\s+(?<template>#{@templates.keys.join('|')})/
+        template = @templates[$~[:template]]
+        time = minimum_time(parse_time($~[:time]), @minimum_time)
+        template['issue'] =~ /(?<redmine>[a-z]?)#?(?<issue>[0-9]*)/
+
+        result << Buchungsstreber::Entry.new(
+          time: time,
+          activity: template['activity'],
+          issue: $~[:issue],
+          text: template['text'],
+          date: parse_date(current),
+          redmine: $~[:redmine]
+        )
       when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]+\s+)?(?<text>.+)/i
         result << Buchungsstreber::Entry.new(
           time: minimum_time(parse_time($~[:time]), @minimum_time),
