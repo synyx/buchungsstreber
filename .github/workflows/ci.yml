@@ -27,7 +27,7 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
 
     - name: Recreate Ruby Bundler cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: vendor/bundle
         key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile*') }}
