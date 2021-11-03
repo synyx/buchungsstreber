@@ -1,21 +1,24 @@
 ---
-image: "ruby:3.0"
-
-cache:
-  paths:
-    - vendor/bundle
-
 variables:
   BUNDLE_PATH: vendor/bundle
-
-before_script:
-  - gem install bundler --no-document
-  - bundle check || bundle install
 
 stages:
   - Testing
   - Linting
   - Release
+
+default:
+  tags:
+    - docker
+  image: "ruby:3.0"
+
+cache:
+  paths:
+    - vendor/bundle
+
+before_script:
+  - gem install bundler --no-document
+  - bundle check || bundle install
 
 rspec:
   stage: Testing
@@ -25,8 +28,6 @@ rspec:
     - tags
   script:
     - bundle exec rspec
-  tags:
-    - docker
 
 rubocop:
   stage: Linting
@@ -35,8 +36,6 @@ rubocop:
     - merge_requests
   script:
     - ./bin/rubocop_changes
-  tags:
-    - docker
 
 nexus:
   stage: Release
@@ -54,5 +53,3 @@ nexus:
     - '/bin/echo -e ":url: $NEXUS_URL\n:authorization: Basic $AUTH\n" > ~/.gem/nexus'
     - bundle exec rake build
     - bundle exec gem nexus pkg/buchungsstreber-*.gem
-  tags:
-    - docker
