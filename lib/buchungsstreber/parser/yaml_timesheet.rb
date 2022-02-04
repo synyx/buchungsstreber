@@ -24,7 +24,7 @@ class Buchungsstreber::YamlTimesheet
         YAML.load_file(file_path)
       end
     throw 'invalid line: file should contain map' unless timesheet.is_a?(Hash)
-    result = []
+    result = Buchungsstreber::Entries.new(file_path)
 
     timesheet.each do |date, entries|
       next if entries.nil?

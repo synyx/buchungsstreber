@@ -17,7 +17,7 @@ class Buchungsstreber::BuchTimesheet
   end
 
   def parse(file)
-    result = []
+    result = Buchungsstreber::Entries.new(file)
 
     current = nil
     work_hours = nil

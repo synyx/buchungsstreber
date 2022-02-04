@@ -63,3 +63,21 @@ class Buchungsstreber::Entry
     end
   end
 end
+
+class Buchungsstreber::Entries
+  attr_reader :file_path
+
+  def initialize(file_path)
+    @file_path = file_path
+    @entries = []
+  end
+
+  def each(&block)
+    @entries.each(&block)
+  end
+
+  def <<(entry)
+    entry = Buchungsstreber::Entries.new(**entry) unless entry.is_a?(Buchungsstreber::Entry)
+    @entries << entry
+  end
+end
