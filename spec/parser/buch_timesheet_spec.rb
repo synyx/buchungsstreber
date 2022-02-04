@@ -5,7 +5,14 @@ require 'buchungsstreber/validator'
 require_relative 'timesheet_examples'
 
 RSpec.describe Buchungsstreber::BuchTimesheet, '#common' do
-  it_should_behave_like 'a timesheet parser', '.B'
+  templates = {
+    'BeispielDaily' => {
+      'activity' => 'Daily',
+      'issue' => 's#99999',
+      'text' => 'Daily',
+    }
+  }.freeze
+  it_should_behave_like 'a timesheet parser', '.B', templates
 end
 
 RSpec.describe Buchungsstreber::BuchTimesheet, '#parse' do

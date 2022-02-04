@@ -29,6 +29,11 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
 
       expect(v).to_not include(false)
     end
+
+    it 'handles templates' do
+      entry = subject.select {|e| e.issue.to_i == 99999 }.first
+      expect(entry[:text]).to eq('Daily')
+    end
   end
 
   context 'invalid' do

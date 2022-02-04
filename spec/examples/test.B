@@ -9,6 +9,7 @@ s#25888	0.75	foobar done to support meh
 s#1234	1	retro	fjfjfjjf
 #123	1.75	supp	asdf
 #1234	1:15	daily	asdf
+#       0.25    BeispielDaily
 
 %#1234	1:15	[4567] daily asdf
 

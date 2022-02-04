@@ -36,7 +36,7 @@ class Buchungsstreber::Entry
     # ignore extra fields, only compare bare minimum
     if @date == o[:date] && @activity == o[:activity] && @issue == o[:issue] && @time == (o[:time]||0) && @redmine == o[:redmine]
       0
-    elsif @date > o[:date]
+    elsif o[:date] && @date > o[:date]
       1
     else
       -1
