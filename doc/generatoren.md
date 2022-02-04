@@ -28,8 +28,7 @@ generators:
 ## Buchungseinträge aus Git-Commits generieren
 
 Der Generator erzeugt Buchungsstreber-Einträge anhand von Git-Commits.
-Er betrachtet maximal 5 Ordner-Ebenen der konfigurierten Repositories.
-Die Pfade müssen Bash kompatibel sein.
+Er betrachtet maximal 5 Ordner-Ebenen der konfigurierten Pfade.
 
 ### Konfiguration des Buchungsstrebers
 
@@ -38,7 +37,7 @@ Repositories konfigurieren, die betrachtet werden sollen:
 generators:
   git:
     :dirs:
-      - /home/someone/Projects/buchungsstreber
+      - ~/Projects/buchungsstreber
 ````
 
 ## Buchungseinträge aus E-Mails generieren
