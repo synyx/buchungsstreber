@@ -5,15 +5,27 @@ class Buchungsstreber::TimesheetParser
   def initialize(file, templates, minimum_time)
     @file = file
     @minimum_time = minimum_time
-    @parser = choose_parser(file).new(templates, minimum_time)
+    @parser = choose_parser(file).new(file, templates, minimum_time)
   end
 
   def parse
-    @parser.parse(@file)
+    @parser.parse
+  end
+
+  def add(entries)
+    @parser.add(entries)
+
+    # Backup file to reduce problems...
+    FileUtils.cp(@file, "#{@file}~")
+
+    # Fill file with new content
+    File.open(@file, 'w+') do |file|
+      file.write(@parser.unparse)
+    end
   end
 
   def archive(archive_path, date)
-    @parser.archive(@file, archive_path, date)
+    @parser.archive(archive_path, date)
   end
 
   def format(entries)
@@ -37,7 +49,7 @@ class Buchungsstreber::TimesheetParser
       PARSERS << klass
     end
 
-    # @return time in hours
+    # @return [Float] time in hours
     def parse_time(time_descr)
       case time_descr
       when /-/

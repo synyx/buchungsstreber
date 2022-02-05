@@ -65,19 +65,24 @@ class Buchungsstreber::Entry
 end
 
 class Buchungsstreber::Entries
+  include Enumerable
+
   attr_reader :file_path
 
-  def initialize(file_path)
-    @file_path = file_path
+  def initialize
     @entries = []
   end
 
-  def each(&block)
-    @entries.each(&block)
+  def <<(entry)
+    entry = Buchungsstreber::Entry.new(**entry) unless entry.is_a?(Buchungsstreber::Entry)
+    @entries << entry
   end
 
-  def <<(entry)
-    entry = Buchungsstreber::Entries.new(**entry) unless entry.is_a?(Buchungsstreber::Entry)
-    @entries << entry
+  def method_missing(symbol, *args, &block)
+    @entries.send(symbol, *args, &block)
+  end
+
+  def empty?
+    @entries.empty?
   end
 end

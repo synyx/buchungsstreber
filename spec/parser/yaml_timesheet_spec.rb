@@ -18,7 +18,7 @@ RSpec.describe Buchungsstreber::YamlTimesheet do
 end
 
 RSpec.describe Buchungsstreber::YamlTimesheet, '#parse' do
-  subject { described_class.new({}, 0.25).parse('spec/examples/aggregatable.yml') }
+  subject { described_class.new('spec/examples/aggregatable.yml', {}, 0.25).parse }
 
   it 'parses aggragatable entries' do
     entries = subject.select { |e| e[:issue] == '123' }
@@ -29,7 +29,12 @@ RSpec.describe Buchungsstreber::YamlTimesheet, '#parse' do
 end
 
 RSpec.describe Buchungsstreber::YamlTimesheet, '#archive', type: :aruba do
-  let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
+  let(:timesheet_path) do
+    p = expand_path('~/.config/buchungsstreber/buchungen.yml')
+    FileUtils.mkdir_p(File.dirname(p))
+    FileUtils.copy(example_file, p)
+    p
+  end
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
   let(:example_file) { File.expand_path('../../example.buchungen.yml', __dir__) }
 
@@ -40,13 +45,10 @@ RSpec.describe Buchungsstreber::YamlTimesheet, '#archive', type: :aruba do
       'text' => 'Daily',
     }
   }.freeze
-  subject { described_class.new(templates, 0.25) }
+  subject { described_class.new(timesheet_path, templates, 0.25) }
 
   it 'archives correctly' do
-    FileUtils.mkdir_p(File.dirname(timesheet_path))
-    FileUtils.copy(example_file, timesheet_path)
-
-    subject.archive(timesheet_path, archive_path, Date.parse('2019-06-18'))
+    subject.archive(archive_path, Date.parse('2019-06-18'))
 
     # Read the file (options for systems with non-utf8 locale)
     text = File.read(timesheet_path, mode: 'rb', encoding: 'UTF-8')

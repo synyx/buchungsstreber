@@ -181,16 +181,7 @@ module Buchungsstreber
             end
 
             parser = buchungsstreber.timesheet_parser
-            newday = parser.format(entries)
-            FileUtils.cp(timesheet_file, "#{timesheet_file}~")
-            prev =  File.read(timesheet_file)
-            tmpfile = File.open(timesheet_file, 'w+')
-            begin
-              tmpfile.write("#{newday}\n\n#{prev}")
-              timesheet_file = tmpfile.path
-            ensure
-              tmpfile.close
-            end
+            parser.add(entries)
           end
         end
 
@@ -213,29 +204,16 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
-      desc 'add [date] entry', _('Buchung ueber Kommandozeile hinzufuegen')
+      desc 'add [--date date] entry', _('Buchung ueber Kommandozeile hinzufuegen')
       method_option :date, :default => 'today'
       def add(*entry)
-        if entry
-          date = parse_date(options[:date])
-          entry = entry.join(' ')
-          buchungsstreber = Buchungsstreber::Context.new(options[:file])
-          timesheet_file = buchungsstreber.timesheet_file
+        date = parse_date(options[:date])
+        entry = entry.join(' ')
+        buchungsstreber = Buchungsstreber::Context.new(options[:file])
 
-          parser = buchungsstreber.timesheet_parser
-
-          entry = parser.parse_entry(entry, date) rescue { comment: entry }
-          entry = parser.format([entry])
-          prev =  File.read(timesheet_file)
-          tmpfile = File.open(timesheet_file, 'w+')
-          begin
-            tmpfile.write("#{entry}\n#{prev}")
-          ensure
-            tmpfile.close
-            YamlTimesheet.parses?(tmpfile)
-            say entry
-          end
-        end
+        parser = buchungsstreber.timesheet_parser
+        entry = parser.parse_entry(entry, date) rescue { date: date, comment: entry }
+        parser.add([entry])
       rescue StandardError => e
         handle_error(e, options[:debug])
       end

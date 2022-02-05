@@ -16,7 +16,7 @@ RSpec.describe Buchungsstreber::BuchTimesheet, '#common' do
 end
 
 RSpec.describe Buchungsstreber::BuchTimesheet, '#parse' do
-  subject { described_class.new({}, 0.25).parse('spec/examples/aggregatable.B') }
+  subject { described_class.new('spec/examples/aggregatable.B', {}, 0.25).parse }
 
   it 'parses aggragatable entries' do
     entries = subject.select { |e| e[:issue] == '123' }
@@ -27,18 +27,21 @@ RSpec.describe Buchungsstreber::BuchTimesheet, '#parse' do
 end
 
 RSpec.describe Buchungsstreber::BuchTimesheet, '#archive' do
-  let(:timesheet_path) { expand_path('~/.config/buchungsstreber/buchungen.yml') }
+  let(:timesheet_path) do
+    p = expand_path('~/.config/buchungsstreber/buchungen.yml')
+    FileUtils.mkdir_p(File.dirname(p))
+    FileUtils.copy(example_file, p)
+    p
+  end
   let(:archive_path) { expand_path('~/.config/buchungsstreber/archive') }
   let(:example_file) { File.expand_path('../examples/test.B', __dir__) }
 
-  subject { described_class.new({}, 0.25) }
+  subject { described_class.new(timesheet_path, {}, 0.25) }
 
   it 'has implemented archiving' do
-    FileUtils.mkdir_p(File.dirname(timesheet_path))
-    FileUtils.copy(example_file, timesheet_path)
     archive_file = "#{archive_path}/2016-07-21.B"
 
-    subject.archive(timesheet_path, archive_path, Date.parse('2016-07-21'))
+    subject.archive(archive_path, Date.parse('2016-07-21'))
 
     # The archived file is identical to the current file
     expect(File.size(timesheet_path)).to eq(File.size(archive_file))

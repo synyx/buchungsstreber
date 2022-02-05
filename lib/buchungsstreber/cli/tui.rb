@@ -214,7 +214,6 @@ module Buchungsstreber
         loading(_('&'))
 
         entries = @buchungsstreber.entries(@date)
-        timesheet_file = @buchungsstreber.timesheet_file
 
         if entries[:entries].empty?
           entries = @buchungsstreber.generate(@date)
@@ -224,15 +223,7 @@ module Buchungsstreber
           end
 
           parser = @buchungsstreber.timesheet_parser
-          newday = parser.format(entries)
-          FileUtils.cp(timesheet_file, "#{timesheet_file}~")
-          prev =  File.read(timesheet_file)
-          tmpfile = File.open(timesheet_file, 'w+')
-          begin
-            tmpfile.write("#{newday}\n\n#{prev}")
-          ensure
-            tmpfile.close
-          end
+          parser.add(entries)
         end
       rescue StandardError => e
         addstatus(e.message)

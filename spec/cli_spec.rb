@@ -92,8 +92,6 @@ RSpec.describe 'CLI App', type: :aruba do
       text = File.read(entry_file)
       expect(text).to match(/^  # Notiz/)
       expect(text).to match(/morgen/)
-      expect(last_command_started).to have_output(/^  # Notiz/)
-      expect(last_command_started).to have_output(/morgen/)
     end
 
     it 'runs add command with time entry' do
@@ -101,8 +99,7 @@ RSpec.describe 'CLI App', type: :aruba do
       run_command_and_stop("buchungsstreber add --debug 0.25 Adm S1234 Einhorn hueten")
 
       text = File.read(entry_file)
-      expect(text).to match(/^  -\s+0\.25\s+Adm\s+S1234\s+Einhorn hueten/)
-      expect(last_command_started).to have_output(/^  -\s+0\.25\s+Adm\s+S1234\s+Einhorn hueten/)
+      expect(text).to match(/^\s*-\s+0\.25\s+Adm\s+S1234\s+Einhorn hueten/)
     end
 
     it 'runs add command with time entry for a date' do
@@ -123,14 +120,14 @@ RSpec.describe 'CLI App', type: :aruba do
       buchungsstreber = Buchungsstreber::Context.new(entry_file, config_file)
       parser = buchungsstreber.timesheet_parser
       entries = parser.parse
-      entries = entries.select { |entry| entry[:date] == Date.today }
+      entries = entries.select { |e| e[:date] == Date.today }
       expect(entries.size).to eq(3)
 
       text = File.read(entry_file)
       expect(text).to match(/^#{Date.today.iso8601}:/)
       expect(text).to match(/^  -\s+1\.0\s+Adm\s+S1234\s+Yak rasieren/)
       expect(text).to match(/^  -\s+1\.5\s+Adm\s+S1234\s+Yak fuettern/)
-      expect(text).to match(/^  -\s+2\.0\s+Adm\s+S1234\s+Yak schlafen legen!/)
+      expect(text).to match(/^  -\s+2\.0\s+Adm\s+S1234\s+Yak schlafen legen/)
     end
 
     it 'runs show command' do

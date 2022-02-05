@@ -7,24 +7,27 @@ require_relative '../entry'
 class Buchungsstreber::YamlTimesheet
   include Buchungsstreber::TimesheetParser::Base
 
-  def initialize(templates, minimum_time)
+  def initialize(file, templates, minimum_time)
+    @file_path = file
     @templates = templates
     @minimum_time = minimum_time
+
+    @model = File.readlines(@file_path) rescue []
   end
 
   def self.parses?(file)
     %w[.yml .yaml].include?(File.extname(file))
   end
 
-  def parse(file_path)
+  def parse
     timesheet =
-      if File.size(file_path) <= 1
+      if File.size(@file_path) <= 1
         {}
       else
-        YAML.load_file(file_path)
+        YAML.load_file(@file_path)
       end
     throw 'invalid line: file should contain map' unless timesheet.is_a?(Hash)
-    result = Buchungsstreber::Entries.new(file_path)
+    result = []
 
     timesheet.each do |date, entries|
       next if entries.nil?
@@ -38,9 +41,25 @@ class Buchungsstreber::YamlTimesheet
     result
   end
 
-  def archive(file_path, archive_path, date)
+  def add(entries)
+    entries.each do |e|
+      iso_date = e[:date].to_s
+      idx = @model.index { |line| line =~ /^#{iso_date}/ }
+      if idx
+        @model = @model[0..idx] + [format_entry(e)] + @model[idx+1..-1]
+      else
+        @model.unshift "#{iso_date}:\n", format_entry(e)
+      end
+    end
+  end
+
+  def unparse
+    @model.join
+  end
+
+  def archive(archive_path, date)
     old_timesheet = ""
-    File.read(file_path).each_line do |line|
+    File.read(@file_path).each_line do |line|
       break if line.start_with? "---"
 
       old_timesheet += line
@@ -51,7 +70,7 @@ class Buchungsstreber::YamlTimesheet
     File.write("#{archive_path}/#{archive_filename}", old_timesheet)
 
     next_monday = (Date.today + ((1 - Date.today.wday) % 7)).strftime("%Y-%m-%d")
-    File.write(file_path, "#{next_monday}:\n\n\n---\n# Letzte Woche\n" + old_timesheet)
+    File.write(@file_path, "#{next_monday}:\n\n\n---\n# Letzte Woche\n" + old_timesheet)
   end
 
   def format(entries)
@@ -60,8 +79,7 @@ class Buchungsstreber::YamlTimesheet
     days.each do |date, day|
       buf << "#{date}:\n"
       day.each do |e|
-        buf << "  # #{e[:comment]}\n" if e[:comment]
-        buf << "  - #{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
+        buf << format_entry(e)
       end
     end
     buf
@@ -91,5 +109,14 @@ class Buchungsstreber::YamlTimesheet
       date: date,
       redmine: redmine
     )
+  end
+
+  private
+
+  def format_entry(e)
+    buf = ''
+    buf << "  # #{e[:comment]}\n" if e[:comment]
+    buf << "  - #{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
+    buf
   end
 end

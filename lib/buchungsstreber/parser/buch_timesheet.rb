@@ -7,21 +7,24 @@ require_relative '../entry'
 class Buchungsstreber::BuchTimesheet
   include Buchungsstreber::TimesheetParser::Base
 
-  def initialize(templates, minimum_time)
+  def initialize(file_path, templates, minimum_time)
+    @file_path = file_path
     @templates = templates
     @minimum_time = minimum_time
+
+    @model = File.readlines(@file_path) rescue []
   end
 
   def self.parses?(file)
     File.extname(file) == '.B'
   end
 
-  def parse(file)
-    result = Buchungsstreber::Entries.new(file)
+  def parse
+    result = Buchungsstreber::Entries.new
 
     current = nil
     work_hours = nil
-    File.readlines(file).each do |line|
+    @model.each do |line|
       case line
       when /^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/
         # beginning of day
@@ -82,29 +85,51 @@ class Buchungsstreber::BuchTimesheet
     result
   end
 
+  def add(entries)
+    entries.each do |e|
+      iso_date = e[:date].to_s
+      idx = @model.index { |line| line =~ /^#{iso_date}/ }
+      if idx
+        @model = @model[0..idx] + [format_entry(e)] + @model[idx+1..-1]
+      else
+        @model.unshift "#{iso_date}\n\n", format_entry(e)
+      end
+    end
+  end
+
+  def unparse
+    @model.join
+  end
+
   def format(entries)
     buf = ""
     days = entries.group_by { |e| e[:date] }.to_a.sort_by { |x| x[0] }
     days.each do |date, day|
       buf << "#{date}\n\n"
       day.each do |e|
-        buf << "% #{e[:comment]}\n" if e[:comment]
-        buf << "#{e[:redmine]}##{e[:issue]}\t#{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:text]}\n"
+        buf << format_entry(e)
       end
     end
     buf
   end
 
-  def archive(file_path, archive_path, date)
+  def archive(archive_path, date)
     FileUtils.mkdir_p archive_path unless File.directory? archive_path
     archive_filename = "#{date.strftime('%Y-%m-%d')}.B"
 
     File.open("#{archive_path}/#{archive_filename}", File::WRONLY | File::CREAT | File::EXCL) do |f|
-      f.write(File.read(file_path))
+      f.write(File.read(@file_path))
     end
   end
 
   private
+
+  def format_entry(e)
+    buf = ''
+    buf << "% #{e[:comment]}\n" if e[:comment]
+    buf << "#{e[:redmine]}##{e[:issue]}\t#{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:text]}\n"
+    buf
+  end
 
   def parse_date(date_descr)
     Date.parse(date_descr)

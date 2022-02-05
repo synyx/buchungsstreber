@@ -3,7 +3,7 @@ require 'tempfile'
 require 'buchungsstreber/parser'
 
 RSpec.shared_examples 'a timesheet parser' do |extension, templates|
-  subject { described_class.new(templates || {}, 0.25).parse("spec/examples/test#{extension}") }
+  subject { described_class.new("spec/examples/test#{extension}", templates || {}, 0.25).parse }
 
   let(:redmine) do
     redmine = double("redmine")
@@ -38,30 +38,30 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
 
   context 'invalid' do
     it 'raises on invalid lines' do
-      expect { described_class.new(templates || {}, 0.25).parse("spec/examples/invalid#{extension}") }.to raise_exception(/invalid line/)
+      expect { described_class.new("spec/examples/invalid#{extension}", templates || {}, 0.25).parse }.to raise_exception(/invalid line/)
     end
 
     it 'raises on invalid times' do
-      expect { described_class.new(templates || {}, 0.25).parse("spec/examples/invalid_time#{extension}") }.to raise_exception(/invalid time/)
+      expect { described_class.new("spec/examples/invalid_time#{extension}", templates || {}, 0.25).parse }.to raise_exception(/invalid time/)
     end
   end
 
   context 'generating' do
     it 'can render time entries' do
       e = [{ issue: '1234', activity: 'Dev', text: 'asdf', time: 0.5, date: Date.parse('1970-01-01') }]
-      expect(described_class.new(templates || {}, 0.25).format(e)).to include('asdf')
+      expect(described_class.new('', {}, 0.25).format(e)).to include('asdf')
     end
 
     it 'produces something the same parser can parse' do
-      parser = described_class.new(templates || {}, 0.25)
       e1 = [{ issue: '1234', activity: 'Dev', text: 'asdf', time: 0.5, date: Date.parse('1970-01-01') }]
-      str = parser.format(e1)
+      str = described_class.new('', {}, 0.25).format(e1)
 
       file = Tempfile.new('foo')
       begin
         file.write(str)
         file.close
-        e2 = parser.parse(file.path)
+        parser = described_class.new(file.path, templates || {}, 0.25)
+        e2 = parser.parse
         e1[0].each do |k, v|
           expect(e2[0][k]).to eq(v)
         end
