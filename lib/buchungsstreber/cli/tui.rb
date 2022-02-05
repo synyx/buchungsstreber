@@ -213,18 +213,14 @@ module Buchungsstreber
       def generate
         loading(_('&'))
 
-        entries = @buchungsstreber.entries(@date)
-
-        if entries[:entries].empty?
-          entries = @buchungsstreber.generate(@date)
-          entries.each do |e|
-            @buchungsstreber.resolve(e)
-            e[:redmine] = nil if @buchungsstreber.redmines.default?(e[:redmine])
-          end
-
-          parser = @buchungsstreber.timesheet_parser
-          parser.add(entries)
+        entries = @buchungsstreber.generate(@date)
+        entries.each do |e|
+          @buchungsstreber.resolve(e)
+          e[:redmine] = nil if @buchungsstreber.redmines.default?(e[:redmine])
         end
+
+        parser = @buchungsstreber.timesheet_parser
+        parser.add(entries)
       rescue StandardError => e
         addstatus(e.message)
       ensure
