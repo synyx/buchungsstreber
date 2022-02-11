@@ -38,7 +38,7 @@ RSpec.shared_examples 'a timesheet parser' do |extension, templates|
 
   context 'invalid' do
     it 'raises on invalid lines' do
-      expect { described_class.new("spec/examples/invalid#{extension}", templates || {}, 0.25).parse }.to raise_exception(/invalid line/)
+      expect { described_class.new("spec/examples/invalid#{extension}", templates || {}, 0.25).parse }.to raise_exception(/invalid/)
     end
 
     it 'raises on invalid times' do

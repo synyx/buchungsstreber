@@ -98,7 +98,8 @@ class Buchungsstreber::YamlTimesheet
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
 
-    err = "invalid line: #{entry}" unless time && issue
+    raise "invalid line: #{entry}" unless time
+    err = "missing issue #{entry}" unless issue
 
     Buchungsstreber::Entry.new(
       time: minimum_time(parse_time(time), @minimum_time),
