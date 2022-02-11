@@ -213,7 +213,9 @@ module Buchungsstreber
 
         parser = buchungsstreber.timesheet_parser
         entry = parser.parse_entry(entry, date) rescue { date: date, comment: entry }
+        entry = buchungsstreber.resolve(entry)
         parser.add([entry])
+        puts parser.format([entry])
       rescue StandardError => e
         handle_error(e, options[:debug])
       end
