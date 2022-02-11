@@ -76,6 +76,7 @@ class Buchungsstreber::Entries
   def <<(entry)
     entry = Buchungsstreber::Entry.new(**entry) unless entry.is_a?(Buchungsstreber::Entry)
     @entries << entry
+    self
   end
 
   def method_missing(symbol, *args, &block)

@@ -20,14 +20,13 @@ class Buchungsstreber::YamlTimesheet
   end
 
   def parse
-    timesheet =
-      if File.size(@file_path) <= 1
-        {}
-      else
-        YAML.load_file(@file_path)
-      end
+    if YAML.respond_to?(:safe_load_file)
+      timesheet = YAML.safe_load_file(@file_path, permitted_classes: [Date], fallback: {})
+    else
+      timesheet = YAML.load_file(@file_path, {})
+    end
     throw 'invalid line: file should contain map' unless timesheet.is_a?(Hash)
-    result = []
+    result = Buchungsstreber::Entries.new
 
     timesheet.each do |date, entries|
       next if entries.nil?
