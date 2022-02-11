@@ -1,6 +1,14 @@
 Changes
 =======
 
+## v2.8.0
+
+* Add time entries or notes from command line ([#11](https://github.com/synyx/buchungsstreber/issues/11))
+* Template handling for Buch format ([#48](https://github.com/synyx/buchungsstreber/issues/48))
+* Expand path configuration for Git generator
+* Various housekeeping actions
+* Introduce [Renovate](https://togithub.com/renovatebot/renovate)
+
 ## v2.7.0
 
 * Fix confusing internationalized confirmation of saving entries in german
