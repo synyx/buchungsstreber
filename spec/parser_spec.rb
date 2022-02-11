@@ -46,9 +46,9 @@ class MockParser
     file == 'mock'
   end
 
-  def initialize(template, minimum_time); end
+  def initialize(file, template, minimum_time); end
 
-  def parse(file); end
+  def parse; end
 
-  def archive(file_path, archive_path, date); end
+  def archive(archive_path, date); end
 end

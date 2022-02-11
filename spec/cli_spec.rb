@@ -85,6 +85,51 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(last_command_started).to have_output(/resolved/)
     end
 
+    it 'runs add command' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber add --debug Notiz fuer morgen")
+
+      text = File.read(entry_file)
+      expect(text).to match(/^  # Notiz/)
+      expect(text).to match(/morgen/)
+    end
+
+    it 'runs add command with time entry' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber add --debug 0.25 Adm S1234 Einhorn hueten")
+
+      text = File.read(entry_file)
+      expect(text).to match(/^\s*-\s+0\.25\s+Adm\s+S1234\s+Einhorn hueten/)
+    end
+
+    it 'runs add command with time entry for a date' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber add --debug --date=2099-10-30 2.0 Adm S1234 Yak rasieren")
+
+      text = File.read(entry_file)
+      expect(text).to match(/^2099-10-30:/)
+      expect(text).to match(/^  -\s+2\.0\s+Adm\s+S1234\s+Yak rasieren/)
+    end
+
+    it 'runs add command multiple times for a date' do
+      FileUtils.copy(example_file, entry_file)
+      run_command_and_stop("buchungsstreber add --debug --date=#{Date.today.iso8601} 1.0 Adm S1234 Yak rasieren")
+      run_command_and_stop("buchungsstreber add --debug --date=#{Date.today.iso8601} 1.5 Adm S1234 Yak fuettern")
+      run_command_and_stop("buchungsstreber add --debug --date=#{Date.today.iso8601} 2.0 Adm S1234 Yak schlafen legen")
+
+      buchungsstreber = Buchungsstreber::Context.new(entry_file, config_file)
+      parser = buchungsstreber.timesheet_parser
+      entries = parser.parse
+      entries = entries.select { |e| e[:date] == Date.today }
+      expect(entries.size).to eq(3)
+
+      text = File.read(entry_file)
+      expect(text).to match(/^#{Date.today.iso8601}:/)
+      expect(text).to match(/^  -\s+1\.0\s+Adm\s+S1234\s+Yak rasieren/)
+      expect(text).to match(/^  -\s+1\.5\s+Adm\s+S1234\s+Yak fuettern/)
+      expect(text).to match(/^  -\s+2\.0\s+Adm\s+S1234\s+Yak schlafen legen/)
+    end
+
     it 'runs show command' do
       stub_request(:get, "https://localhost/issues/8484.json").to_return(status: 200, body: JSON.dump(issue8484))
 

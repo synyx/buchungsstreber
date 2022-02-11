@@ -3,7 +3,7 @@ require_relative 'validator'
 class Buchungsstreber::Entry
   include Comparable
 
-  attr_accessor :time, :activity, :issue, :text, :date, :redmine, :work_hours, :comment, :error
+  attr_accessor :time, :activity, :issue, :text, :date, :redmine, :work_hours, :comment, :errors
 
   def initialize(
     date:,
@@ -14,10 +14,10 @@ class Buchungsstreber::Entry
     redmine: nil,
     work_hours: nil,
     comment: nil,
-    error: nil
+    errors: nil
   )
     @time, @activity, @issue, @text, @date, @redmine = time, activity, issue, text, date, redmine
-    @work_hours, @comment, @error = work_hours, comment, error
+    @work_hours, @comment, @error = work_hours, comment, [errors].flatten
   end
 
   def [](sym)
@@ -58,8 +58,32 @@ class Buchungsstreber::Entry
   end
 
   def to_hash
-    [:time, :activity, :issue, :text, :date, :redmine, :work_hours, :comment, :error].inject({}) do |m,s|
+    [:time, :activity, :issue, :text, :date, :redmine, :work_hours, :comment, :errors].inject({}) do |m,s|
       m.merge({s: self.send(s)})
     end
+  end
+end
+
+class Buchungsstreber::Entries
+  include Enumerable
+
+  attr_reader :file_path
+
+  def initialize
+    @entries = []
+  end
+
+  def <<(entry)
+    entry = Buchungsstreber::Entry.new(**entry) unless entry.is_a?(Buchungsstreber::Entry)
+    @entries << entry
+    self
+  end
+
+  def method_missing(symbol, *args, &block)
+    @entries.send(symbol, *args, &block)
+  end
+
+  def empty?
+    @entries.empty?
   end
 end

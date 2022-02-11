@@ -81,7 +81,7 @@ module Buchungsstreber
             nil
           end
         redmine =
-          if entry[:redmine].empty?
+          if (entry[:redmine] || '').empty?
             nil
           else
             entry[:redmine]

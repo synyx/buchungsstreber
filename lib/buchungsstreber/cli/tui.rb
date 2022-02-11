@@ -48,7 +48,7 @@ module Buchungsstreber
         end
 
         @win = Window.new
-        @entries = { entries: [] }
+        @entries = { entries: [], work_hours: {}, }
         @queue = Queue.new
 
         Signal.trap('SIGWINCH') { @queue << 'r' }
@@ -81,6 +81,22 @@ module Buchungsstreber
 
       private
 
+      def handle_error(error, debug = true)
+        $stderr.puts pretty_error(error, debug)
+      end
+
+      def pretty_error(error, debug)
+        if !debug
+          "#{error.class.name}: #{error.message[0..80]}"
+        else
+          msg = ['']
+          msg << ["#{error.class.name}: #{error.message}"]
+          msg << error.backtrace.select { |x| x =~ /buchungsstreber/ }.map { |x| "  #{x}" }
+          msg << '  ...'
+          msg.join("\n")
+        end
+      end
+
       def redraw
         loading(_('&'))
         Ncurses.refresh
@@ -93,7 +109,7 @@ module Buchungsstreber
           rescue StandardError => e
             addstatus(e.message)
             # redraw old state
-            $stderr.puts e if @options[:debug]
+            handle_error(e, @options[:debug])
             @entries[:entries]
           end
 
@@ -133,7 +149,7 @@ module Buchungsstreber
           @win.attron(color_pair(status_color)) { @win.addstr(style((err || '') + (e[:title] || ''), 50)) }
 
           @win.move(@win.getcury, 70)
-          @win.addstr(style(e[:text], @win.getmaxx - 70))
+          @win.addstr(style(e[:text] || '', @win.getmaxx - 70))
         end
         @win.addstr("\n")
         (@win.getcury..(@win.getmaxy - 2)).each do |i|
@@ -142,6 +158,7 @@ module Buchungsstreber
         end
       rescue StandardError => e
         addstatus(e.message)
+        handle_error(e)
       ensure
         loading('  ')
         Ncurses.refresh
@@ -208,34 +225,23 @@ module Buchungsstreber
         w
       rescue StandardError => e
         addstatus(e.message)
+        handle_error(e)
       end
 
       def generate
         loading(_('&'))
 
-        entries = @buchungsstreber.entries(@date)
-        timesheet_file = @buchungsstreber.timesheet_file
-
-        if entries[:entries].empty?
-          entries = @buchungsstreber.generate(@date)
-          entries.each do |e|
-            @buchungsstreber.resolve(e)
-            e[:redmine] = nil if @buchungsstreber.redmines.default?(e[:redmine])
-          end
-
-          parser = @buchungsstreber.timesheet_parser
-          newday = parser.format(entries)
-          FileUtils.cp(timesheet_file, "#{timesheet_file}~")
-          prev =  File.read(timesheet_file)
-          tmpfile = File.open(timesheet_file, 'w+')
-          begin
-            tmpfile.write("#{newday}\n\n#{prev}")
-          ensure
-            tmpfile.close
-          end
+        entries = @buchungsstreber.generate(@date)
+        entries.each do |e|
+          @buchungsstreber.resolve(e)
+          e[:redmine] = nil if @buchungsstreber.redmines.default?(e[:redmine])
         end
+
+        parser = @buchungsstreber.timesheet_parser
+        parser.add(entries)
       rescue StandardError => e
         addstatus(e.message)
+        handle_error(e)
       ensure
         loading('  ')
       end

@@ -20,7 +20,7 @@ EOS
       issue: 22224,
     }]
   end
-  Hash
+
   context 'generation' do
     subject { described_class.new(config) }
     before { allow(subject).to receive(:`).and_return(command_output) }
