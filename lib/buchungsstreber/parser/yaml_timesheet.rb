@@ -85,7 +85,7 @@ class Buchungsstreber::YamlTimesheet
   end
 
   def parse_entry(entry, date)
-    time, activity, issue_ref, text = entry.split(/\s+/, 4)
+    time, activity, issue_ref, text = entry.to_s.split(/\s+/, 4)
 
     if @templates.key? activity
       template = @templates[activity]
@@ -98,7 +98,7 @@ class Buchungsstreber::YamlTimesheet
 
     _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
 
-    raise "invalid line: #{entry}" unless time && issue
+    err = "invalid line: #{entry}" unless time && issue
 
     Buchungsstreber::Entry.new(
       time: minimum_time(parse_time(time), @minimum_time),
@@ -106,7 +106,8 @@ class Buchungsstreber::YamlTimesheet
       issue: issue,
       text: text,
       date: date,
-      redmine: redmine
+      redmine: redmine,
+      errors: err,
     )
   end
 
