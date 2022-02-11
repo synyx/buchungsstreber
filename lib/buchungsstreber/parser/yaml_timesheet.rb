@@ -21,7 +21,7 @@ class Buchungsstreber::YamlTimesheet
 
   def parse
     if YAML.respond_to?(:safe_load_file)
-      timesheet = YAML.safe_load_file(@file_path, permitted_classes: [Date], fallback: {})
+      timesheet = YAML.safe_load_file(@file_path, permitted_classes: [Date, Symbol], fallback: {})
     else
       timesheet = YAML.load_file(@file_path, {})
     end
