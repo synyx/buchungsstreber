@@ -43,11 +43,27 @@ class Buchungsstreber::YamlTimesheet
   def add(entries)
     entries.each do |e|
       iso_date = e[:date].to_s
-      idx = @model.index { |line| line =~ /^#{iso_date}/ }
+      days = @model.map
+                   .with_index { |line, idx| [Date.parse($1), idx] if line =~ /^(\d\d\d\d-\d\d-\d\d)/ }
+                   .compact
+                   .sort { |x| x[0] }
+                   .reverse
+
+      # Find the line of the day to append to
+      idx = days.select {|x| x[0] == e[:date] }.map {|x| x[1] }.first
+
+      # or: Find the line of the day to insert new day before
+      nidx = days.select {|x| x[0] < e[:date] }.map {|x| x[1] - 1 }.first
+
       if idx
         @model = @model[0..idx] + [format_entry(e)] + @model[idx+1..-1]
+      elsif nidx && nidx < 0
+        @model.unshift "#{iso_date}:\n\n", format_entry(e)
+      elsif nidx
+        @model = @model[0..nidx] + ["#{iso_date}:\n", format_entry(e)] + @model[nidx+1..-1]
       else
-        @model.unshift "#{iso_date}:\n", format_entry(e)
+        @model << "#{iso_date}:\n\n"
+        @model << format_entry(e)
       end
     end
   end

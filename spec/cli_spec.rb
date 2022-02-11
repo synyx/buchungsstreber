@@ -114,20 +114,22 @@ RSpec.describe 'CLI App', type: :aruba do
     it 'runs add command multiple times for a date' do
       FileUtils.copy(example_file, entry_file)
       run_command_and_stop("buchungsstreber add --debug --date=#{Date.today.iso8601} 1.0 Adm S1234 Yak rasieren")
-      run_command_and_stop("buchungsstreber add --debug --date=#{Date.today.iso8601} 1.5 Adm S1234 Yak fuettern")
+      run_command_and_stop("buchungsstreber add --debug --date=1970-01-01 1.5 Adm S1234 Yak fuettern")
       run_command_and_stop("buchungsstreber add --debug --date=#{Date.today.iso8601} 2.0 Adm S1234 Yak schlafen legen")
 
       buchungsstreber = Buchungsstreber::Context.new(entry_file, config_file)
       parser = buchungsstreber.timesheet_parser
       entries = parser.parse
       entries = entries.select { |e| e[:date] == Date.today }
-      expect(entries.size).to eq(3)
+      expect(entries.size).to eq(2)
 
       text = File.read(entry_file)
       expect(text).to match(/^#{Date.today.iso8601}:/)
       expect(text).to match(/^  -\s+1\.0\s+Adm\s+S1234\s+Yak rasieren/)
       expect(text).to match(/^  -\s+1\.5\s+Adm\s+S1234\s+Yak fuettern/)
       expect(text).to match(/^  -\s+2\.0\s+Adm\s+S1234\s+Yak schlafen legen/)
+
+      expect(text.index('1970-01-01')).to be > text.index(Date.today.to_s)
     end
 
     it 'runs show command' do
