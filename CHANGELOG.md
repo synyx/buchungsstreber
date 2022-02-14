@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.8.1
+
+* Make sure entries get added in order ([#83](https://github.com/synyx/buchungsstreber/issues/83))
+
 ## v2.8.0
 
 * Add time entries or notes from command line ([#11](https://github.com/synyx/buchungsstreber/issues/11))
