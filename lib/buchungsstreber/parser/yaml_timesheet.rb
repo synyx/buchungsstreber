@@ -41,7 +41,8 @@ class Buchungsstreber::YamlTimesheet
   end
 
   def add(entries)
-    entries.each do |e|
+    # as entries get added on top, reverse the entries before
+    entries.reverse.each do |e|
       iso_date = e[:date].to_s
       days = @model.map
                    .with_index { |line, idx| [Date.parse($1), idx] if line =~ /^(\d\d\d\d-\d\d-\d\d)/ }
