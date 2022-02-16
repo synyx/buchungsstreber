@@ -31,7 +31,6 @@ redmines:
       apikey:
     activities:
       16: [AdministrationTechnisch, Adm, AT]
-      16: [AdministrationTechnisch, Adm, AT]
       10: [Analyse, Ana]
       26: [DailyWeekly, Daily, Dly, Wkly]
       8: [Design, Dsgn]
@@ -47,6 +46,7 @@ redmines:
       66: [Monthly]
       79: [Refinement, Ref]
       80: [AbstimmungStakeholder, Stakeholder, Sh]
+      81: [EntwicklungSolo, ES, Solo, Dev, EntwicklungPair, EP, Pair]
 templates:
   BeispielDaily:
     activity: Daily
