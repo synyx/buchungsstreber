@@ -31,14 +31,13 @@ redmines:
       apikey:
     activities:
       16: [AdministrationTechnisch, Adm, AT]
+      16: [AdministrationTechnisch, Adm, AT]
       10: [Analyse, Ana]
       26: [DailyWeekly, Daily, Dly, Wkly]
       8: [Design, Dsgn]
       17: [Dokumentation, Doku]
       22: [EinarbeitungGeben, EinG]
       28: [EinarbeitungEmpfangen, EinE]
-      27: [EntwicklungPair, EP]
-      9: [EntwicklungSolo, ES]
       19: [MaintenanceSupport, Sup]
       11: [Organisatorisches, Orga]
       24: [Planning, Pla]
@@ -46,6 +45,8 @@ redmines:
       23: [Review, Rev]
       25: [Workshop, Ws]
       66: [Monthly]
+      79: [Refinement, Ref]
+      80: [AbstimmungStakeholder, Stakeholder, Sh]
 templates:
   BeispielDaily:
     activity: Daily
