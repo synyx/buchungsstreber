@@ -27,7 +27,7 @@ class Buchungsstreber::TimesheetParser
 
         if idx
           # the specific day was found
-          idx += 1 if @lines[idx] == "\n"
+          idx += 1 if @lines[idx+1] == "\n"
           @lines = @lines[0..idx] + [format_entry(e)] + @lines[idx+1..-1]
         elsif nidx && nidx < 0
           # the new day is the first in the file
