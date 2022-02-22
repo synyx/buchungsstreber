@@ -115,6 +115,10 @@ class Buchungsstreber::BuchTimesheet
     buf
   end
 
+  def format_day(d)
+    "#{d.to_s}\n"
+  end
+
   def parse_date(date_descr)
     Date.parse(date_descr)
   end

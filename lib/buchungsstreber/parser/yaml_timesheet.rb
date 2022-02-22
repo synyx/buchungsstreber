@@ -106,4 +106,8 @@ class Buchungsstreber::YamlTimesheet
     buf << "  - #{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
     buf
   end
+
+  def format_day(d)
+    "#{d.to_s}:\n"
+  end
 end
