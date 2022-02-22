@@ -27,12 +27,16 @@ class Buchungsstreber::TimesheetParser
         nidx = days.select {|x| x[0] < e[:date] }.map {|x| x[1] - 1 }.first
 
         if idx
+          # the specific day was found
           @lines = @lines[0..idx] + [format_entry(e)] + @lines[idx+1..-1]
         elsif nidx && nidx < 0
+          # the new day is the first in the file
           @lines.unshift "#{iso_date}:\n\n", format_entry(e)
         elsif nidx
           @lines = @lines[0..nidx] + ["#{iso_date}:\n", format_entry(e)] + @lines[nidx+1..-1]
+          # the new day will be inserted between two days
         else
+          # the new day is the first one
           @lines << "#{iso_date}:\n\n"
           @lines << format_entry(e)
         end
