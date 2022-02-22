@@ -41,6 +41,9 @@ Aruba.configure do |config|
 
   require 'buchungsstreber/cli/runner'
   config.main_class = Buchungsstreber::CLI::Runner
+
+  # We're mocking paths differently
+  config.allow_absolute_paths = true
 end
 
 WebMock.disable_net_connect!(net_http_connect_on_start: true)
