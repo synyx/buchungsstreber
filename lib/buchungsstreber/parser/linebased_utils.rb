@@ -31,10 +31,10 @@ class Buchungsstreber::TimesheetParser
           @lines = @lines[0..idx] + [format_entry(e)] + @lines[idx+1..-1]
         elsif nidx && nidx < 0
           # the new day is the first in the file
-          @lines.unshift format_day(e[:date]), "\n", format_entry(e)
+          @lines.unshift format_day(e[:date]), "\n", format_entry(e), "\n"
         elsif nidx
           # the new day will be inserted between two days
-          @lines = @lines[0..nidx] + [format_day(e[:date]), "\n", format_entry(e)] + @lines[nidx+1..-1]
+          @lines = @lines[0..nidx] + [format_day(e[:date]), "\n", format_entry(e), "\n"] + @lines[nidx+1..-1]
         else
           # the new day is the first one
           @lines << format_day(e[:date])
