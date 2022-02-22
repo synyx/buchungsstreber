@@ -36,7 +36,8 @@ class Buchungsstreber::TimesheetParser
           # the new day will be inserted between two days
           @lines = @lines[0..nidx] + [format_day(e[:date]), "\n", format_entry(e), "\n"] + @lines[nidx+1..-1]
         else
-          # the new day is the first one
+          # the new day is the first one or the last one
+          @lines << "\n" unless @lines.empty?
           @lines << format_day(e[:date])
           @lines << "\n"
           @lines << format_entry(e)
