@@ -131,9 +131,9 @@ RSpec.describe 'CLI App', type: :aruba do
 
       expect(text.index('1970-01-01')).to be > text.index(Date.today.to_s)
 
-      # whitespaces before and after a new day
-      expect(text).to match(/(\A|\n)#{Date.today.iso8601}:\n\n/m)
-      expect(text).to match(/(\A|\n)1970-01-01:\n\n/m)
+      # eof/bof/nl before and after a new day
+      expect(text).to match(/(\A|\n)#{Date.today.iso8601}:\n(\Z|\n)/m)
+      expect(text).to match(/(\A|\n)1970-01-01:\n(\Z|\n)/m)
     end
 
     it 'runs show command' do
