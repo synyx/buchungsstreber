@@ -130,6 +130,10 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(text).to match(/^  -\s+2\.0\s+Adm\s+S1234\s+Yak schlafen legen/)
 
       expect(text.index('1970-01-01')).to be > text.index(Date.today.to_s)
+
+      # eof/bof/nl before and after a new day
+      expect(text).to match(/(\A|\n)#{Date.today.iso8601}:\n(\Z|\n)/m)
+      expect(text).to match(/(\A|\n)1970-01-01:\n(\Z|\n)/m)
     end
 
     it 'runs show command' do

@@ -2,17 +2,17 @@ require "yaml"
 require "date"
 require "time"
 
+require_relative 'linebased_utils'
 require_relative '../entry'
 
 class Buchungsstreber::YamlTimesheet
   include Buchungsstreber::TimesheetParser::Base
+  include Buchungsstreber::TimesheetParser::LineBased
 
   def initialize(file, templates, minimum_time)
     @file_path = file
     @templates = templates
     @minimum_time = minimum_time
-
-    @model = File.readlines(@file_path) rescue []
   end
 
   def self.parses?(file)
@@ -40,38 +40,7 @@ class Buchungsstreber::YamlTimesheet
     result
   end
 
-  def add(entries)
-    # as entries get added on top, reverse the entries before
-    entries.reverse.each do |e|
-      iso_date = e[:date].to_s
-      days = @model.map
-                   .with_index { |line, idx| [Date.parse($1), idx] if line =~ /^(\d\d\d\d-\d\d-\d\d)/ }
-                   .compact
-                   .sort { |x| x[0] }
-                   .reverse
 
-      # Find the line of the day to append to
-      idx = days.select {|x| x[0] == e[:date] }.map {|x| x[1] }.first
-
-      # or: Find the line of the day to insert new day before
-      nidx = days.select {|x| x[0] < e[:date] }.map {|x| x[1] - 1 }.first
-
-      if idx
-        @model = @model[0..idx] + [format_entry(e)] + @model[idx+1..-1]
-      elsif nidx && nidx < 0
-        @model.unshift "#{iso_date}:\n\n", format_entry(e)
-      elsif nidx
-        @model = @model[0..nidx] + ["#{iso_date}:\n", format_entry(e)] + @model[nidx+1..-1]
-      else
-        @model << "#{iso_date}:\n\n"
-        @model << format_entry(e)
-      end
-    end
-  end
-
-  def unparse
-    @model.join
-  end
 
   def archive(archive_path, date)
     old_timesheet = ""
@@ -136,5 +105,9 @@ class Buchungsstreber::YamlTimesheet
     buf << "  # #{e[:comment]}\n" if e[:comment]
     buf << "  - #{minimum_time(e[:time] || 0.0, @minimum_time)}\t#{e[:activity]}\t#{e[:redmine]}#{e[:issue]}\t#{e[:text]}\n"
     buf
+  end
+
+  def format_day(d)
+    "#{d.to_s}:\n"
   end
 end
