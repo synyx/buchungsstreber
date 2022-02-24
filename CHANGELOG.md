@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.8.2
+
+* Fix "Messy" YAML file when using the `add` feature ([#84](https://github.com/synyx/buchungsstreber/issues/84))
+
 ## v2.8.1
 
 * Make sure entries get added in order ([#83](https://github.com/synyx/buchungsstreber/issues/83))
