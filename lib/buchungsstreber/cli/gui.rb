@@ -27,12 +27,12 @@ module Buchungsstreber
               text @day
             }
             table {
-              text_column
-              text_column
-              text_column
-              text_column
-              text_column
-              text_column
+              text_column(' ')
+              text_column(' ')
+              text_column(' ')
+              text_column(' ')
+              text_column(' ')
+              text_column(' ')
 
               cell_rows @data
             }
