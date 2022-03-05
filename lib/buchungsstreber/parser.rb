@@ -20,7 +20,7 @@ class Buchungsstreber::TimesheetParser
 
     # Fill file with new content
     File.open(@file, 'w+') do |file|
-      file.write(@parser.unparse)
+      file.write(@parser.unparse!)
     end
   end
 

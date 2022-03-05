@@ -6,8 +6,10 @@ class Buchungsstreber::TimesheetParser
       @lines ||= (File.readlines(@file_path) rescue [])
     end
 
-    def unparse
-      lines.join
+    def unparse!
+      str = lines.join
+      @lines = nil # reset cache after
+      str
     end
 
     def add(entries)
