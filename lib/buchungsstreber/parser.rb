@@ -13,14 +13,14 @@ class Buchungsstreber::TimesheetParser
   end
 
   def add(entries)
-    @parser.add(entries)
+    new_content = @parser.add(entries)
 
     # Backup file to reduce problems...
     FileUtils.cp(@file, "#{@file}~")
 
     # Fill file with new content
     File.open(@file, 'w+') do |file|
-      file.write(@parser.unparse!)
+      file.write(new_content)
     end
   end
 
