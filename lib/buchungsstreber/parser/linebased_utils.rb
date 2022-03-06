@@ -1,11 +1,20 @@
 
 class Buchungsstreber::TimesheetParser
+
+  # LineBased module is meant to be included in TimesheetParsers based on
+  # a single-line based backing file.
+  # It assumes that there are Lines matching a ISO Date at the beginning
+  # of the line and will add new entries below it.
   module LineBased
 
     def read_lines
       File.readlines(@file_path) rescue []
     end
 
+    # add loads the current backing file and returns a string with the given
+    # entries added at a sensible location.
+    #
+    # @param entries
     def add(entries)
       lines = read_lines
       # as entries get added on top, reverse the entries before
