@@ -24,7 +24,7 @@ class Buchungsstreber::BuchTimesheet
 
     current = nil
     work_hours = nil
-    self.lines.each do |line|
+    self.read_lines.each do |line|
       case line
       when /^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])/
         # beginning of day
