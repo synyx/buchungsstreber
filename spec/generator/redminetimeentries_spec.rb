@@ -1,7 +1,7 @@
 require 'rspec'
 
 require 'buchungsstreber/config'
-require 'buchungsstreber/generator/redmine_time_entries'
+require 'buchungsstreber/generator/redminetimeentries'
 
 RSpec.describe Buchungsstreber::Generator::RedmineTimeEntries do
   let(:config_file) { File.expand_path('../../example.config.yml', __dir__) }
