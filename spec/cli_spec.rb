@@ -22,7 +22,7 @@ RSpec.describe 'CLI App', type: :aruba do
       expect(config_file).to be_an_existing_file
     end
 
-    %w[config edit execute show].each do |cmd|
+    %w[config edit show].each do |cmd|
       it "does nothing when running #{cmd}" do
         run_command_and_stop("buchungsstreber #{cmd} --debug", fail_on_error: false)
         expect(last_command_started).to have_output(/Error|Fehler/i)
