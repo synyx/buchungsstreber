@@ -13,7 +13,13 @@ class Buchungsstreber::TimesheetParser
   end
 
   def add(entries)
+    old_content = File.read(@file) rescue ''
     new_content = @parser.add(entries)
+
+    if new_content.length < old_content.length
+      warn "Rejecting new content due to safety concerns, smaller than before"
+      return
+    end
 
     # Backup file to reduce problems...
     FileUtils.cp(@file, "#{@file}~")
