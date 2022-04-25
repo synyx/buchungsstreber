@@ -1,8 +1,10 @@
+require_relative '../redmines'
+
 class Buchungsstreber::Generator::RedmineTimeEntries
   include Buchungsstreber::Generator::Base
 
   def initialize(config)
-    @redmines = Redmines.new(@config[:redmines])
+    @redmines = Buchungsstreber::Redmines.new(config[:redmines])
   end
 
   def generate(date)

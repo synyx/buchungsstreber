@@ -6,7 +6,7 @@ redmines:
     prefix: S
     server:
       url: https://project.synyx.de
-      apikey:
+      apikey: 'secret'
     activities:
       8: [DesignView, Design, View, Dsgn]
       9: [Entwicklung, E]
@@ -28,7 +28,7 @@ redmines:
     prefix: C
     server:
       url: https://projects.example.net
-      apikey:
+      apikey: 'secret'
     activities:
       16: [AdministrationTechnisch, Adm, AT]
       10: [Analyse, Ana]
