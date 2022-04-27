@@ -39,7 +39,7 @@ RSpec.describe Buchungsstreber::Generator::RedmineTimeEntries do
           },
           "hours": 0.5,
           "comments": "Selbstorganisation, E-Mails, Nachrichten",
-          "spent_on": "2022-04-25",
+          "spent_on": Date.today.to_s,
           "created_on": "2022-04-25T06:00:30Z",
           "updated_on": "2022-04-25T06:00:30Z",
           "custom_fields": [
