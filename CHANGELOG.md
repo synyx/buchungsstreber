@@ -1,6 +1,11 @@
 Changes
 =======
 
+## v2.9.0
+
+* Add Redmine Time Entry generator ([#101](https://github.com/synyx/buchungsstreber/issues/101))
+* Fix potential data loss on generating entries ([#94](https://github.com/synyx/buchungsstreber/issues/94))
+
 ## v2.8.2
 
 * Fix "Messy" YAML file when using the `add` feature ([#84](https://github.com/synyx/buchungsstreber/issues/84))
