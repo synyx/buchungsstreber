@@ -1,0 +1,21 @@
+class Buchungsstreber::YamlTimesheet
+  include Buchungsstreber::TimesheetParser::Base
+  include Buchungsstreber::TimesheetParser::LineBased
+
+  @file_path: String
+  @templates: Hash[untyped, untyped]
+  @minimum_time: Float
+
+  def initialize: (String file, untyped templates, untyped minimum_time) -> void
+
+  def self.parses?: (String file) -> bool
+  def parse: () -> Buchungsstreber::Entries
+  def archive: (String archive_path, Date date) -> void
+  def format: (Buchungsstreber::Entries entries) -> String
+  def parse_entry: (String entry, Date date) -> Buchungsstreber::Entry
+
+  private
+
+  def format_entry: (Buchungsstreber::Entry e) -> String
+  def format_day: (Date d) -> ::String
+end

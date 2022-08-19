@@ -1,0 +1,25 @@
+interface _Resolver
+  def initialize: (config config) -> void
+  def resolve: (Buchungsstreber::Entry) -> void
+end
+
+class Buchungsstreber::Resolver
+  @resolvers: Array[_Resolver]
+  @config: Hash[Symbol, untyped]
+
+  def initialize: (Hash[Symbol, untyped] config) -> void
+
+  def resolve: (Buchungsstreber::Entry entry) -> Buchungsstreber::Entry
+  def load!: (String name) -> void
+
+  private
+
+  def resolver: (String klass) -> _Resolver
+
+  module Base
+    @resolvers: Array[_Resolver]
+
+    def self.included: (Class klass) -> void
+    def self.resolver: (untyped name) -> untyped
+  end
+end

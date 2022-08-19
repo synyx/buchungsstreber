@@ -1,0 +1,8 @@
+class Buchungsstreber::Generator::Git
+  include Buchungsstreber::Generator::Base
+
+  @dirs: Array[String]
+
+  def initialize: (config config) -> void
+  def generate: (Date date) -> entry_list
+end

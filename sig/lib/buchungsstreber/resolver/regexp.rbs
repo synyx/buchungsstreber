@@ -1,0 +1,8 @@
+class Buchungsstreber::Resolver::Regexp
+  include Buchungsstreber::Resolver::Base
+
+  @config: config
+
+  def initialize: (config config) -> void
+  def resolve: (entry entry) -> void
+end

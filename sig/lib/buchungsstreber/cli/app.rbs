@@ -1,0 +1,31 @@
+module Buchungsstreber
+  module CLI
+    class App < Thor
+      def execute: () -> void
+      def show: (String date) -> void
+      def buchen: (?String? date) -> void
+      def archivieren: () -> void
+      def init: () -> void
+      def version: () -> void
+      def config: () -> void
+      def edit: (?String? date) -> void
+      def watch: (?String? date) -> void
+      def add: (*String entry) -> void
+
+      def self.exit_on_failure?: () -> true
+
+      private
+
+      def parse_date: (String? date) -> Date
+      def style: (String string, *(Numeric|Symbol) styles) -> String
+      def handle_error: (Exception error, ?bool debug) -> void
+      def pretty_error: (Exception error, bool debug) -> String
+      def automated?: () -> bool
+      def init_config: () -> String
+    end
+  end
+end
+
+class Object
+  include I18n::Gettext::Helpers
+end

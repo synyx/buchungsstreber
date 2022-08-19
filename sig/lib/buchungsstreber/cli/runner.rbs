@@ -1,0 +1,15 @@
+module Buchungsstreber
+  module CLI
+    class Runner
+      @argv: IO
+      @stdin: IO
+      @stdout: IO
+      @stderr: IO
+      @kernel: Kernel
+
+      def initialize: (untyped argv, ?IO stdin, ?IO stdout, ?IO stderr, ?Kernel kernel) -> void
+
+      def execute!: () -> void
+    end
+  end
+end

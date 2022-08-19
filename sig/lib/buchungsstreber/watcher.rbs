@@ -1,0 +1,3 @@
+class Buchungsstreber::Watcher
+  def self.watch: (String file) ?{ (String file) -> void } -> void
+end

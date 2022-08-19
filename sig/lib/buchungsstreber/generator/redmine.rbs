@@ -1,0 +1,9 @@
+class Buchungsstreber::Generator::Redmine
+  include Buchungsstreber::Generator::Base
+
+  RE: ::Regexp
+  @config: config
+
+  def initialize: (config config) -> void
+  def generate: (Date date) -> entry_list
+end

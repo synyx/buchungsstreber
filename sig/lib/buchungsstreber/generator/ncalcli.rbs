@@ -1,0 +1,9 @@
+class Buchungsstreber::Generator::NCalCLI
+  include Buchungsstreber::Generator::Base
+
+  @ignore: Regexp
+  @config: config
+
+  def initialize: (config config) -> void
+  def generate: (Date date) -> entry_list
+end

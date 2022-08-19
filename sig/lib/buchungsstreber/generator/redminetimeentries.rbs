@@ -1,0 +1,7 @@
+class Buchungsstreber::Generator::RedmineTimeEntries
+  include Buchungsstreber::Generator::Base
+  @redmines: Buchungsstreber::Redmines
+
+  def initialize: (config config) -> void
+  def generate: (Date date) -> entry_list
+end

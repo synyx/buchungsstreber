@@ -1,0 +1,36 @@
+interface _Parser
+  def parses?: (String) -> bool
+  def parse: -> Buchungsstreber::Entries
+end
+
+# TimesheetParser selects the correct parser depending on the extension.
+class Buchungsstreber::TimesheetParser
+  PARSERS: ::Array[_Parser]
+
+  @file: String
+  @minimum_time: Float
+  @parser: _Parser
+
+  def initialize: (String file, template_config templates, Float minimum_time) -> void
+
+  def parse: () -> Buchungsstreber::Entries
+  def add: (entry_list entries) -> void
+  def archive: (String archive_path, Date date) -> void
+  def format: (entry_list entries) -> String
+  def parse_entry: (String entry, ?Date? date) -> untyped
+
+  private
+
+  def choose_parser: (untyped file) -> untyped
+
+  module Base
+    def self.included: (untyped klass) -> untyped
+
+    def parse_time: (untyped time_descr) -> untyped
+    def minimum_time: (untyped time, untyped minimum_time_value) -> untyped
+
+    private
+
+    def parse_time_diff: (untyped time_diff) -> untyped
+  end
+end

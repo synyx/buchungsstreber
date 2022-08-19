@@ -1,0 +1,8 @@
+class Buchungsstreber::Generator::XChat
+  include Buchungsstreber::Generator::Base
+
+  @config: config
+
+  def initialize: (config config) -> void
+  def generate: (Date date) -> entry_list
+end

@@ -1,0 +1,4 @@
+class Buchungsstreber::Utils
+  def self.fixed_length: (String str, Integer length) -> String
+  def self.classify_workhours: (Numeric worked_hours, Numeric work_hours, ?Numeric? on_day) -> (:red | :yellow | :default)
+end

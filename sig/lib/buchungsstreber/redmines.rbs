@@ -1,0 +1,12 @@
+class Buchungsstreber::Redmines
+  include Enumerable[Buchungsstreber::RedmineApi]
+
+  @redmines: Hash[String, Buchungsstreber::RedmineApi]
+  @default: Buchungsstreber::RedmineApi
+
+  def initialize: (Array[config] redmines) -> void
+
+  def get: (String prefix) -> Buchungsstreber::RedmineApi
+  def default?: (String prefix) -> bool
+  def each: () { (String arg0, Buchungsstreber::RedmineApi arg1) -> void } -> void
+end

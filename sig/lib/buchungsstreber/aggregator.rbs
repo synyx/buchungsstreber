@@ -1,0 +1,5 @@
+class Buchungsstreber::Aggregator
+  def self.aggregate: (Array[Buchungsstreber::Entry] entries) -> Array[Buchungsstreber::Entry]
+
+  def self.aggregatable?: (Buchungsstreber::Entry entry, Buchungsstreber::Entry extension) -> bool
+end

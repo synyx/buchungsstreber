@@ -1,0 +1,21 @@
+module Buchungsstreber
+  class Context
+    attr_reader redmines: untyped
+    attr_reader timesheet_parser: untyped
+    attr_reader timesheet_file: untyped
+    attr_reader config: untyped
+
+    @generator: Generator
+    @resolver: Resolver
+
+    def initialize: (?String? file, ?String? config_file) -> void
+
+    def entries: (?Date? date) -> Hash[Symbol, untyped]
+    def generate: (Date date) -> (Entries | Array[Entry])
+    def resolve: (Entry entry) -> Entry
+
+    private
+
+    def fake_stderr: () { () -> bool } -> [bool, String]
+  end
+end

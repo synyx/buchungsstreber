@@ -1,0 +1,10 @@
+type config = Hash[(Symbol|String), untyped]
+type template_config = Hash[String, untyped]
+
+class Buchungsstreber::Config
+  def self.load: (?String? file) -> config
+  def self.find_config: () -> String?
+  def self.user_config_path: () -> String
+  def self.search_path: () -> ::Array[String]
+  def self.parse_config: (String file) -> config
+end

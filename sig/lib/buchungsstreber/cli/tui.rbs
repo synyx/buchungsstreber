@@ -1,0 +1,52 @@
+module Buchungsstreber
+  module TUI
+    type color_pair = Integer
+
+    interface _NcursesWindow
+      def bkgd: (color_pair) -> void
+      def clear: -> void
+      def box: (Integer, Integer) -> void
+      def attron: (*untyped) -> void
+      def attroff: (*untyped) -> void
+    end
+
+    class App
+      def initialize: (Buchungsstreber::Context buchungsstreber, ?Date? startdate, ?::Hash[Symbol, untyped] options) -> void
+
+      def start: () -> void
+
+      private
+
+      @buchungsstreber: Buchungsstreber::Context
+      @options: config
+      @colors: Hash[Symbol, color_pair]
+      @win: Window
+      @entries: {entries: entry_list, work_hours: Hash[Date, Integer]}
+      @queue: Thread::Queue
+      @subwindow: Window
+      @date: Date
+      @help_shown: bool
+
+      def handle_error: (Exception error, ?bool debug) -> void
+      def pretty_error: (Exception error, bool debug) -> String
+      def redraw: () -> void
+      def detailpage: (Integer _x, Integer y) -> Window
+      def buchen: (?Date? date) -> Window
+      def generate: () -> void
+      def setsize: (*untyped _args) -> void
+      def show_help: () -> void
+      def addstatus: (String msg) -> void
+      def loading: (String l) -> void
+      def on_input: (Integer keycode) -> void
+      def style: (String string, *(Integer) styles) -> untyped
+      def color_pair: (Symbol color) -> color_pair
+    end
+
+    class Window
+      def initialize: (_NcursesWindow win) -> void
+      def initialize: (Integer nlines, Integer ncols, Integer begin_y, Integer begin_x) -> void | ...
+      def attron: (*untyped args) ?{ () -> untyped } -> void
+      def method_missing: (Symbol symbol, *untyped args) ?{ () -> untyped } -> untyped
+    end
+  end
+end

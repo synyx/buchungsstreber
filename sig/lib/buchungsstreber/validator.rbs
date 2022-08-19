@@ -1,0 +1,6 @@
+type validation_status = ::Array[:missing|:existing|:activity_different|:time_different]
+
+class Buchungsstreber::Validator
+  def self.validate: (entry entry, Buchungsstreber::RedmineApi redmine) -> bool
+  def self.status!: (entry entry, Buchungsstreber::RedmineApi redmine) -> validation_status
+end

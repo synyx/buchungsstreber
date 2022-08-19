@@ -1,0 +1,6 @@
+class Buchungsstreber::TimesheetParser
+  module LineBased
+    def read_lines: () -> Array[String]
+    def add: (Buchungsstreber::Entries entries) -> String
+  end
+end

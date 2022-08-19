@@ -1,0 +1,19 @@
+class Buchungsstreber::RedmineApi
+  attr_reader config: config
+
+  def initialize: (config config) -> void
+  def add_time: (entry entry) -> void
+  def valid_activity?: (String activity) -> bool
+  def same_activity?: (String a, String b) -> bool
+  def get_issue: (Integer issue_id) -> String
+  def get_times: (Date day) -> entry_list
+  def prefix: () -> String
+  def default?: () -> bool
+
+  private
+
+  def post: (untyped path, untyped dto) -> bool
+  def get: (untyped path, ?untyped? params) { (untyped) -> untyped } -> untyped
+  def from_time_entry: (Hash[String, untyped] entry) -> entry
+  def load_config: (untyped config) -> untyped
+end

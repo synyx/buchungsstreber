@@ -1,0 +1,45 @@
+type entry = Buchungsstreber::Entry | {
+    id: Integer,
+    issue: Integer,
+    date: Date,
+    time: Numeric,
+    activity: String,
+    text: String,
+  }
+type entry_list = Buchungsstreber::Entries | Array[entry]
+
+class Buchungsstreber::Entry
+  include Comparable
+
+  attr_accessor time: Numeric
+  attr_accessor activity: String
+  attr_accessor issue: Integer
+  attr_accessor text: String
+  attr_accessor date: Date
+  attr_accessor redmine: String
+  attr_accessor work_hours: Numeric
+  attr_accessor comment: String
+  attr_accessor error: String
+
+  def initialize: (date: Date date, ?time: Numeric time, ?activity: String? activity, ?issue: Integer? issue, ?text: String? text, ?redmine: String? redmine, ?work_hours: Numeric? work_hours, ?comment: String? comment, ?error: String? error) -> void
+
+  def []: (Symbol sym) -> untyped
+  def []=: (Symbol sym, untyped val) -> untyped
+  def <=>: ((entry | Range[entry]) o) -> (nil | -1 | 0 | 1)
+  def ===: ((Date | Range[Date] | entry) o) -> bool
+  def to_h: () -> Hash[String, untyped]
+  def to_hash: () -> Hash[String, untyped]
+end
+
+class Buchungsstreber::Entries
+  include Enumerable[Buchungsstreber::Entries]
+
+  attr_reader file_path: String
+  @enties: Array[entry]
+
+  def initialize: () -> void
+
+  def <<: (entry entry) -> Buchungsstreber::Entries
+  def method_missing: (Symbol symbol, *untyped args) { () -> untyped } -> untyped
+  def empty?: () -> bool
+end
