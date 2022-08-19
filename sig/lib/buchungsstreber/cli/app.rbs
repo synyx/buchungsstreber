@@ -1,6 +1,6 @@
 module Buchungsstreber
   module CLI
-    class App < Thor
+    class App
       def execute: () -> void
       def show: (String date) -> void
       def buchen: (?String? date) -> void
@@ -24,8 +24,4 @@ module Buchungsstreber
       def init_config: () -> String
     end
   end
-end
-
-class Object
-  include I18n::Gettext::Helpers
 end

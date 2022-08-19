@@ -1,0 +1,56 @@
+---
+sources:
+- name: ruby/gem_rbs_collection
+  remote: https://github.com/ruby/gem_rbs_collection.git
+  revision: main
+  repo_dir: gems
+path: ".gem_rbs_collection"
+gems:
+- name: ast
+  version: '2.4'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 5442918ecb9bbecca2a3a357477f24af42047af4
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: forwardable
+  version: '0'
+  source:
+    type: stdlib
+- name: i18n
+  version: '1.10'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 5442918ecb9bbecca2a3a357477f24af42047af4
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: json
+  version: '0'
+  source:
+    type: stdlib
+- name: parallel
+  version: '1.20'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 5442918ecb9bbecca2a3a357477f24af42047af4
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: prime
+  version: '0'
+  source:
+    type: stdlib
+- name: rainbow
+  version: '3.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 5442918ecb9bbecca2a3a357477f24af42047af4
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: singleton
+  version: '0'
+  source:
+    type: stdlib

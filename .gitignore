@@ -12,3 +12,4 @@ tmp/
 
 # Translation
 lib/buchungsstreber/i18n/*.mo
+/.gem_rbs_collection/
