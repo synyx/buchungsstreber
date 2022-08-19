@@ -2,5 +2,14 @@
   "extends": [
     "config:base",
     ":disableDependencyDashboard"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ".*[.]gemspec$",
+      "matchStrings": [
+        ".*[.]add.*dependency\\s+['\"](?<depName>.*?)['\"],\\s+['\"](?<currentValue>.*?)['\"]"
+      ],
+      "datasourceTemplate": "rubygems"
+    }
   ]
 }
