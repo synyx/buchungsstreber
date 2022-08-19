@@ -29,7 +29,7 @@ Questions?  Help needed?  Simply wanna talk?
 Requirements
 ---------------
 
-- Ruby 2.x
+- Ruby > 2.5
 - bundler (optional)
 - bad time entry moral
   

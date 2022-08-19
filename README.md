@@ -37,7 +37,7 @@ Fragen?  Hilfe notwendig?  Einfach nur mal Schnacken?
 Voraussetzungen
 ---------------
 
-- Ruby 2.x
+- Ruby > 2.5
 - bundler (optional)
 - schlechte Buchungsmoral
   
