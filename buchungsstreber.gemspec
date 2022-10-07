@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'i18n', '~> 1.8.0'
   spec.add_dependency 'thor', '~> 1.0'
 
-  spec.add_development_dependency 'aruba', '~> 1.0'
+  spec.add_development_dependency 'aruba', '~> 2.0'
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'gettext', '~> 3.0'
   spec.add_development_dependency 'nexus', '~> 1.0'
