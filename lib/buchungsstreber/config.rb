@@ -4,6 +4,7 @@ class Buchungsstreber::Config
   DEFAULT_CONFIG = {
     timesheet_file: 'buchungen.yml',
     archive_path: 'archive',
+    issues: {},
     templates: {},
     hours: 8,
     minimum_time: 0.25,

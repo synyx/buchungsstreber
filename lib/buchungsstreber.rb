@@ -25,7 +25,7 @@ module Buchungsstreber
       @config = Config.load(config_file)
 
       @timesheet_file = file || File.expand_path(@config[:timesheet_file])
-      @timesheet_parser = TimesheetParser.new(@timesheet_file, @config[:templates], @config[:minimum_time])
+      @timesheet_parser = TimesheetParser.new(@timesheet_file, @config[:issues], @config[:templates], @config[:minimum_time])
       @redmines = Redmines.new(@config[:redmines])
 
       @config[:generators].each_key do |gc|

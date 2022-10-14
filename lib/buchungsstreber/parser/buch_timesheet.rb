@@ -9,8 +9,9 @@ class Buchungsstreber::BuchTimesheet
   include Buchungsstreber::TimesheetParser::Base
   include Buchungsstreber::TimesheetParser::LineBased
 
-  def initialize(file_path, templates, minimum_time)
+  def initialize(file_path, issues, templates, minimum_time)
     @file_path = file_path
+    @issues = issues;
     @templates = templates
     @minimum_time = minimum_time
   end
