@@ -11,7 +11,7 @@ class Buchungsstreber::BuchTimesheet
   def self.parses?: (String file) -> bool
   def parse: () -> Buchungsstreber::Entries
   def format: (Buchungsstreber::Entries entries) -> String
-  def archive: (String archive_path, Date date) -> void
+  def archive: (String archive_path, Date? date) -> void
 
   private
 

@@ -23,7 +23,7 @@ module Buchungsstreber
       @win: Window
       @entries: {entries: entry_list, work_hours: Hash[Date, Integer]}
       @queue: Thread::Queue
-      @subwindow: Window
+      @subwindow: Window?
       @date: Date
       @help_shown: bool
 
@@ -43,6 +43,8 @@ module Buchungsstreber
     end
 
     class Window
+      @win: _NcursesWindow
+
       def initialize: (_NcursesWindow win) -> void
       def initialize: (Integer nlines, Integer ncols, Integer begin_y, Integer begin_x) -> void | ...
       def attron: (*untyped args) ?{ () -> untyped } -> void

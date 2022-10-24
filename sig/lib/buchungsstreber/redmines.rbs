@@ -1,5 +1,5 @@
 class Buchungsstreber::Redmines
-  include Enumerable[Buchungsstreber::RedmineApi]
+  include Enumerable[Buchungsstreber::Redmines]
 
   @redmines: Hash[String, Buchungsstreber::RedmineApi]
   @default: Buchungsstreber::RedmineApi

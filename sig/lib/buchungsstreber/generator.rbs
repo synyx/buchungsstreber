@@ -1,19 +1,25 @@
+interface _GeneratorClass
+  def new: (config config) -> void
+end
 interface _Generator
-  def initialize: (Hash[String, untyped] config) -> void
+  def initialize: (config config) -> void
   def generate: (Date date) -> Array[entry]
 end
 
 class Buchungsstreber::Generator
-  attr_reader generators: Array[_Generator]
+  attr_reader generators: Array[_GeneratorClass]
+
+  @config: config
 
   def initialize: (Hash[String, untyped] config) -> void
 
-  def generate: (Date date) -> (Buchungsstreber::Entries | Array[entry])
+  def generate: (Date date) -> entry_list
   def load!: (String generator_name) -> void
 
   module Base
-    @generators: Array[_Generator]
-    def self.included: (Class klass) -> void
-    def self.generator: (String name) -> _Generator?
+    self.@generators: Array[_GeneratorClass]
+
+    def self.included: (_GeneratorClass klass) -> void
+    def self.generator: (String name) -> _GeneratorClass?
   end
 end

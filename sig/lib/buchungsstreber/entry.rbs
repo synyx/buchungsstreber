@@ -5,6 +5,8 @@ type entry = Buchungsstreber::Entry | {
     time: Numeric,
     activity: String,
     text: String,
+    comment?: String,
+    redmine?: String,
   }
 type entry_list = Buchungsstreber::Entries | Array[entry]
 
