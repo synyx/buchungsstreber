@@ -17,7 +17,7 @@ class Buchungsstreber::Entry
     errors: nil
   )
     @time, @activity, @issue, @text, @date, @redmine = time, activity, issue, text, date, redmine
-    @work_hours, @comment, @error = work_hours, comment, [errors].flatten
+    @work_hours, @comment, @errors = work_hours, comment, [errors].flatten
   end
 
   def [](sym)

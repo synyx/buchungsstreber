@@ -26,12 +26,12 @@ class Buchungsstreber::Generator::NCalCLI
         )
       end
     rescue StandardError => e
-      Buchungsstreber::Entry.new(
+      [Buchungsstreber::Entry.new(
         date: date,
         time: 0.0,
         text: line.chomp,
-        error: e.message
-      )
+        errors: e.message
+      )]
     end
   end
 end
