@@ -2,17 +2,20 @@ module I18n
   module Env
     class Config < I18n::Config
       VERSION: String
-      VARS: ::Array[String]
+      VARS: Array[String]
 
-      def locale: () -> untyped
+      @locales: Array[Symbol]
+      @locale: Symbol
+
+      def locale: () -> Symbol
 
       private
 
-      def find_user_locale: () -> untyped
-      def find_primary: () -> untyped
-      def find_secondary: () -> untyped
-      def locales: () -> untyped
-      def normalize: (untyped lang) -> untyped
+      def find_user_locale: () -> Symbol?
+      def find_primary: () -> Symbol?
+      def find_secondary: () -> Symbol?
+      def locales: () -> Array[Symbol]
+      def normalize: (String lang) -> Symbol
     end
   end
 end

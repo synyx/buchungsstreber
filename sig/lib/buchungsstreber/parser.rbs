@@ -1,9 +1,13 @@
 interface _ParserClass
+  def parses?: (String) -> bool
   def new: (String file, template_config templates, Numeric minimum_time) -> _Parser
 end
 interface _Parser
-  def parses?: (String) -> bool
-  def parse: -> Buchungsstreber::Entries
+  def initialize: (String file, template_config templates, Numeric minimum_time) -> void
+  def parse: () -> Buchungsstreber::Entries
+  def archive: (String archive_path, Date date) -> void
+  def format: (Buchungsstreber::Entries entries) -> String
+  def parse_entry: (String entry, Date? date) -> Buchungsstreber::Entry
 end
 
 # TimesheetParser selects the correct parser depending on the extension.
@@ -11,10 +15,10 @@ class Buchungsstreber::TimesheetParser
   PARSERS: ::Array[_ParserClass]
 
   @file: String
-  @minimum_time: Float
+  @minimum_time: Numeric
   @parser: _Parser
 
-  def initialize: (String file, template_config templates, Float minimum_time) -> void
+  def initialize: (String file, template_config templates, Numeric minimum_time) -> void
 
   def parse: () -> Buchungsstreber::Entries
   def add: (entry_list entries) -> void

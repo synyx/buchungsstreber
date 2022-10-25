@@ -11,7 +11,7 @@ module Buchungsstreber
     def initialize: (?String? file, ?String? config_file) -> void
 
     def entries: (?Date? date) -> Hash[Symbol, untyped]
-    def generate: (Date date) -> (Entries | Array[Entry])
+    def generate: (Date date) -> entry_list
     def resolve: (Entry entry) -> Entry
 
     private

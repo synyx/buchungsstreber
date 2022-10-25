@@ -30,8 +30,8 @@ module Buchungsstreber
       def handle_error: (Exception error, ?bool debug) -> void
       def pretty_error: (Exception error, bool debug) -> String
       def redraw: () -> void
-      def detailpage: (Integer _x, Integer y) -> Window
-      def buchen: (?Date? date) -> Window
+      def detailpage: (Integer _x, Integer y) -> (Window | void)
+      def buchen: (?Date? date) -> (Window | void)
       def generate: () -> void
       def setsize: (*untyped _args) -> void
       def show_help: () -> void

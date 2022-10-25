@@ -55,7 +55,6 @@ class Buchungsstreber::TimesheetParser
       PARSERS << klass
     end
 
-    # @return [Float] time in hours
     def parse_time(time_descr)
       case time_descr
       when /-/

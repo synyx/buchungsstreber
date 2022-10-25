@@ -1,6 +1,5 @@
 type entry = Buchungsstreber::Entry | {
-    id: Integer,
-    issue: Integer,
+    issue: (Integer | String),
     date: Date,
     time: Numeric,
     activity: String,
@@ -15,15 +14,25 @@ class Buchungsstreber::Entry
 
   attr_accessor time: Numeric
   attr_accessor activity: String
-  attr_accessor issue: Integer
+  attr_accessor issue: (Integer | String)
   attr_accessor text: String
   attr_accessor date: Date
-  attr_accessor redmine: String
+  attr_accessor redmine: String?
   attr_accessor work_hours: Numeric
-  attr_accessor comment: String
-  attr_accessor error: String
+  attr_accessor comment: String?
+  attr_accessor errors: Array[String]
 
-  def initialize: (date: Date date, ?time: Numeric time, ?activity: String? activity, ?issue: Integer? issue, ?text: String? text, ?redmine: String? redmine, ?work_hours: Numeric? work_hours, ?comment: String? comment, ?error: String? error) -> void
+  def initialize: (
+      date: Date date,
+      time: Numeric time,
+      ?activity: String? activity,
+      ?issue: (Integer | String)? issue,
+      ?text: String? text,
+      ?redmine: String? redmine,
+      ?work_hours: Numeric? work_hours,
+      ?comment: String? comment,
+      ?errors: (Array[String]|String)? error,
+    ) -> void
 
   def []: (Symbol sym) -> untyped
   def []=: (Symbol sym, untyped val) -> untyped
@@ -34,10 +43,10 @@ class Buchungsstreber::Entry
 end
 
 class Buchungsstreber::Entries
-  include Enumerable[Buchungsstreber::Entries]
+  include Enumerable[entry]
 
   attr_reader file_path: String
-  @enties: Array[entry]
+  @entries: entry_list
 
   def initialize: () -> void
 

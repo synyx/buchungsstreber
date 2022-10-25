@@ -1,8 +1,8 @@
 class Buchungsstreber::Resolver::Redmines
   include Buchungsstreber::Resolver::Base
 
-  @redmines: Array[Buchungsstreber::RedmineApi]
+  @redmines: Buchungsstreber::Redmines
 
-  def initialize: (config config) -> void
+  def initialize: (Array[config] config) -> void
   def resolve: (entry entry) -> void
 end
