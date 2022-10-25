@@ -53,7 +53,7 @@ class Buchungsstreber::BuchTimesheet
           date: parse_date(current),
           redmine: $~[:redmine]
         )
-      when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s\s*(?<time>[0-9]+(?:[.:][0-9]*)?)\s\s*(?<activity>[a-z]+\s+)?(?<text>.+)/i
+      when /(?<redmine>[a-z]?)#(?<issue>[0-9]*)\s+(?<time>[0-9]+(?:[.:][0-9]*)?)\s+(?<activity>[a-z]+\s+)?(?<text>.+)/i
         result << Buchungsstreber::Entry.new(
           time: minimum_time(parse_time($~[:time]), @minimum_time),
           activity: ($~[:activity] ? $~[:activity].strip : nil),
