@@ -106,14 +106,14 @@ class Buchungsstreber::RedmineApi
     possible_activities = @config['activities'].select { |_x, y| y == entry['activity']['id'] }
     # use shortest one for displaying
     activity = possible_activities.to_a.min { |x| x[0].length }[0]
-    {
-      id: entry['id'],
+
+    Buchungsstreber::Entry.new(
       issue: entry['issue']['id'],
       date: Date.parse(entry['spent_on']),
       time: entry['hours'],
       activity: activity.freeze,
-      text: entry['comments'].freeze,
-    }
+      text: entry['comments'].freeze
+    )
   end
 
   def load_config(config)
