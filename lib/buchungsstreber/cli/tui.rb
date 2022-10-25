@@ -346,7 +346,7 @@ module Buchungsstreber
 
     class Window
       def initialize(win = Ncurses.stdscr, *args)
-        if args.empty?
+        if win.is_a?(Ncurses::WINDOW)
           @win = win
         else
           nlines, ncols, begin_y, begin_x = win, *args
