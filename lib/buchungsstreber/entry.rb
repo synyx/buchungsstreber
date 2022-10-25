@@ -2,6 +2,7 @@ require_relative 'validator'
 
 class Buchungsstreber::Entry
   include Comparable
+  extend Gem::Deprecate
 
   attr_accessor :time, :activity, :issue, :text, :date, :redmine, :work_hours, :comment, :errors
 
@@ -24,11 +25,13 @@ class Buchungsstreber::Entry
     self.respond_to?(sym) or throw "#{sym} not available for entry"
     self.send(sym)
   end
+  deprecate :[], :none, 2023, 01
 
   def []=(sym, val)
     self.respond_to?("#{sym}=".to_sym) or throw "#{sym} not available for entry"
     self.send("#{sym}=".to_sym, val)
   end
+  deprecate :[]=, :none, 2023, 01
 
   def <=>(o)
     return nil unless o.respond_to?(:[])
