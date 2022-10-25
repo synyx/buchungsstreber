@@ -4,7 +4,7 @@ class Buchungsstreber::Resolver::Redmines
   include Buchungsstreber::Resolver::Base
 
   def initialize(config)
-    @redmines = Redmines.new(config)
+    @redmines = Buchungsstreber::Redmines.new(config)
   end
 
   def resolve(entry)
