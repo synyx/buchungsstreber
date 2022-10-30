@@ -11,13 +11,16 @@ class Buchungsstreber::Generator::DailyDoings
 
         p dailydoings
 
-        Buchungsstreber::Entry.new(
-            date: date,
-            redmine: dailydoings[0]['redmine'],
-            issue: dailydoings[0]['issue'],
-            activity: dailydoings[0]['activity'],
-            text: dailydoings[0]['text']
-        )
+        dailydoings.map do |doing|
+            Buchungsstreber::Entry.new(
+                date: date,
+                redmine: doing['redmine'],
+                issue: doing['issue'],
+                activity: doing['activity'],
+                text: doing['text']
+            )
+        end
+
     end
 
 end
