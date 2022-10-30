@@ -6,10 +6,8 @@ class Buchungsstreber::Generator::DailyDoings
     end
 
     def generate(date)
-
-        dailydoings = @dailydoings
-
-        dailydoings.map do |doing|
+        
+        @dailydoings.map do |doing|
             Buchungsstreber::Entry.new(
                 date: date,
                 redmine: doing['redmine'],
