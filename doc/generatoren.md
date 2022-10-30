@@ -102,3 +102,16 @@ Welche Ausgabe vom Generator erwartet wird kann dem
 generators:
   xchat: {}
 ````
+
+## Täglich wiederkehrende Einträge generieren
+
+Der Generator erzeugt tägliche Buchungsstreber-Einträge ohne zeitliche
+Abhängigkeit.
+
+````yaml
+generators:
+  dailydoings:
+    - activity: Adm
+      issue: t7654
+      text: Daily cleanup
+````
