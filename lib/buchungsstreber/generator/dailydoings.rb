@@ -9,8 +9,6 @@ class Buchungsstreber::Generator::DailyDoings
 
         dailydoings = @dailydoings
 
-        p dailydoings
-
         dailydoings.map do |doing|
             Buchungsstreber::Entry.new(
                 date: date,

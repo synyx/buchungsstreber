@@ -23,7 +23,6 @@ RSpec.describe Buchungsstreber::Generator::DailyDoings do
     subject { described_class.new(config) }
 
     it 'executes' do
-      p subject.generate('today')
       expect(subject.generate('today')).to include(result)
     end
   end
