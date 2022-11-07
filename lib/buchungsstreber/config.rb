@@ -35,7 +35,7 @@ class Buchungsstreber::Config
       ENV['CWD'],
       user_config_path,
       '/etc/buchungsstreber',
-      "#{__dir__}/.."
+      "#{__dir__}/../.."
     ].freeze
   end
 
