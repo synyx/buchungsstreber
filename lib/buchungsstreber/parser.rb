@@ -2,10 +2,10 @@
 class Buchungsstreber::TimesheetParser
   PARSERS = []
 
-  def initialize(file, issues, templates, minimum_time)
+  def initialize(file, templates, minimum_time)
     @file = file
     @minimum_time = minimum_time
-    @parser = choose_parser(file).new(file, issues, templates, minimum_time)
+    @parser = choose_parser(file).new(file, templates, minimum_time)
   end
 
   def parse

@@ -9,9 +9,8 @@ class Buchungsstreber::YamlTimesheet
   include Buchungsstreber::TimesheetParser::Base
   include Buchungsstreber::TimesheetParser::LineBased
 
-  def initialize(file, issues, templates, minimum_time)
+  def initialize(file, templates, minimum_time)
     @file_path = file
-    @issues = issues
     @templates = templates
     @minimum_time = minimum_time
   end
@@ -81,10 +80,6 @@ class Buchungsstreber::YamlTimesheet
       activity = template["activity"]
       issue_ref ||= template["issue"].to_s
       text ||= template["text"]
-    end
-
-    if @issues.key? issue_ref
-      issue_ref = @issues[issue_ref]
     end
 
     activity, issue_ref = nil, activity if !issue_ref && activity =~ /^([a-z]*)(\d+)$/i

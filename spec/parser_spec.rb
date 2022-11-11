@@ -6,14 +6,14 @@ RSpec.describe Buchungsstreber::TimesheetParser do
   it 'initializes yaml parser' do
     file = '../example.buchungen.yml'
     minimum_time = 0.25
-    p = described_class.new(file, {}, {}, minimum_time)
+    p = described_class.new(file, {}, minimum_time)
     expect(p).to_not be_nil
   end
 
   it 'initializes B parser' do
     file = 'examples/test.B'
     minimum_time = 0.25
-    p = described_class.new(file, {}, {}, minimum_time)
+    p = described_class.new(file, {}, minimum_time)
     expect(p).to_not be_nil
   end
 
@@ -21,7 +21,7 @@ RSpec.describe Buchungsstreber::TimesheetParser do
     minimum_time = 0.25
     expect_any_instance_of(MockParser).to receive(:parse).and_return(true)
 
-    tp = described_class.new('mock', {}, {}, minimum_time)
+    tp = described_class.new('mock', {}, minimum_time)
     expect(tp.parse).to eq(true)
   end
 
@@ -29,13 +29,13 @@ RSpec.describe Buchungsstreber::TimesheetParser do
     minimum_time = 0.25
     expect_any_instance_of(MockParser).to receive(:archive).and_return(true)
 
-    tp = described_class.new('mock', {}, {}, minimum_time)
+    tp = described_class.new('mock', {}, minimum_time)
     expect(tp.archive('mockpath', Date.today)).to eq(true)
   end
 
   it 'raises error on unknown filetypes' do
     minimum_time = 0.25
-    expect { described_class.new('../CHANGELOG.md', {}, {}, minimum_time) }.to raise_error(/file extension/)
+    expect { described_class.new('../CHANGELOG.md', {}, minimum_time) }.to raise_error(/file extension/)
   end
 end
 
@@ -46,7 +46,7 @@ class MockParser
     file == 'mock'
   end
 
-  def initialize(file, issues, template, minimum_time); end
+  def initialize(file, template, minimum_time); end
 
   def parse; end
 
