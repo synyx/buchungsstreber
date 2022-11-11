@@ -53,6 +53,9 @@ module Buchungsstreber
 
     def entries(date = nil)
       entries = @timesheet_parser.parse.select { |x| date.nil? || date == x[:date] }
+      entries.each do |e|
+        resolve(e)
+      end
 
       result = {
         daily_hours: Hash.new(0),
