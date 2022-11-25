@@ -10,12 +10,7 @@ class Buchungsstreber::Resolver::Templates
 
     template = @templates[entry[:activity]]
 
-    if template['issue']
-      _, redmine, issue = template['issue'].match(/^([a-z]*)(\d+)$/i).to_a
-      entry[:issue] ||= issue
-      entry[:redmine] ||= redmine
-    end
-
+    entry[:issue] ||= template['issue'] if template['issue']
     entry[:activity] = template['activity']
     entry[:text] ||= template['text']
   end

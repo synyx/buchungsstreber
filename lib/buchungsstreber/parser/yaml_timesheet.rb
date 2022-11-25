@@ -9,6 +9,8 @@ class Buchungsstreber::YamlTimesheet
   include Buchungsstreber::TimesheetParser::Base
   include Buchungsstreber::TimesheetParser::LineBased
 
+  ISSUE_REGEX = /^([a-z]*)(\d+)$/i.freeze
+
   def initialize(file, templates, minimum_time)
     @file_path = file
     @templates = templates
@@ -75,28 +77,18 @@ class Buchungsstreber::YamlTimesheet
   def parse_entry(entry, date)
     time, activity, issue_ref, text = entry.to_s.split(/\s+/, 4)
 
-    if @templates.key? activity
-      template = @templates[activity]
-      activity = template["activity"]
-      issue_ref ||= template["issue"].to_s
-      text ||= template["text"]
-    end
-
-    activity, issue_ref = nil, activity if !issue_ref && activity =~ /^([a-z]*)(\d+)$/i
-
-    _, redmine, issue = issue_ref.match(/^([a-z]*)(\d+)$/i).to_a if issue_ref
-
     raise "invalid line: #{entry}" unless time
-    err = "missing issue #{entry}" unless issue
+
+    activity, issue_ref = nil, activity if !issue_ref && activity =~ ISSUE_REGEX
 
     Buchungsstreber::Entry.new(
       time: minimum_time(parse_time(time), @minimum_time),
       activity: activity,
-      issue: issue,
+      issue: issue_ref,
       text: text,
       date: date,
-      redmine: redmine,
-      errors: err,
+      redmine: nil,
+      errors: nil
     )
   end
 
