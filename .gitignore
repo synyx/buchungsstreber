@@ -10,5 +10,8 @@ coverage
 pkg/
 tmp/
 
+# IDEs
+.idea
+
 # Translation
 lib/buchungsstreber/i18n/*.mo
