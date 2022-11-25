@@ -28,6 +28,10 @@ class Buchungsstreber::Resolver
     @resolvers << resolver if resolver
   end
 
+  def add_default!(klass)
+    @resolvers << klass unless @resolvers.include?(klass)
+  end
+
   private
 
   def resolver(klass)
