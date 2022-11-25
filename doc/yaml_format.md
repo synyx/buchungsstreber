@@ -39,30 +39,6 @@ Wird gebucht als:
 - 0.5   Daily  S99999  Daily
 ```
 
-## Issue Aliases
-
-Konfiguration:
-
-```yaml
-issues:
-  AliasFuerIssue: S99999
-```
-
-Buchung:
-
-```yaml
-- 0.5  Daily AliasFuerIssue Daily
-```
-
-Wird gebucht als:
-
-```yaml
-2019-01-01:
-- 0.5   Daily  S99999  Daily
-```
-
-Issue Aliases koennen auch in Template verwendet werden.
-
 ## Zeitangaben
 
 Es sind Stunden-Angaben (`1.25`) sowie Zeitraeume (`Uhrzeit-Uhrzeit`) verwendbar.
