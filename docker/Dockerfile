@@ -1,4 +1,4 @@
-FROM ruby:2.7.6-alpine
+FROM ruby:2.7.8-alpine
 LABEL maintainer="synyx"
 LABEL org.opencontainers.image.source https://github.com/synyx/buchungsstreber
 
