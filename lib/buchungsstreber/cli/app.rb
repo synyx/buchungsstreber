@@ -208,7 +208,8 @@ module Buchungsstreber
       method_option :date, :default => 'today'
       def add(*entry)
         date = parse_date(options[:date])
-        entry << "# Added on " + Time.at(Time.now.to_i).to_s
+        creation_time = Time.now.strftime("%Y-%m-%d %H:%m")
+        entry << "(added on #{creation_time})"
         entry = entry.join(' ')
         buchungsstreber = Buchungsstreber::Context.new(options[:file])
 
