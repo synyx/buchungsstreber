@@ -1,6 +1,14 @@
 Changes
 =======
 
+## v2.10.0
+
+* Add dockerfile for containerized buchungsstreber
+* Introduce DailyDoings ([#107](https://github.com/synyx/buchungsstreber/issues/107))
+* Add creation time to `add` command ([#115](https://github.com/synyx/buchungsstreber/issues/115))
+* Fix handling of empty YAML buchungen file
+* Fix search path for config file
+
 ## v2.9.1
 
 * Add Redmine Time Entry generator ([#101](https://github.com/synyx/buchungsstreber/issues/101))
