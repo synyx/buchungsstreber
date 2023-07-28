@@ -6,12 +6,19 @@ class Buchungsstreber::Resolver
   end
 
   def resolve(entry)
-    @resolvers.each do |r|
-      resolver(r).resolve(entry)
-    end
-    # TODO: it would be better to keep track of changes to stop resolving
-    @resolvers.each do |r|
-      resolver(r).resolve(entry)
+    previous_entry = entry.dup
+    iteration = 0
+    loop do
+      @resolvers.each do |r|
+        resolver(r).resolve(entry)
+      end
+
+      break if entry == previous_entry
+
+      throw 'Resolving took too many iterations' unless iteration < 100
+
+      previous_entry = entry.dup
+      iteration += 1
     end
     entry
   end
@@ -19,6 +26,10 @@ class Buchungsstreber::Resolver
   def load!(name)
     resolver = Base.resolver(name)
     @resolvers << resolver if resolver
+  end
+
+  def add_default!(klass)
+    @resolvers << klass unless @resolvers.include?(klass)
   end
 
   private
