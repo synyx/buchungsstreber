@@ -72,9 +72,9 @@ class Buchungsstreber::TimesheetParser
     end
 
     def minimum_time(time, minimum_time_value)
-      minimum_time = ((time * 60 * 60) / 900).ceil
+      time_intervals = (time / minimum_time_value).ceil
 
-      minimum_time * minimum_time_value
+      time_intervals * minimum_time_value
     end
 
     private
