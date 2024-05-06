@@ -37,6 +37,24 @@ RSpec.describe Buchungsstreber::TimesheetParser do
     minimum_time = 0.25
     expect { described_class.new('../CHANGELOG.md', {}, minimum_time) }.to raise_error(/file extension/)
   end
+
+  context 'minimum_time' do
+    subject {
+      Object.new.extend(Buchungsstreber::TimesheetParser::Base)
+    }
+    it 'rounds up to the minimum time interval' do
+      minimum_time = 0.5
+      expect(subject.minimum_time(0.75, minimum_time)).to eq(1.0)
+    end
+    it 'does not change full intervals' do
+      minimum_time = 0.5
+      expect(subject.minimum_time(1.5, minimum_time)).to eq(1.5)
+    end
+    it 'handles weird minimal time intervals' do
+      minimum_time = 0.123
+      expect(subject.minimum_time(0.1, minimum_time)).to eq(0.123)
+    end
+  end
 end
 
 class MockParser
