@@ -1,7 +1,7 @@
 Changes
 =======
 
-## v2.11.0
+## v2.11.1
 
 * Fix time steps for non quarter hour ([#125](https://github.com/synyx/buchungsstreber/pull/125))
 
