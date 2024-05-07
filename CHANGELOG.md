@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v2.11.0
+
+* Fix time steps for non quarter hour ([#125](https://github.com/synyx/buchungsstreber/pull/125))
+
 ## v2.10.0
 
 * Add dockerfile for containerized buchungsstreber
