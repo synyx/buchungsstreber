@@ -37,10 +37,11 @@ Fragen?  Hilfe notwendig?  Einfach nur mal Schnacken?
 Voraussetzungen
 ---------------
 
-- Ruby 2.x
-- bundler (optional)
+- Ruby 2.x/3.x
+- bundler (fuer Entwicklung)
+- ncursesw (fuer buchungsstreber-tui) (Kompatibel mit Ruby Version)
 - schlechte Buchungsmoral
-  
+
 Installation
 ------------
 

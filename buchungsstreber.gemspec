@@ -30,15 +30,15 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'i18n', '~> 1.14.0'
-  spec.add_dependency 'thor', '~> 1.0'
+  spec.add_dependency 'thor', '~> 1.3'
 
-  spec.add_development_dependency 'aruba', '~> 2.0'
-  spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'gettext', '~> 3.0'
-  spec.add_development_dependency 'nexus', '~> 1.0'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 1.1'
+  spec.add_development_dependency 'aruba', '~> 2.2'
+  spec.add_development_dependency 'bundler', '~> 2.3'
+  spec.add_development_dependency 'gettext', '~> 3.4'
+  spec.add_development_dependency 'nexus', '~> 1.5'
+  spec.add_development_dependency 'rake', '~> 13.2'
+  spec.add_development_dependency 'rspec', '~> 3.13'
+  spec.add_development_dependency 'rubocop', '~> 1.63'
   spec.add_development_dependency 'simplecov', '~> 0.22.0'
-  spec.add_development_dependency 'webmock', '~> 3.0'
+  spec.add_development_dependency 'webmock', '~> 3.23'
 end
