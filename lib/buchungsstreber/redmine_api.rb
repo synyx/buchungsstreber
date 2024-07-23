@@ -82,15 +82,12 @@ class Buchungsstreber::RedmineApi
   def get(path, params = nil)
     uri = URI.parse("#{@config['server']['url']}#{path}.json")
     uri.query = URI.encode_www_form(params) if params
-    https = Net::HTTP.new(uri.host, uri.port)
-    https.use_ssl = true
 
     header = {
       "Accept" => "application/json",
       "X-Redmine-API-Key" => @config["server"]["apikey"],
     }
-    request = Net::HTTP::Get.new(uri, header)
-    result = https.request(request)
+    result = Net::HTTP.get_response(uri, header)
     raise 'Unexpected result code' unless result.code == "200"
 
     result.body.force_encoding("utf-8")
