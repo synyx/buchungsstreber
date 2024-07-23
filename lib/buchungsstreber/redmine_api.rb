@@ -64,7 +64,7 @@ class Buchungsstreber::RedmineApi
 
     header = {
       "Content-Type" => "application/json",
-      "X-Redmine-API-Key" => @config["server"]["apikey"]
+      "X-Redmine-API-Key" => @config["server"]["apikey"],
     }
     request = Net::HTTP::Post.new(uri, header)
     request.body = dto.to_json
@@ -86,8 +86,8 @@ class Buchungsstreber::RedmineApi
     https.use_ssl = true
 
     header = {
-      "Content-Type" => "application/json",
-      "X-Redmine-API-Key" => @config["server"]["apikey"]
+      "Accept" => "application/json",
+      "X-Redmine-API-Key" => @config["server"]["apikey"],
     }
     request = Net::HTTP::Get.new(uri, header)
     result = https.request(request)
