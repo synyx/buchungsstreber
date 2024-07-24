@@ -90,7 +90,7 @@ class Buchungsstreber::RedmineApi
     }
 
     mh = header.map{|k,v| ['-H', "#{k}: #{v}"]}.flatten
-    body, _, status = Open3.capture3('/usr/bin/curl', '-s', *mh, uri.to_s)
+    body, _, status = Open3.capture3('/usr/bin/curl', '-m', '2', '-s', *mh, uri.to_s)
     raise 'Unexpected result code' unless status == 0
 
     body.force_encoding("utf-8")
