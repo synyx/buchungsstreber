@@ -3,6 +3,7 @@ require "net/http"
 require "net/https"
 require "json"
 require "yaml"
+require 'open3'
 
 class Buchungsstreber::RedmineApi
   attr_reader :config
@@ -87,15 +88,17 @@ class Buchungsstreber::RedmineApi
       "Accept" => "application/json",
       "X-Redmine-API-Key" => @config["server"]["apikey"],
     }
-    result = Net::HTTP.get_response(uri, header)
-    raise 'Unexpected result code' unless result.code == "200"
 
-    result.body.force_encoding("utf-8")
-    body = JSON.parse(result.body)
+    mh = header.map{|k,v| ['-H', "#{k}: #{v}"]}.flatten
+    body, _, status = Open3.capture3('/usr/bin/curl', '-s', *mh, uri.to_s)
+    raise 'Unexpected result code' unless status == 0
+
+    body.force_encoding("utf-8")
+    body = JSON.parse(body)
 
     (yield body if block_given?) || body
   rescue StandardError => e
-    h = { url: path, error: e, content: result&.body }
+    h = { url: path, error: e, content: body }
     raise "Fehler beim Laden von %<url>s: %<error>s, Rückgabe: %<content>s" % h
   end
 
