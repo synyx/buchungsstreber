@@ -1,6 +1,11 @@
 Changes
 =======
 
+## v2.12.0
+
+* Update for Ruby >= 3.3
+* Replace underlying TUI library (`ncursesw` -> `curses`)
+
 ## v2.11.1
 
 * Fix time steps for non quarter hour ([#125](https://github.com/synyx/buchungsstreber/pull/125))
