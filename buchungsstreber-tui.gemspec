@@ -21,6 +21,6 @@ Gem::Specification.new do |spec|
   spec.files         = []
 
   spec.add_dependency 'buchungsstreber', Buchungsstreber::VERSION
-  spec.add_dependency 'ncursesw', '~> 1.4.0'
+  spec.add_dependency 'curses', '~> 1.5'
   spec.add_dependency 'rb-inotify', '~> 0.10.0'
 end
