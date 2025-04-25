@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'racc'
 
   spec.add_development_dependency 'aruba', '~> 2.3'
-  spec.add_development_dependency 'bundler', '~> 2.6'
+  spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'gettext', '~> 3.5'
   spec.add_development_dependency 'nexus', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 13.2'
