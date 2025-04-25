@@ -31,6 +31,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'i18n', '~> 1.14.0'
   spec.add_dependency 'thor', '~> 1.3'
+  # add racc, not because it is needed directly, but because things just happen to be that way.
+  spec.add_dependency 'racc'
 
   spec.add_development_dependency 'aruba', '~> 2.3'
   spec.add_development_dependency 'bundler', '~> 2.6'
