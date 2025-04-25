@@ -5,6 +5,6 @@ gemspec :name => 'buchungsstreber'
 
 group :tui, optional: true do
   # Keep in sync with buchungsstreber-tui dependencies
-  gem 'ncursesw', '~>1.4.0'
-  gem 'rb-inotify', '~>0.10.0'
+  #gem 'ncursesw', '1.4.11'
+  gem 'rb-inotify', '0.11.1'
 end

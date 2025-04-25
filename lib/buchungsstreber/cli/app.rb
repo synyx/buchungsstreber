@@ -1,4 +1,5 @@
 require 'thor'
+require 'stringio'
 require 'tempfile'
 require 'i18n'
 
@@ -267,7 +268,7 @@ module Buchungsstreber
       end
 
       def automated?
-        !$stdin.tty? || $stdin.closed? || $stdin.is_a?(StringIO) || !$stdout.tty?
+        !$stdin.tty? || $stdin.closed? || $stdin.is_a?(::StringIO) || !$stdout.tty?
       end
 
       def init_config
