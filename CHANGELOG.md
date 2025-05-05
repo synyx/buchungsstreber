@@ -1,7 +1,7 @@
 Changes
 =======
 
-## v2.12.1
+## v2.12.2
 
 * Update for Ruby >= 3.3
 * Replace underlying TUI library (`ncursesw` -> `curses`)
