@@ -351,7 +351,7 @@ module Buchungsstreber
           @win = win
         else
           nlines, ncols, begin_y, begin_x = win, *args
-          @win = Curses.subwin(Curses.stdscr, nlines, ncols, begin_y, begin_x)
+          @win = Curses.stdscr.subwin(nlines, ncols, begin_y, begin_x)
           @win.bkgd(Curses.color_pair(0))
           @win.clear
           @win.box(0, 0)
