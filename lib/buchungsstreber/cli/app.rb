@@ -205,6 +205,18 @@ module Buchungsstreber
         handle_error(e, options[:debug])
       end
 
+      desc 'gui [date]', _('Graphisches Interface')
+      def gui(date = nil)
+        date = parse_date(date) || Date.today
+        buchungsstreber = Buchungsstreber::Context.new(options[:file])
+
+        require_relative 'gui'
+        tui = Buchungsstreber::GUI::App.new(buchungsstreber, date, options)
+        tui.start
+      rescue Interrupt, StandardError => e
+        handle_error(e, options[:debug])
+      end
+
       desc 'add [--date date] entry', _('Buchung ueber Kommandozeile hinzufuegen')
       method_option :date, :default => 'today'
       def add(*entry)
