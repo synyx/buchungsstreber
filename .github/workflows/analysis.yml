@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # This is needed, so SonarCloud can analyze correctly the times when regressions were introduced
           fetch-depth: 0
