@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['fhfet', 'jbuch', 'grammlich', 'heib']
   spec.email         = ['heft@synyx.de', 'jonathan.buch@gmail.com', 'grammlich@synyx.de', 'heib@synyx.de']
 
-  spec.summary       = %q{Enables timely timekeeping.}
+  spec.summary       = %q{Titillates timely timekeeping.}
   spec.description   = "Streber."
   spec.homepage      = 'https://buchungsstreber.synyx.de'
 
@@ -30,17 +30,18 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'i18n', '~> 1.14.0'
-  spec.add_dependency 'thor', '~> 1.3'
+  spec.add_dependency 'thor', '~> 1.4'
   # add racc, not because it is needed directly, but because things just happen to be that way.
   spec.add_dependency 'racc'
+  spec.add_dependency 'openssl', '~> 3.3'
 
   spec.add_development_dependency 'aruba', '~> 2.3'
-  spec.add_development_dependency 'bundler', '~> 2.0'
+  spec.add_development_dependency 'bundler', '~> 2.6'
   spec.add_development_dependency 'gettext', '~> 3.5'
   spec.add_development_dependency 'nexus', '~> 1.5'
-  spec.add_development_dependency 'rake', '~> 13.2'
+  spec.add_development_dependency 'rake', '~> 13.3'
   spec.add_development_dependency 'rspec', '~> 3.13'
-  spec.add_development_dependency 'rubocop', '~> 1.75'
+  spec.add_development_dependency 'rubocop', '~> 1.81'
   spec.add_development_dependency 'simplecov', '~> 0.22.0'
   spec.add_development_dependency 'webmock', '~> 3.25'
 end
