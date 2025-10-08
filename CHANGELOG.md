@@ -1,5 +1,4 @@
-Changes
-=======
+# Changes
 
 ## v3.x.x
 
