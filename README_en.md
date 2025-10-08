@@ -29,7 +29,7 @@ Questions?  Help needed?  Simply wanna talk?
 Requirements
 ---------------
 
-- Ruby 2.x/3.x
+- Ruby 3.x
 - bundler (for development)
 - ncursesw (for buchungsstreber-tui) (compatible to ruby version)
 - bad time entry moral
