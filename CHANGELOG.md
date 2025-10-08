@@ -1,6 +1,10 @@
 Changes
 =======
 
+## v3.x.x
+
+* Ruby 2 is now deprecated
+
 ## v2.12.2
 
 * Update for Ruby >= 3.3
