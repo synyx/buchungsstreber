@@ -1,6 +1,6 @@
 # Changes
 
-## v3.x.x
+## v3.0.0
 
 * Ruby 2 is now deprecated
 
