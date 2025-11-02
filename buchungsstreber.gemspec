@@ -29,10 +29,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.required_ruby_version = '>= 2.7.0'
+
   spec.add_dependency 'i18n', '~> 1.14.0'
   spec.add_dependency 'thor', '~> 1.4'
   # add racc, not because it is needed directly, but because things just happen to be that way.
-  spec.add_dependency 'racc'
+  spec.add_dependency 'racc', '~> 1.5'
   spec.add_dependency 'openssl', '~> 3.3'
 
   spec.add_development_dependency 'aruba', '~> 2.3'

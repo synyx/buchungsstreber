@@ -20,6 +20,8 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = 'https://gitlab.synyx.de/synyx/buchungsstreber/CHANGELOG.md'
   spec.files         = []
 
+  spec.required_ruby_version = '>= 3.0.0'
+
   spec.add_dependency 'buchungsstreber', Buchungsstreber::VERSION
   spec.add_dependency 'curses', '~> 1.5'
   spec.add_dependency 'rb-inotify', '~> 0.11.0'
