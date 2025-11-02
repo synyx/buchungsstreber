@@ -283,12 +283,12 @@ module Buchungsstreber
         if @subwindow
           case keycode
           when ' ', ' '.ord, "\e".ord, Curses::KEY_CANCEL, Curses::KEY_BACKSPACE
-            @subwindow.del
+            @subwindow.close
             @subwindow = nil
             redraw
           when 'n', 'n'.ord, "\n".ord, Curses::KEY_ENTER
             @date += 1
-            @subwindow.del
+            @subwindow.close
             @subwindow = nil
             redraw
           else
