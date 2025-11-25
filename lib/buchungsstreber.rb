@@ -38,6 +38,7 @@ module Buchungsstreber
         @generator.load!(gc)
       end
 
+      require_relative "buchungsstreber/resolver/issueref"
       require_relative "buchungsstreber/resolver/templates"
       require_relative "buchungsstreber/resolver/redmines"
       @config[:resolvers].each_key do |gc|
@@ -49,10 +50,17 @@ module Buchungsstreber
       @config[:resolvers].each_key do |gc|
         @resolver.load!(gc)
       end
+
+      # Load default resolvers
+      @resolver.add_default!(Buchungsstreber::Resolver::IssueRef)
+      @resolver.add_default!(Buchungsstreber::Resolver::Templates)
     end
 
     def entries(date = nil)
       entries = @timesheet_parser.parse.select { |x| date.nil? || date == x[:date] }
+      entries.each do |e|
+        resolve(e)
+      end
 
       result = {
         daily_hours: Hash.new(0),
