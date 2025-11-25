@@ -9,6 +9,7 @@ class Buchungsstreber::Config
     minimum_time: 0.25,
     generators: {},
     resolvers: {},
+    allow_empty_text: false,
   }.freeze
 
   DEFAULT_NAME = 'config.yml'.freeze
