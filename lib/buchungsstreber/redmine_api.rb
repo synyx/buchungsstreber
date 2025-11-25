@@ -3,6 +3,7 @@ require "net/http"
 require "net/https"
 require "json"
 require "yaml"
+require 'open3'
 
 class Buchungsstreber::RedmineApi
   attr_reader :config
@@ -64,7 +65,7 @@ class Buchungsstreber::RedmineApi
 
     header = {
       "Content-Type" => "application/json",
-      "X-Redmine-API-Key" => @config["server"]["apikey"]
+      "X-Redmine-API-Key" => @config["server"]["apikey"],
     }
     request = Net::HTTP::Post.new(uri, header)
     request.body = dto.to_json
@@ -82,23 +83,22 @@ class Buchungsstreber::RedmineApi
   def get(path, params = nil)
     uri = URI.parse("#{@config['server']['url']}#{path}.json")
     uri.query = URI.encode_www_form(params) if params
-    https = Net::HTTP.new(uri.host, uri.port)
-    https.use_ssl = true
 
     header = {
-      "Content-Type" => "application/json",
-      "X-Redmine-API-Key" => @config["server"]["apikey"]
+      "Accept" => "application/json",
+      "X-Redmine-API-Key" => @config["server"]["apikey"],
     }
-    request = Net::HTTP::Get.new(uri, header)
-    result = https.request(request)
-    raise 'Unexpected result code' unless result.code == "200"
 
-    result.body.force_encoding("utf-8")
-    body = JSON.parse(result.body)
+    mh = header.map{|k,v| ['-H', "#{k}: #{v}"]}.flatten
+    body, _, status = Open3.capture3('/usr/bin/curl', '-m', '2', '-s', *mh, uri.to_s)
+    raise 'Unexpected result code' unless status == 0
+
+    body.force_encoding("utf-8")
+    body = JSON.parse(body)
 
     (yield body if block_given?) || body
   rescue StandardError => e
-    h = { url: path, error: e, content: result&.body }
+    h = { url: path, error: e, content: body }
     raise "Fehler beim Laden von %<url>s: %<error>s, Rückgabe: %<content>s" % h
   end
 
