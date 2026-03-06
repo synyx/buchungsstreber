@@ -1,6 +1,6 @@
-FROM ruby:2.7.8-alpine
+FROM ruby:3.4-alpine
 LABEL maintainer="synyx"
-LABEL org.opencontainers.image.source https://github.com/synyx/buchungsstreber
+LABEL org.opencontainers.image.source="https://github.com/synyx/buchungsstreber"
 
 RUN apk update && \
     apk add --no-cache \
