@@ -28,7 +28,9 @@ jobs:
             ${{ runner.os }}-bundler-
 
       - name: Install dependencies
-        run: bundle install --path ./vendor/bundle
+        run: |
+          bundle config set path './vendor/bundle'
+          bundle install
 
       - name: Run tests
         run: bundle exec rspec
