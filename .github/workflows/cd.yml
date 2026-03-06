@@ -17,7 +17,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4.8
+          ruby-version: 4.0.1
 
       - name: Recreate Ruby Bundler cache
         uses: actions/cache@v5
@@ -28,7 +28,9 @@ jobs:
             ${{ runner.os }}-bundler-
 
       - name: Install dependencies
-        run: bundle install --path ./vendor/bundle
+        run: |
+          bundle config set path './vendor/bundle'
+          bundle install
 
       - name: Run tests
         run: bundle exec rspec
