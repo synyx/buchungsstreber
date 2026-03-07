@@ -11,5 +11,8 @@ pkg/
 tmp/
 .gem_rbs*
 
+# IDEs
+.idea
+
 # Translation
 lib/buchungsstreber/i18n/*.mo
