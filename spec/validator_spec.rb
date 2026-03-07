@@ -93,6 +93,27 @@ RSpec.describe Buchungsstreber::Validator do
       entry = default_entry.merge(text: '')
       expect { described_class.validate(entry, redmine) }.to fail_with('invalid text')
     end
+
+    it 'fail on missing text when allow_empty_text is false' do
+      entry = default_entry.merge(text: nil)
+      config = { allow_empty_text: false }
+      r = described_class.validate(entry, redmine, config)
+      expect(r).to be(false)
+    end
+
+    it 'succeeds on missing text when allow_empty_text is true' do
+      entry = default_entry.merge(text: nil)
+      config = { allow_empty_text: true }
+      r = described_class.validate(entry, redmine, config)
+      expect(r).to be(true)
+    end
+
+    it 'succeeds on empty text when allow_empty_text is true' do
+      entry = default_entry.merge(text: '')
+      config = { allow_empty_text: true }
+      r = described_class.validate(entry, redmine, config)
+      expect(r).to be(true)
+    end
   end
 end
 

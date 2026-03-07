@@ -1,5 +1,5 @@
 class Buchungsstreber::Validator
-  def self.validate(entry, redmine)
+  def self.validate(entry, redmine, config = {})
     date = entry[:date]
     unless date
       warn "Entry is missing date: #{entry}"
@@ -42,7 +42,8 @@ class Buchungsstreber::Validator
     end
 
     text = entry[:text]
-    if !text || text.strip.length <= 1
+    allow_empty_text = config[:allow_empty_text] || false
+    if !allow_empty_text && (!text || text.strip.length <= 1)
       warn "Entry has invalid text: #{entry}"
       return false
     end

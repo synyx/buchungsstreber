@@ -65,7 +65,7 @@ module Buchungsstreber
         errors = []
         redmine = @redmines.get(entry[:redmine])
         valid, err = fake_stderr do
-          Validator.validate(entry, redmine)
+          Validator.validate(entry, redmine, @config)
         end
         errors << err unless valid
         result[:valid] &= valid

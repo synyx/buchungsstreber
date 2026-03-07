@@ -1,5 +1,6 @@
 timesheet_file: ./buchungen.yml
 archive_path: ./archive
+allow_empty_text: false
 redmines:
   -
     name: Synyx
