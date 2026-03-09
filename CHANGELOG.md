@@ -1,5 +1,12 @@
 # Changes
 
+## v3.1.0
+
+* Ruby 4.0 compatibility
+* Add new setting for allowing entries without comments [#136]
+
+[#137]: https://github.com/synyx/buchungsstreber/pull/137
+
 ## v3.0.2
 
 * Bugfix release
