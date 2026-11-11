@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.7.0'
 
-  spec.add_dependency 'i18n', '~> 1.14.0'
+  spec.add_dependency 'i18n', '~> 1.15.0'
   spec.add_dependency 'thor', '~> 1.4'
   # add racc, not because it is needed directly, but because things just happen to be that way.
   spec.add_dependency 'racc', '~> 1.5'
