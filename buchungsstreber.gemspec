@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor', '~> 1.4'
   # add racc, not because it is needed directly, but because things just happen to be that way.
   spec.add_dependency 'racc', '~> 1.5'
-  spec.add_dependency 'openssl', '~> 3.3'
+  spec.add_dependency 'openssl', '~> 4.0'
 
   spec.add_development_dependency 'aruba', '~> 2.3'
   spec.add_development_dependency 'bundler', '> 2'
